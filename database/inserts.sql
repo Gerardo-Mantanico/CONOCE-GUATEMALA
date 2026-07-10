@@ -970,3 +970,7272 @@ CREATE TRIGGER trg_auditoria AFTER INSERT OR DELETE OR UPDATE ON clima.registro_
 -- Fin schema clima
 -- **********************************************************************
 
+-- **********************************************************************
+-- Inicio schema TURISMO
+-- **********************************************************************
+BEGIN;
+
+
+-- ============================================================
+-- METADATOS TURISMO
+-- ============================================================
+
+
+INSERT INTO meta.esquema_datos (
+    nombre_esquema, titulo, descripcion, objetivo, alcance, fuera_de_alcance,
+    responsable, id_version_desde, estado, observaciones
+)
+SELECT
+    'meta', 'Metadatos y catálogo de datos', 'Contiene el catálogo central del proyecto: versiones, esquemas, tablas, columnas, temas, fuentes, reglas de calidad, revisiones por pares y decisiones de modelado.', 'Permitir que una persona externa pueda entender qué datos existen, dónde están, qué significan, qué fuentes los respaldan y cómo decidir si un nuevo dato pertenece a un esquema existente o requiere uno nuevo.', 'Documentación estructurada y consultable de todos los esquemas del proyecto.', 'No almacena datos temáticos finales, como destinos turísticos, municipios, clima o denuncias. Solo almacena metadatos y criterios de organización.',
+    'Equipo de metadatos', v.id_version, 'ACTIVO',
+    'Esquema documentado en el catálogo meta para facilitar búsqueda, comprensión y crecimiento del proyecto.'
+FROM meta.version_proyecto v
+WHERE v.numero_version = '1.0'
+ON CONFLICT (nombre_esquema) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    objetivo = EXCLUDED.objetivo,
+    alcance = EXCLUDED.alcance,
+    fuera_de_alcance = EXCLUDED.fuera_de_alcance,
+    responsable = EXCLUDED.responsable,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.esquema_datos (
+    nombre_esquema, titulo, descripcion, objetivo, alcance, fuera_de_alcance,
+    responsable, id_version_desde, estado, observaciones
+)
+SELECT
+    'turismo', 'Turismo y Patrimonio', 'Contiene información turística de Guatemala: destinos, regiones turísticas, categorías, actividades, temporadas, patrimonio, rutas, recomendaciones y fuentes.', 'Organizar datos turísticos de forma estructurada y trazable, conectados con la geografía oficial del proyecto.', 'Destinos turísticos, patrimonio turístico, actividades, rutas, regiones turísticas, temporadas, recomendaciones y fuentes de información turística.', 'No almacena resultados deportivos, ligas, estadísticas de competencias, información económica general ni festividades culturales si no tienen enfoque turístico.',
+    'Jhony Fuentes / Equipo Turismo', v.id_version, 'ACTIVO',
+    'Esquema documentado en el catálogo meta para facilitar búsqueda, comprensión y crecimiento del proyecto.'
+FROM meta.version_proyecto v
+WHERE v.numero_version = '1.0'
+ON CONFLICT (nombre_esquema) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    objetivo = EXCLUDED.objetivo,
+    alcance = EXCLUDED.alcance,
+    fuera_de_alcance = EXCLUDED.fuera_de_alcance,
+    responsable = EXCLUDED.responsable,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+
+-- ============================================================
+-- Tablas del esquema turismo
+-- ============================================================
+
+
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde,
+    estado, observaciones
+)
+SELECT
+    e.id_esquema,
+    'fuente_turistica',
+    'Fuentes turísticas',
+    'Fuentes documentales utilizadas para sustentar los datos reales del area de turismo.',
+    'FUENTE',
+    'Una fila representa una fuente documental, institucional o internacional utilizada para respaldar datos turísticos.',
+    'Se incluyen fuentes con institución, URL y fecha de consulta que respalden destinos, regiones, rutas, patrimonio o actividades turísticas.',
+    'No se incluyen opiniones sin respaldo, publicaciones sin origen identificable o enlaces que no permitan verificar la información.',
+    'UNESCO_TIKAL, Guatemala Convention Bureau - Regiones de Guatemala, CONAP/SIGAP Turismo.',
+    v.id_version,
+    'ACTIVA',
+    'Tabla documentada para que usuarios externos comprendan qué datos contiene y cuándo debe usarse.'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde,
+    estado, observaciones
+)
+SELECT
+    e.id_esquema,
+    'region_turistica',
+    'Regiones turísticas',
+    'Regiones turisticas de Guatemala utilizadas para agrupar atractivos y destinos.',
+    'CATALOGO',
+    'Una fila representa una región turística utilizada para agrupar departamentos o destinos.',
+    'Se incluyen regiones turísticas reconocidas o documentadas por fuentes institucionales de turismo.',
+    'No se incluyen regiones administrativas oficiales; esas pertenecen a geografía.',
+    'Altiplano Cultura Maya Viva, Petén Aventura en el Mundo Maya.',
+    v.id_version,
+    'ACTIVA',
+    'Tabla documentada para que usuarios externos comprendan qué datos contiene y cuándo debe usarse.'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde,
+    estado, observaciones
+)
+SELECT
+    e.id_esquema,
+    'departamento_region_turistica',
+    'Departamentos por región turística',
+    'Tabla puente entre regiones turisticas del esquema turismo y departamentos oficiales del esquema geografia.',
+    'PUENTE',
+    'Una fila relaciona un departamento oficial con una región turística.',
+    'Se incluyen relaciones donde un departamento forma parte de una región turística documentada.',
+    'No se registran departamentos nuevos ni nombres territoriales alternativos.',
+    'Sacatepéquez asociado a Guatemala Moderna y Colonial.',
+    v.id_version,
+    'ACTIVA',
+    'Tabla documentada para que usuarios externos comprendan qué datos contiene y cuándo debe usarse.'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde,
+    estado, observaciones
+)
+SELECT
+    e.id_esquema,
+    'categoria_destino',
+    'Categorías de destino turístico',
+    'Categorias tematicas utilizadas para clasificar destinos turisticos.',
+    'CATALOGO',
+    'Una fila representa una categoría usada para clasificar destinos turísticos.',
+    'Se incluyen categorías generales como arqueológico, natural, cultural, religioso, recreativo o urbano.',
+    'No se incluyen etiquetas libres, opiniones o categorías duplicadas con distinto nombre.',
+    'ARQUEOLOGICO, NATURAL, CULTURAL.',
+    v.id_version,
+    'ACTIVA',
+    'Tabla documentada para que usuarios externos comprendan qué datos contiene y cuándo debe usarse.'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde,
+    estado, observaciones
+)
+SELECT
+    e.id_esquema,
+    'actividad_turistica',
+    'Actividades turísticas',
+    'Actividades turisticas que pueden realizarse o recomendarse en los destinos.',
+    'CATALOGO',
+    'Una fila representa una actividad que puede realizarse en uno o varios destinos.',
+    'Se incluyen actividades propias de visita turística como senderismo, fotografía, recorrido guiado, observación de fauna o visita cultural.',
+    'No se incluyen deportes competitivos, ligas, resultados o actividades que no tengan enfoque turístico.',
+    'Senderismo, fotografía, recorrido histórico.',
+    v.id_version,
+    'ACTIVA',
+    'Tabla documentada para que usuarios externos comprendan qué datos contiene y cuándo debe usarse.'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde,
+    estado, observaciones
+)
+SELECT
+    e.id_esquema,
+    'temporada_turistica',
+    'Temporadas turísticas',
+    'Temporadas o periodos utiles para planificacion turistica.',
+    'CATALOGO',
+    'Una fila representa una temporada o periodo recomendado de visita.',
+    'Se incluyen temporadas generales documentadas o definidas para orientar la visita turística.',
+    'No se incluyen calendarios completos de eventos o festividades específicas.',
+    'Temporada seca, Semana Santa si se usa como periodo turístico general.',
+    v.id_version,
+    'ACTIVA',
+    'Tabla documentada para que usuarios externos comprendan qué datos contiene y cuándo debe usarse.'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde,
+    estado, observaciones
+)
+SELECT
+    e.id_esquema,
+    'destino_turistico',
+    'Destinos turísticos',
+    'Destinos turisticos reales de Guatemala documentados para consulta, ETL y analitica BI.',
+    'OPERATIVA',
+    'Una fila representa un destino turístico específico ubicado en un departamento y opcionalmente en un municipio.',
+    'Se incluyen lugares físicos o territoriales que funcionan como atractivo turístico: sitios arqueológicos, parques, lagos, volcanes, reservas, ciudades o monumentos.',
+    'No se incluyen eventos temporales, festividades, ligas deportivas ni entidades que no representen un destino turístico. Las festividades deben evaluarse como evento turístico o como dato cultural.',
+    'Antigua Guatemala, Parque Nacional Tikal, Lago de Atitlán.',
+    v.id_version,
+    'ACTIVA',
+    'Tabla documentada para que usuarios externos comprendan qué datos contiene y cuándo debe usarse.'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde,
+    estado, observaciones
+)
+SELECT
+    e.id_esquema,
+    'destino_categoria',
+    'Clasificación de destinos por categoría',
+    'Relacion muchos a muchos entre destinos turisticos y categorias.',
+    'PUENTE',
+    'Una fila relaciona un destino turístico con una categoría.',
+    'Se incluyen asociaciones verificables entre destinos y categorías turísticas.',
+    'No se duplican categorías ni se registran clasificaciones sin justificación.',
+    'Tikal asociado a arqueológico y natural.',
+    v.id_version,
+    'ACTIVA',
+    'Tabla documentada para que usuarios externos comprendan qué datos contiene y cuándo debe usarse.'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde,
+    estado, observaciones
+)
+SELECT
+    e.id_esquema,
+    'destino_actividad',
+    'Actividades por destino',
+    'Relacion muchos a muchos entre destinos y actividades turisticas.',
+    'PUENTE',
+    'Una fila relaciona un destino turístico con una actividad disponible o recomendada.',
+    'Se incluyen actividades que un visitante puede realizar en el destino.',
+    'No se incluyen actividades sin relación directa con la experiencia turística.',
+    'Tikal asociado a recorrido guiado y fotografía.',
+    v.id_version,
+    'ACTIVA',
+    'Tabla documentada para que usuarios externos comprendan qué datos contiene y cuándo debe usarse.'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde,
+    estado, observaciones
+)
+SELECT
+    e.id_esquema,
+    'destino_temporada',
+    'Temporadas por destino',
+    'Relacion entre destinos y temporadas recomendadas para visita.',
+    'PUENTE',
+    'Una fila relaciona un destino con una temporada recomendada.',
+    'Se incluyen recomendaciones de visita por temporada cuando son útiles para el visitante.',
+    'No se incluyen eventos puntuales con fecha específica, salvo que se modelen como temporada general.',
+    'Volcán Pacaya asociado a temporada seca.',
+    v.id_version,
+    'ACTIVA',
+    'Tabla documentada para que usuarios externos comprendan qué datos contiene y cuándo debe usarse.'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde,
+    estado, observaciones
+)
+SELECT
+    e.id_esquema,
+    'destino_fuente',
+    'Fuentes por destino',
+    'Fuentes documentales que respaldan la informacion de cada destino turistico.',
+    'PUENTE',
+    'Una fila relaciona un destino turístico con una fuente documental.',
+    'Se incluyen todas las fuentes que respaldan datos de un destino.',
+    'No se incluyen fuentes sin URL o sin identificación institucional.',
+    'Tikal relacionado con UNESCO y SICultura.',
+    v.id_version,
+    'ACTIVA',
+    'Tabla documentada para que usuarios externos comprendan qué datos contiene y cuándo debe usarse.'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde,
+    estado, observaciones
+)
+SELECT
+    e.id_esquema,
+    'patrimonio_turistico',
+    'Patrimonio turístico',
+    'Patrimonios UNESCO, nacionales o intangibles vinculados con el turismo en Guatemala.',
+    'CATALOGO',
+    'Una fila representa un reconocimiento patrimonial nacional o internacional relacionado con turismo.',
+    'Se incluyen reconocimientos UNESCO, nacionales o institucionales relacionados con destinos o manifestaciones patrimoniales.',
+    'No se registran bienes sin reconocimiento o sin fuente verificable.',
+    'Parque Nacional Tikal como Patrimonio Mundial UNESCO.',
+    v.id_version,
+    'ACTIVA',
+    'Tabla documentada para que usuarios externos comprendan qué datos contiene y cuándo debe usarse.'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde,
+    estado, observaciones
+)
+SELECT
+    e.id_esquema,
+    'destino_patrimonio',
+    'Relación destino-patrimonio',
+    'Relacion entre destinos turisticos y reconocimientos patrimoniales.',
+    'PUENTE',
+    'Una fila relaciona un destino turístico con un reconocimiento patrimonial.',
+    'Se incluyen relaciones entre destinos y patrimonios reconocidos.',
+    'No se incluyen relaciones especulativas o sin fuente.',
+    'Antigua Guatemala relacionada con Patrimonio Mundial UNESCO.',
+    v.id_version,
+    'ACTIVA',
+    'Tabla documentada para que usuarios externos comprendan qué datos contiene y cuándo debe usarse.'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde,
+    estado, observaciones
+)
+SELECT
+    e.id_esquema,
+    'ruta_turistica',
+    'Rutas turísticas',
+    'Rutas turisticas sugeridas para recorrer destinos relacionados.',
+    'OPERATIVA',
+    'Una fila representa una ruta turística compuesta por uno o varios destinos.',
+    'Se incluyen recorridos sugeridos, rutas institucionales o agrupaciones de destinos con sentido turístico.',
+    'No se incluyen rutas de transporte público o movilidad general que no tengan enfoque turístico.',
+    'Ruta de Patrimonio UNESCO, ruta del Altiplano.',
+    v.id_version,
+    'ACTIVA',
+    'Tabla documentada para que usuarios externos comprendan qué datos contiene y cuándo debe usarse.'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde,
+    estado, observaciones
+)
+SELECT
+    e.id_esquema,
+    'ruta_destino',
+    'Destinos por ruta turística',
+    'Detalle de destinos incluidos en cada ruta turistica sugerida.',
+    'PUENTE',
+    'Una fila indica que un destino forma parte de una ruta y su orden sugerido.',
+    'Se incluyen destinos pertenecientes a una ruta turística y su orden de visita.',
+    'No se registran trayectos de transporte sin relación turística.',
+    'Ruta UNESCO: Antigua Guatemala, Tikal, Quiriguá, Tak’alik Ab’aj.',
+    v.id_version,
+    'ACTIVA',
+    'Tabla documentada para que usuarios externos comprendan qué datos contiene y cuándo debe usarse.'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde,
+    estado, observaciones
+)
+SELECT
+    e.id_esquema,
+    'recomendacion_destino',
+    'Recomendaciones por destino',
+    'Recomendaciones turisticas, logisticas, culturales, ambientales, de seguridad o temporada por destino.',
+    'OPERATIVA',
+    'Una fila representa una recomendación turística asociada a un destino.',
+    'Se incluyen recomendaciones de seguridad, ambiente, cultura, logística o temporada.',
+    'No se incluyen opiniones personales sin respaldo o comentarios no verificados.',
+    'Recomendación logística para visitar un área protegida.',
+    v.id_version,
+    'ACTIVA',
+    'Tabla documentada para que usuarios externos comprendan qué datos contiene y cuándo debe usarse.'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+-- ============================================================
+-- 5. Autodocumentacion de tablas meta
+-- ============================================================
+
+
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde,
+    estado, observaciones
+)
+SELECT
+    e.id_esquema,
+    'version_proyecto',
+    'Versiones del proyecto',
+    'Tabla del esquema meta: versiones del proyecto.',
+    'METADATA',
+    'Una fila representa una versión del proyecto.',
+    'Versiones académicas o técnicas de la base.',
+    'No almacena cambios de datos individuales.',
+    'Versión 1.0.',
+    v.id_version,
+    'ACTIVA',
+    'Tabla documentada para que usuarios externos comprendan qué datos contiene y cuándo debe usarse.'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'meta'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde,
+    estado, observaciones
+)
+SELECT
+    e.id_esquema,
+    'esquema_datos',
+    'Catálogo de esquemas',
+    'Tabla del esquema meta: catálogo de esquemas.',
+    'METADATA',
+    'Una fila representa un esquema de la base documentado.',
+    'Esquemas creados o planificados en el proyecto.',
+    'No almacena datos finales de los módulos.',
+    'turismo, geografia.',
+    v.id_version,
+    'ACTIVA',
+    'Tabla documentada para que usuarios externos comprendan qué datos contiene y cuándo debe usarse.'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'meta'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde,
+    estado, observaciones
+)
+SELECT
+    e.id_esquema,
+    'tabla_datos',
+    'Catálogo de tablas',
+    'Tabla del esquema meta: catálogo de tablas.',
+    'METADATA',
+    'Una fila representa una tabla documentada.',
+    'Tablas reales o planificadas del proyecto.',
+    'No almacena filas de datos temáticos.',
+    'turismo.destino_turistico.',
+    v.id_version,
+    'ACTIVA',
+    'Tabla documentada para que usuarios externos comprendan qué datos contiene y cuándo debe usarse.'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'meta'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde,
+    estado, observaciones
+)
+SELECT
+    e.id_esquema,
+    'columna_datos',
+    'Diccionario de columnas',
+    'Tabla del esquema meta: diccionario de columnas.',
+    'METADATA',
+    'Una fila representa una columna documentada.',
+    'Columnas existentes en las tablas documentadas.',
+    'No almacena valores transaccionales.',
+    'destino_turistico.nombre.',
+    v.id_version,
+    'ACTIVA',
+    'Tabla documentada para que usuarios externos comprendan qué datos contiene y cuándo debe usarse.'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'meta'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde,
+    estado, observaciones
+)
+SELECT
+    e.id_esquema,
+    'tema_datos',
+    'Temas de datos',
+    'Tabla del esquema meta: temas de datos.',
+    'METADATA',
+    'Una fila representa un tema o dominio de búsqueda.',
+    'Temas para localizar información dentro del catálogo.',
+    'No reemplaza esquemas temáticos finales.',
+    'Turismo, Deportes, Festividades.',
+    v.id_version,
+    'ACTIVA',
+    'Tabla documentada para que usuarios externos comprendan qué datos contiene y cuándo debe usarse.'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'meta'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde,
+    estado, observaciones
+)
+SELECT
+    e.id_esquema,
+    'objeto_tema',
+    'Relación objeto-tema',
+    'Tabla del esquema meta: relación objeto-tema.',
+    'METADATA',
+    'Una fila relaciona un tema con esquema, tabla o columna.',
+    'Relaciones útiles para búsquedas por temas.',
+    'No crea datos en los esquemas temáticos.',
+    'Tema Turismo asociado a turismo.destino_turistico.',
+    v.id_version,
+    'ACTIVA',
+    'Tabla documentada para que usuarios externos comprendan qué datos contiene y cuándo debe usarse.'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'meta'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde,
+    estado, observaciones
+)
+SELECT
+    e.id_esquema,
+    'fuente_datos',
+    'Fuentes de datos',
+    'Tabla del esquema meta: fuentes de datos.',
+    'METADATA',
+    'Una fila representa una fuente general del proyecto.',
+    'Fuentes institucionales, oficiales, internacionales o académicas.',
+    'No reemplaza la tabla de fuentes específica de un esquema si existe.',
+    'UNESCO, CONAP, INGUAT.',
+    v.id_version,
+    'ACTIVA',
+    'Tabla documentada para que usuarios externos comprendan qué datos contiene y cuándo debe usarse.'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'meta'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde,
+    estado, observaciones
+)
+SELECT
+    e.id_esquema,
+    'tabla_fuente',
+    'Fuentes por tabla',
+    'Tabla del esquema meta: fuentes por tabla.',
+    'METADATA',
+    'Una fila relaciona una fuente con un esquema, tabla, columna o registro.',
+    'Fuentes que respaldan tablas o columnas.',
+    'No almacena los datos originales descargados.',
+    'UNESCO respalda turismo.patrimonio_turistico.',
+    v.id_version,
+    'ACTIVA',
+    'Tabla documentada para que usuarios externos comprendan qué datos contiene y cuándo debe usarse.'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'meta'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde,
+    estado, observaciones
+)
+SELECT
+    e.id_esquema,
+    'regla_calidad',
+    'Reglas de calidad',
+    'Tabla del esquema meta: reglas de calidad.',
+    'METADATA',
+    'Una fila representa una regla de calidad aplicable a una tabla o columna.',
+    'Validaciones esperadas para datos, fuentes, formatos o relaciones.',
+    'No almacena resultados de ejecución si no se define un proceso separado.',
+    'Todo destino debe tener fuente principal.',
+    v.id_version,
+    'ACTIVA',
+    'Tabla documentada para que usuarios externos comprendan qué datos contiene y cuándo debe usarse.'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'meta'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde,
+    estado, observaciones
+)
+SELECT
+    e.id_esquema,
+    'revision_pares',
+    'Revisión por pares',
+    'Tabla del esquema meta: revisión por pares.',
+    'METADATA',
+    'Una fila representa una revisión de calidad por dos personas.',
+    'Revisiones de esquemas, tablas, columnas, fuentes o reglas.',
+    'No reemplaza evidencias de Git, pero las complementa.',
+    'Revisión de turismo.destino_turistico.',
+    v.id_version,
+    'ACTIVA',
+    'Tabla documentada para que usuarios externos comprendan qué datos contiene y cuándo debe usarse.'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'meta'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde,
+    estado, observaciones
+)
+SELECT
+    e.id_esquema,
+    'decision_modelado',
+    'Decisiones de modelado',
+    'Tabla del esquema meta: decisiones de modelado.',
+    'METADATA',
+    'Una fila documenta una decisión sobre ubicación o tratamiento de datos.',
+    'Criterios para decidir dónde se agregan nuevos datos.',
+    'No almacena datos del dominio; almacena criterios.',
+    'Festividades en turismo o cultura.',
+    v.id_version,
+    'ACTIVA',
+    'Tabla documentada para que usuarios externos comprendan qué datos contiene y cuándo debe usarse.'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'meta'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+-- ============================================================
+-- Diccionario de columnas de turismo
+-- ============================================================
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'id_fuente',
+    'INT',
+    'Identificador unico de la fuente turistica dentro del esquema turismo.',
+    TRUE,
+    TRUE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Identificador técnico del registro.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'fuente_turistica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'codigo',
+    'VARCHAR(80)',
+    'Codigo estable de la fuente para usar en migraciones, ETL y trazabilidad.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'UNESCO_TIKAL',
+    'Debe ser estable, legible y no duplicarse dentro de su tabla.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'fuente_turistica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'nombre',
+    'VARCHAR(220)',
+    'Nombre oficial o descriptivo de la fuente consultada.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'UNESCO World Heritage Centre - Tikal National Park',
+    'Campo obligatorio para que el registro sea válido.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'fuente_turistica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'institucion',
+    'VARCHAR(180)',
+    'Institucion, organismo o portal responsable de la fuente.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Campo opcional; registrar solo si existe respaldo en la fuente.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'fuente_turistica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'tipo',
+    'VARCHAR(80)',
+    'Tipo de fuente: oficial, internacional, cultural, conservacion, turismo u otro.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Campo obligatorio para que el registro sea válido.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'fuente_turistica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'url',
+    'VARCHAR(700)',
+    'URL principal consultada.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Campo obligatorio para que el registro sea válido.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'fuente_turistica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'fecha_consulta',
+    'DATE',
+    'Fecha de consulta de la fuente.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Campo obligatorio para que el registro sea válido.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'fuente_turistica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'descripcion',
+    'TEXT',
+    'Descripcion del uso de la fuente dentro del modelo turismo.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Campo opcional; registrar solo si existe respaldo en la fuente.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'fuente_turistica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'id_region',
+    'INT',
+    'Identificador unico de la region turistica.',
+    TRUE,
+    TRUE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Identificador técnico del registro.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'region_turistica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'codigo',
+    'VARCHAR(50)',
+    'Codigo estable de la region turistica.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Debe ser estable, legible y no duplicarse dentro de su tabla.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'region_turistica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'nombre',
+    'VARCHAR(150)',
+    'Nombre de la region turistica.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'Petén Aventura en el Mundo Maya',
+    'Campo obligatorio para que el registro sea válido.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'region_turistica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'descripcion',
+    'TEXT',
+    'Descripcion general de la region turistica.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Campo opcional; registrar solo si existe respaldo en la fuente.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'region_turistica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'fuente_id',
+    'INT',
+    'Fuente documental principal que respalda la definicion de la region.',
+    FALSE,
+    FALSE,
+    TRUE,
+    'turismo.fuente_turistica',
+    'id_fuente',
+    NULL,
+    NULL,
+    'Debe referenciar un registro existente cuando sea llave foránea.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'region_turistica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'id_departamento_region',
+    'INT',
+    'Identificador unico de la relacion departamento-region turistica.',
+    TRUE,
+    TRUE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Identificador técnico del registro.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'departamento_region_turistica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'region_turistica_id',
+    'INT',
+    'Region turistica a la que se asocia el departamento.',
+    TRUE,
+    FALSE,
+    TRUE,
+    'turismo.region_turistica',
+    'id_region',
+    NULL,
+    NULL,
+    'Debe referenciar un registro existente cuando sea llave foránea.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'departamento_region_turistica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'departamento_id',
+    'INT',
+    'Departamento oficial registrado en geografia.departamento.',
+    TRUE,
+    FALSE,
+    TRUE,
+    'geografia.departamento',
+    'id',
+    NULL,
+    NULL,
+    'Debe referenciar un registro existente cuando sea llave foránea.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'departamento_region_turistica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'observacion',
+    'VARCHAR(400)',
+    'Nota para casos donde un departamento participa parcialmente en mas de una region turistica.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Campo opcional; registrar solo si existe respaldo en la fuente.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'departamento_region_turistica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'id_categoria',
+    'INT',
+    'Identificador unico de la categoria turistica.',
+    TRUE,
+    TRUE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Identificador técnico del registro.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'categoria_destino'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'codigo',
+    'VARCHAR(60)',
+    'Codigo estable de la categoria.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Debe ser estable, legible y no duplicarse dentro de su tabla.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'categoria_destino'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'nombre',
+    'VARCHAR(120)',
+    'Nombre de la categoria.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'Arqueológico',
+    'Campo obligatorio para que el registro sea válido.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'categoria_destino'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'descripcion',
+    'TEXT',
+    'Descripcion de la categoria y criterio de uso.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Campo opcional; registrar solo si existe respaldo en la fuente.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'categoria_destino'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'id_actividad',
+    'INT',
+    'Identificador unico de la actividad turistica.',
+    TRUE,
+    TRUE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Identificador técnico del registro.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'actividad_turistica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'codigo',
+    'VARCHAR(60)',
+    'Codigo estable de la actividad.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Debe ser estable, legible y no duplicarse dentro de su tabla.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'actividad_turistica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'nombre',
+    'VARCHAR(140)',
+    'Nombre de la actividad turistica.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'Recorrido guiado',
+    'Campo obligatorio para que el registro sea válido.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'actividad_turistica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'descripcion',
+    'TEXT',
+    'Descripcion de la actividad y su uso analitico.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Campo opcional; registrar solo si existe respaldo en la fuente.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'actividad_turistica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'id_temporada',
+    'INT',
+    'Identificador unico de la temporada turistica.',
+    TRUE,
+    TRUE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Identificador técnico del registro.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'temporada_turistica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'codigo',
+    'VARCHAR(60)',
+    'Codigo estable de la temporada.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Debe ser estable, legible y no duplicarse dentro de su tabla.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'temporada_turistica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'nombre',
+    'VARCHAR(120)',
+    'Nombre de la temporada.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'Temporada seca',
+    'Campo obligatorio para que el registro sea válido.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'temporada_turistica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'meses',
+    'VARCHAR(120)',
+    'Meses o periodo del anio asociado a la temporada.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Campo obligatorio para que el registro sea válido.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'temporada_turistica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'descripcion',
+    'TEXT',
+    'Descripcion de condiciones o recomendaciones generales de la temporada.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Campo opcional; registrar solo si existe respaldo en la fuente.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'temporada_turistica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'id_destino',
+    'INT',
+    'Identificador unico del destino turistico.',
+    TRUE,
+    TRUE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Identificador técnico del registro.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'destino_turistico'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'codigo',
+    'VARCHAR(80)',
+    'Codigo estable del destino turistico para migraciones y ETL.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'PARQUE_NACIONAL_TIKAL',
+    'Debe ser estable, legible y no duplicarse dentro de su tabla.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'destino_turistico'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'nombre',
+    'VARCHAR(220)',
+    'Nombre del destino turistico.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'Parque Nacional Tikal',
+    'Campo obligatorio para que el registro sea válido.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'destino_turistico'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'tipo',
+    'turismo.tipo_destino',
+    'Tipo general del destino turistico.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    'NATURAL, CULTURAL, ARQUEOLOGICO, URBANO, RELIGIOSO, RECREATIVO, MIXTO',
+    'ARQUEOLOGICO',
+    'Campo obligatorio para que el registro sea válido.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'destino_turistico'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'departamento_id',
+    'INT',
+    'Departamento oficial donde se ubica el destino, referenciado desde geografia.departamento.',
+    TRUE,
+    FALSE,
+    TRUE,
+    'geografia.departamento',
+    'id',
+    NULL,
+    NULL,
+    'Debe referenciar un registro existente cuando sea llave foránea.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'destino_turistico'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'municipio_id',
+    'INT',
+    'Municipio oficial donde se ubica el destino, referenciado desde geografia.municipio cuando se conoce.',
+    FALSE,
+    FALSE,
+    TRUE,
+    'geografia.municipio',
+    'id',
+    NULL,
+    NULL,
+    'Debe referenciar un registro existente cuando sea llave foránea.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'destino_turistico'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'region_turistica_id',
+    'INT',
+    'Region turistica principal asociada al destino. Se usa para evitar ambiguedad en departamentos que participan parcialmente en mas de una region turistica.',
+    FALSE,
+    FALSE,
+    TRUE,
+    'turismo.region_turistica',
+    'id_region',
+    NULL,
+    NULL,
+    'Debe referenciar un registro existente cuando sea llave foránea.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'destino_turistico'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'descripcion',
+    'TEXT',
+    'Descripcion documentada del destino turistico.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Campo obligatorio para que el registro sea válido.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'destino_turistico'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'direccion_referencia',
+    'VARCHAR(500)',
+    'Referencia textual de ubicacion, acceso o zona del destino.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Campo opcional; registrar solo si existe respaldo en la fuente.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'destino_turistico'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'latitud',
+    'NUMERIC(10, 7)',
+    'Latitud aproximada del destino turistico.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Campo opcional; registrar solo si existe respaldo en la fuente.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'destino_turistico'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'longitud',
+    'NUMERIC(10, 7)',
+    'Longitud aproximada del destino turistico.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Campo opcional; registrar solo si existe respaldo en la fuente.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'destino_turistico'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'altitud_msnm',
+    'INT',
+    'Altitud aproximada sobre el nivel del mar, cuando se conoce.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Campo opcional; registrar solo si existe respaldo en la fuente.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'destino_turistico'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'dificultad',
+    'turismo.dificultad_destino',
+    'Nivel de dificultad general para visitar el destino.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    'BAJA, MEDIA, ALTA, VARIABLE',
+    NULL,
+    'Campo obligatorio para que el registro sea válido.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'destino_turistico'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'tiempo_recomendado',
+    'VARCHAR(120)',
+    'Tiempo recomendado de visita.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Campo opcional; registrar solo si existe respaldo en la fuente.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'destino_turistico'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'costo_aprox_nacional_q',
+    'NUMERIC(10, 2)',
+    'Costo aproximado para visitante nacional, en quetzales, cuando existe dato publico.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Campo opcional; registrar solo si existe respaldo en la fuente.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'destino_turistico'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'costo_aprox_extranjero_q',
+    'NUMERIC(10, 2)',
+    'Costo aproximado para visitante extranjero, en quetzales, cuando existe dato publico.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Campo opcional; registrar solo si existe respaldo en la fuente.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'destino_turistico'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'horario',
+    'VARCHAR(250)',
+    'Horario de visita o atencion cuando se tiene publicado.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Campo opcional; registrar solo si existe respaldo en la fuente.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'destino_turistico'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'es_area_protegida',
+    'BOOLEAN',
+    'Indica si el destino pertenece o se relaciona con un area protegida.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    'TRUE, FALSE',
+    NULL,
+    'Campo obligatorio para que el registro sea válido.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'destino_turistico'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'fuente_principal_id',
+    'INT',
+    'Fuente turistica principal usada para documentar el destino.',
+    FALSE,
+    FALSE,
+    TRUE,
+    'turismo.fuente_turistica',
+    'id_fuente',
+    NULL,
+    NULL,
+    'Debe referenciar un registro existente cuando sea llave foránea.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'destino_turistico'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'activo',
+    'BOOLEAN',
+    'Indica si el destino se mantiene activo para consulta.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    'TRUE, FALSE',
+    NULL,
+    'Campo obligatorio para que el registro sea válido.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'destino_turistico'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'destino_id',
+    'INT',
+    'Destino turistico clasificado.',
+    TRUE,
+    TRUE,
+    TRUE,
+    'turismo.destino_turistico',
+    'id_destino',
+    NULL,
+    NULL,
+    'Debe referenciar un registro existente cuando sea llave foránea.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'destino_categoria'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'categoria_id',
+    'INT',
+    'Categoria asignada al destino.',
+    TRUE,
+    TRUE,
+    TRUE,
+    'turismo.categoria_destino',
+    'id_categoria',
+    NULL,
+    NULL,
+    'Debe referenciar un registro existente cuando sea llave foránea.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'destino_categoria'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'destino_id',
+    'INT',
+    'Destino turistico asociado a la actividad.',
+    TRUE,
+    TRUE,
+    TRUE,
+    'turismo.destino_turistico',
+    'id_destino',
+    NULL,
+    NULL,
+    'Debe referenciar un registro existente cuando sea llave foránea.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'destino_actividad'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'actividad_id',
+    'INT',
+    'Actividad turistica disponible o recomendada.',
+    TRUE,
+    TRUE,
+    TRUE,
+    'turismo.actividad_turistica',
+    'id_actividad',
+    NULL,
+    NULL,
+    'Debe referenciar un registro existente cuando sea llave foránea.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'destino_actividad'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'notas',
+    'VARCHAR(500)',
+    'Notas sobre alcance o condiciones de la actividad en el destino.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Campo opcional; registrar solo si existe respaldo en la fuente.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'destino_actividad'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'destino_id',
+    'INT',
+    'Destino turistico asociado a la temporada.',
+    TRUE,
+    TRUE,
+    TRUE,
+    'turismo.destino_turistico',
+    'id_destino',
+    NULL,
+    NULL,
+    'Debe referenciar un registro existente cuando sea llave foránea.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'destino_temporada'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'temporada_id',
+    'INT',
+    'Temporada recomendada o relevante.',
+    TRUE,
+    TRUE,
+    TRUE,
+    'turismo.temporada_turistica',
+    'id_temporada',
+    NULL,
+    NULL,
+    'Debe referenciar un registro existente cuando sea llave foránea.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'destino_temporada'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'recomendacion',
+    'VARCHAR(600)',
+    'Recomendacion especifica para visitar el destino en la temporada indicada.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Campo opcional; registrar solo si existe respaldo en la fuente.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'destino_temporada'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'destino_id',
+    'INT',
+    'Destino turistico documentado.',
+    TRUE,
+    TRUE,
+    TRUE,
+    'turismo.destino_turistico',
+    'id_destino',
+    NULL,
+    NULL,
+    'Debe referenciar un registro existente cuando sea llave foránea.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'destino_fuente'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'fuente_id',
+    'INT',
+    'Fuente turistica relacionada con el destino.',
+    TRUE,
+    TRUE,
+    TRUE,
+    'turismo.fuente_turistica',
+    'id_fuente',
+    NULL,
+    NULL,
+    'Debe referenciar un registro existente cuando sea llave foránea.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'destino_fuente'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'detalle',
+    'VARCHAR(600)',
+    'Detalle sobre el uso de la fuente para el destino.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Campo opcional; registrar solo si existe respaldo en la fuente.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'destino_fuente'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'id_patrimonio',
+    'INT',
+    'Identificador unico del patrimonio turistico.',
+    TRUE,
+    TRUE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Identificador técnico del registro.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'patrimonio_turistico'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'codigo',
+    'VARCHAR(80)',
+    'Codigo estable del patrimonio.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'UNESCO_TIKAL',
+    'Debe ser estable, legible y no duplicarse dentro de su tabla.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'patrimonio_turistico'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'tipo',
+    'turismo.tipo_patrimonio',
+    'Tipo de reconocimiento patrimonial.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    'UNESCO_CULTURAL, UNESCO_NATURAL, UNESCO_MIXTO, UNESCO_INTANGIBLE, NACIONAL',
+    NULL,
+    'Campo obligatorio para que el registro sea válido.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'patrimonio_turistico'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'nombre',
+    'VARCHAR(220)',
+    'Nombre del patrimonio o expresion cultural.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Campo obligatorio para que el registro sea válido.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'patrimonio_turistico'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'organismo',
+    'VARCHAR(160)',
+    'Organismo que reconoce o respalda el patrimonio.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Campo obligatorio para que el registro sea válido.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'patrimonio_turistico'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'anio_inscripcion',
+    'INT',
+    'Anio de inscripcion o reconocimiento, cuando aplica.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Campo opcional; registrar solo si existe respaldo en la fuente.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'patrimonio_turistico'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'descripcion',
+    'TEXT',
+    'Descripcion resumida del valor patrimonial.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Campo opcional; registrar solo si existe respaldo en la fuente.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'patrimonio_turistico'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'fuente_id',
+    'INT',
+    'Fuente principal que respalda el patrimonio.',
+    FALSE,
+    FALSE,
+    TRUE,
+    'turismo.fuente_turistica',
+    'id_fuente',
+    NULL,
+    NULL,
+    'Debe referenciar un registro existente cuando sea llave foránea.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'patrimonio_turistico'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'destino_id',
+    'INT',
+    'Destino turistico asociado al patrimonio.',
+    TRUE,
+    TRUE,
+    TRUE,
+    'turismo.destino_turistico',
+    'id_destino',
+    NULL,
+    NULL,
+    'Debe referenciar un registro existente cuando sea llave foránea.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'destino_patrimonio'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'patrimonio_id',
+    'INT',
+    'Patrimonio asociado al destino.',
+    TRUE,
+    TRUE,
+    TRUE,
+    'turismo.patrimonio_turistico',
+    'id_patrimonio',
+    NULL,
+    NULL,
+    'Debe referenciar un registro existente cuando sea llave foránea.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'destino_patrimonio'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'observacion',
+    'VARCHAR(600)',
+    'Observacion de la relacion entre destino y patrimonio.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Campo opcional; registrar solo si existe respaldo en la fuente.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'destino_patrimonio'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'id_ruta',
+    'INT',
+    'Identificador unico de la ruta turistica.',
+    TRUE,
+    TRUE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Identificador técnico del registro.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'ruta_turistica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'codigo',
+    'VARCHAR(80)',
+    'Codigo estable de la ruta.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'RUTA_PATRIMONIO_UNESCO',
+    'Debe ser estable, legible y no duplicarse dentro de su tabla.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'ruta_turistica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'nombre',
+    'VARCHAR(180)',
+    'Nombre de la ruta turistica.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Campo obligatorio para que el registro sea válido.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'ruta_turistica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'region_id',
+    'INT',
+    'Region turistica principal asociada a la ruta.',
+    FALSE,
+    FALSE,
+    TRUE,
+    'turismo.region_turistica',
+    'id_region',
+    NULL,
+    NULL,
+    'Debe referenciar un registro existente cuando sea llave foránea.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'ruta_turistica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'descripcion',
+    'TEXT',
+    'Descripcion general de la ruta.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Campo opcional; registrar solo si existe respaldo en la fuente.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'ruta_turistica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'duracion_dias',
+    'INT',
+    'Duracion sugerida de la ruta en dias.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Campo opcional; registrar solo si existe respaldo en la fuente.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'ruta_turistica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'fuente_id',
+    'INT',
+    'Fuente principal usada para documentar la ruta.',
+    FALSE,
+    FALSE,
+    TRUE,
+    'turismo.fuente_turistica',
+    'id_fuente',
+    NULL,
+    NULL,
+    'Debe referenciar un registro existente cuando sea llave foránea.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'ruta_turistica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'ruta_id',
+    'INT',
+    'Ruta turistica que contiene el destino.',
+    TRUE,
+    TRUE,
+    TRUE,
+    'turismo.ruta_turistica',
+    'id_ruta',
+    NULL,
+    NULL,
+    'Debe referenciar un registro existente cuando sea llave foránea.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'ruta_destino'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'destino_id',
+    'INT',
+    'Destino incluido en la ruta.',
+    TRUE,
+    TRUE,
+    TRUE,
+    'turismo.destino_turistico',
+    'id_destino',
+    NULL,
+    NULL,
+    'Debe referenciar un registro existente cuando sea llave foránea.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'ruta_destino'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'orden_visita',
+    'INT',
+    'Orden sugerido de visita dentro de la ruta.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Campo obligatorio para que el registro sea válido.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'ruta_destino'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'tiempo_sugerido',
+    'VARCHAR(120)',
+    'Tiempo sugerido para visitar el destino dentro de la ruta.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Campo opcional; registrar solo si existe respaldo en la fuente.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'ruta_destino'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'id_recomendacion',
+    'INT',
+    'Identificador unico de la recomendacion.',
+    TRUE,
+    TRUE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Identificador técnico del registro.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'recomendacion_destino'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'destino_id',
+    'INT',
+    'Destino al que aplica la recomendacion.',
+    TRUE,
+    FALSE,
+    TRUE,
+    'turismo.destino_turistico',
+    'id_destino',
+    NULL,
+    NULL,
+    'Debe referenciar un registro existente cuando sea llave foránea.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'recomendacion_destino'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'tipo',
+    'turismo.tipo_recomendacion',
+    'Tipo de recomendacion.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    'SEGURIDAD, AMBIENTAL, CULTURAL, LOGISTICA, TEMPORADA',
+    'SEGURIDAD',
+    'Campo obligatorio para que el registro sea válido.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'recomendacion_destino'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion, obligatorio,
+    es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada,
+    valores_permitidos, ejemplo_valor, regla_validacion, id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'recomendacion',
+    'VARCHAR(800)',
+    'Texto de la recomendacion.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'Campo obligatorio para que el registro sea válido.',
+    v.id_version,
+    'Columna documentada para consulta del diccionario de datos.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND t.nombre_tabla = 'recomendacion_destino'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+
+-- ============================================================
+-- 8. Temas de búsqueda del catálogo
+-- ============================================================
+
+
+INSERT INTO meta.tema_datos (nombre_tema, descripcion, palabras_clave, estado, observaciones)
+VALUES ('Turismo', 'Datos relacionados con destinos, rutas, regiones, actividades, temporadas y recomendaciones para visitantes.', 'turismo, destino, viaje, ruta, visitante, atractivo, actividad turística', 'ACTIVO', 'Tema utilizado para ubicar objetos de datos y decidir si un nuevo conjunto de datos ya encaja en el modelo.')
+ON CONFLICT (nombre_tema) DO UPDATE SET
+    descripcion = EXCLUDED.descripcion,
+    palabras_clave = EXCLUDED.palabras_clave,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.tema_datos (nombre_tema, descripcion, palabras_clave, estado, observaciones)
+VALUES ('Patrimonio', 'Datos relacionados con bienes o destinos con reconocimiento patrimonial nacional o internacional.', 'patrimonio, UNESCO, cultural, natural, intangible, reconocimiento', 'ACTIVO', 'Tema utilizado para ubicar objetos de datos y decidir si un nuevo conjunto de datos ya encaja en el modelo.')
+ON CONFLICT (nombre_tema) DO UPDATE SET
+    descripcion = EXCLUDED.descripcion,
+    palabras_clave = EXCLUDED.palabras_clave,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.tema_datos (nombre_tema, descripcion, palabras_clave, estado, observaciones)
+VALUES ('Geografía', 'Datos territoriales base del proyecto.', 'país, departamento, municipio, pcode, territorio, ubicación', 'ACTIVO', 'Tema utilizado para ubicar objetos de datos y decidir si un nuevo conjunto de datos ya encaja en el modelo.')
+ON CONFLICT (nombre_tema) DO UPDATE SET
+    descripcion = EXCLUDED.descripcion,
+    palabras_clave = EXCLUDED.palabras_clave,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.tema_datos (nombre_tema, descripcion, palabras_clave, estado, observaciones)
+VALUES ('Fuentes', 'Datos relacionados con el origen, respaldo y trazabilidad documental.', 'fuente, URL, institución, consulta, respaldo, trazabilidad', 'ACTIVO', 'Tema utilizado para ubicar objetos de datos y decidir si un nuevo conjunto de datos ya encaja en el modelo.')
+ON CONFLICT (nombre_tema) DO UPDATE SET
+    descripcion = EXCLUDED.descripcion,
+    palabras_clave = EXCLUDED.palabras_clave,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.tema_datos (nombre_tema, descripcion, palabras_clave, estado, observaciones)
+VALUES ('Regiones turísticas', 'Agrupaciones territoriales usadas para organizar destinos turísticos.', 'región turística, altiplano, petén, pacífico, oriente, verapaces', 'ACTIVO', 'Tema utilizado para ubicar objetos de datos y decidir si un nuevo conjunto de datos ya encaja en el modelo.')
+ON CONFLICT (nombre_tema) DO UPDATE SET
+    descripcion = EXCLUDED.descripcion,
+    palabras_clave = EXCLUDED.palabras_clave,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.tema_datos (nombre_tema, descripcion, palabras_clave, estado, observaciones)
+VALUES ('Actividades turísticas', 'Actividades que un visitante puede realizar en un destino.', 'senderismo, fotografía, recorrido, observación, visita guiada', 'ACTIVO', 'Tema utilizado para ubicar objetos de datos y decidir si un nuevo conjunto de datos ya encaja en el modelo.')
+ON CONFLICT (nombre_tema) DO UPDATE SET
+    descripcion = EXCLUDED.descripcion,
+    palabras_clave = EXCLUDED.palabras_clave,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.tema_datos (nombre_tema, descripcion, palabras_clave, estado, observaciones)
+VALUES ('Rutas turísticas', 'Agrupaciones ordenadas de destinos para recorridos turísticos.', 'ruta, recorrido, orden de visita, itinerario', 'ACTIVO', 'Tema utilizado para ubicar objetos de datos y decidir si un nuevo conjunto de datos ya encaja en el modelo.')
+ON CONFLICT (nombre_tema) DO UPDATE SET
+    descripcion = EXCLUDED.descripcion,
+    palabras_clave = EXCLUDED.palabras_clave,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.tema_datos (nombre_tema, descripcion, palabras_clave, estado, observaciones)
+VALUES ('Festividades', 'Eventos o celebraciones que pueden ser turísticas o culturales según su enfoque.', 'festividad, evento, feria, celebración, semana santa, festival', 'ACTIVO', 'Tema utilizado para ubicar objetos de datos y decidir si un nuevo conjunto de datos ya encaja en el modelo.')
+ON CONFLICT (nombre_tema) DO UPDATE SET
+    descripcion = EXCLUDED.descripcion,
+    palabras_clave = EXCLUDED.palabras_clave,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.tema_datos (nombre_tema, descripcion, palabras_clave, estado, observaciones)
+VALUES ('Deportes', 'Actividades deportivas competitivas o recreativas que podrían requerir un esquema propio.', 'deporte, fútbol, torneo, liga, estadio, competencia, atletismo', 'ACTIVO', 'Tema utilizado para ubicar objetos de datos y decidir si un nuevo conjunto de datos ya encaja en el modelo.')
+ON CONFLICT (nombre_tema) DO UPDATE SET
+    descripcion = EXCLUDED.descripcion,
+    palabras_clave = EXCLUDED.palabras_clave,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.tema_datos (nombre_tema, descripcion, palabras_clave, estado, observaciones)
+VALUES ('Cultura', 'Datos relacionados con tradiciones, manifestaciones, museos y expresiones culturales.', 'cultura, tradición, museo, religión, manifestación cultural', 'ACTIVO', 'Tema utilizado para ubicar objetos de datos y decidir si un nuevo conjunto de datos ya encaja en el modelo.')
+ON CONFLICT (nombre_tema) DO UPDATE SET
+    descripcion = EXCLUDED.descripcion,
+    palabras_clave = EXCLUDED.palabras_clave,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+-- ============================================================
+-- 9. Relación entre temas y objetos
+-- ============================================================
+
+
+INSERT INTO meta.objeto_tema (
+    id_tema, nivel_objeto, id_esquema, id_tabla, id_columna,
+    relevancia, justificacion, ejemplo_relacion
+)
+SELECT
+    tm.id_tema,
+    'ESQUEMA',
+    e.id_esquema,
+    NULL,
+    NULL,
+    'ALTA',
+    'El esquema turismo concentra destinos, regiones, rutas, actividades, patrimonio y recomendaciones turísticas.',
+    'Buscar turismo muestra el esquema turismo.'
+FROM meta.tema_datos tm
+JOIN meta.esquema_datos e ON e.nombre_esquema = 'turismo'
+
+
+WHERE tm.nombre_tema = 'Turismo'
+  AND NOT EXISTS (
+      SELECT 1 FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tm.id_tema
+        AND ot.nivel_objeto = 'ESQUEMA'
+        AND COALESCE(ot.id_esquema, -1) = COALESCE(e.id_esquema, -1)
+        AND COALESCE(ot.id_tabla, -1) = COALESCE(NULL, -1)
+        AND COALESCE(ot.id_columna, -1) = COALESCE(NULL, -1)
+  );
+
+
+INSERT INTO meta.objeto_tema (
+    id_tema, nivel_objeto, id_esquema, id_tabla, id_columna,
+    relevancia, justificacion, ejemplo_relacion
+)
+SELECT
+    tm.id_tema,
+    'ESQUEMA',
+    e.id_esquema,
+    NULL,
+    NULL,
+    'ALTA',
+    'Geografía es base territorial para ubicar datos de turismo y otros módulos.',
+    'Turismo referencia departamentos y municipios de geografía.'
+FROM meta.tema_datos tm
+JOIN meta.esquema_datos e ON e.nombre_esquema = 'geografia'
+
+
+WHERE tm.nombre_tema = 'Geografía'
+  AND NOT EXISTS (
+      SELECT 1 FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tm.id_tema
+        AND ot.nivel_objeto = 'ESQUEMA'
+        AND COALESCE(ot.id_esquema, -1) = COALESCE(e.id_esquema, -1)
+        AND COALESCE(ot.id_tabla, -1) = COALESCE(NULL, -1)
+        AND COALESCE(ot.id_columna, -1) = COALESCE(NULL, -1)
+  );
+
+
+INSERT INTO meta.objeto_tema (
+    id_tema, nivel_objeto, id_esquema, id_tabla, id_columna,
+    relevancia, justificacion, ejemplo_relacion
+)
+SELECT
+    tm.id_tema,
+    'TABLA',
+    e.id_esquema,
+    td.id_tabla,
+    NULL,
+    'ALTA',
+    'Tabla central del módulo Turismo; almacena destinos turísticos específicos.',
+    'Antigua Guatemala se ubica aquí como destino.'
+FROM meta.tema_datos tm
+JOIN meta.esquema_datos e ON e.nombre_esquema = 'turismo'
+JOIN meta.tabla_datos td ON td.id_esquema = e.id_esquema AND td.nombre_tabla = 'destino_turistico'
+
+WHERE tm.nombre_tema = 'Turismo'
+  AND NOT EXISTS (
+      SELECT 1 FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tm.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND COALESCE(ot.id_esquema, -1) = COALESCE(e.id_esquema, -1)
+        AND COALESCE(ot.id_tabla, -1) = COALESCE(td.id_tabla, -1)
+        AND COALESCE(ot.id_columna, -1) = COALESCE(NULL, -1)
+  );
+
+
+INSERT INTO meta.objeto_tema (
+    id_tema, nivel_objeto, id_esquema, id_tabla, id_columna,
+    relevancia, justificacion, ejemplo_relacion
+)
+SELECT
+    tm.id_tema,
+    'TABLA',
+    e.id_esquema,
+    td.id_tabla,
+    NULL,
+    'ALTA',
+    'Tabla que registra reconocimientos patrimoniales relacionados con turismo.',
+    'UNESCO_TIKAL.'
+FROM meta.tema_datos tm
+JOIN meta.esquema_datos e ON e.nombre_esquema = 'turismo'
+JOIN meta.tabla_datos td ON td.id_esquema = e.id_esquema AND td.nombre_tabla = 'patrimonio_turistico'
+
+WHERE tm.nombre_tema = 'Patrimonio'
+  AND NOT EXISTS (
+      SELECT 1 FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tm.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND COALESCE(ot.id_esquema, -1) = COALESCE(e.id_esquema, -1)
+        AND COALESCE(ot.id_tabla, -1) = COALESCE(td.id_tabla, -1)
+        AND COALESCE(ot.id_columna, -1) = COALESCE(NULL, -1)
+  );
+
+
+INSERT INTO meta.objeto_tema (
+    id_tema, nivel_objeto, id_esquema, id_tabla, id_columna,
+    relevancia, justificacion, ejemplo_relacion
+)
+SELECT
+    tm.id_tema,
+    'TABLA',
+    e.id_esquema,
+    td.id_tabla,
+    NULL,
+    'ALTA',
+    'Relaciona destinos con reconocimientos patrimoniales.',
+    'Antigua Guatemala con Patrimonio Mundial.'
+FROM meta.tema_datos tm
+JOIN meta.esquema_datos e ON e.nombre_esquema = 'turismo'
+JOIN meta.tabla_datos td ON td.id_esquema = e.id_esquema AND td.nombre_tabla = 'destino_patrimonio'
+
+WHERE tm.nombre_tema = 'Patrimonio'
+  AND NOT EXISTS (
+      SELECT 1 FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tm.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND COALESCE(ot.id_esquema, -1) = COALESCE(e.id_esquema, -1)
+        AND COALESCE(ot.id_tabla, -1) = COALESCE(td.id_tabla, -1)
+        AND COALESCE(ot.id_columna, -1) = COALESCE(NULL, -1)
+  );
+
+
+INSERT INTO meta.objeto_tema (
+    id_tema, nivel_objeto, id_esquema, id_tabla, id_columna,
+    relevancia, justificacion, ejemplo_relacion
+)
+SELECT
+    tm.id_tema,
+    'TABLA',
+    e.id_esquema,
+    td.id_tabla,
+    NULL,
+    'ALTA',
+    'Registra fuentes documentales usadas por turismo.',
+    'UNESCO, CONAP, GCB.'
+FROM meta.tema_datos tm
+JOIN meta.esquema_datos e ON e.nombre_esquema = 'turismo'
+JOIN meta.tabla_datos td ON td.id_esquema = e.id_esquema AND td.nombre_tabla = 'fuente_turistica'
+
+WHERE tm.nombre_tema = 'Fuentes'
+  AND NOT EXISTS (
+      SELECT 1 FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tm.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND COALESCE(ot.id_esquema, -1) = COALESCE(e.id_esquema, -1)
+        AND COALESCE(ot.id_tabla, -1) = COALESCE(td.id_tabla, -1)
+        AND COALESCE(ot.id_columna, -1) = COALESCE(NULL, -1)
+  );
+
+
+INSERT INTO meta.objeto_tema (
+    id_tema, nivel_objeto, id_esquema, id_tabla, id_columna,
+    relevancia, justificacion, ejemplo_relacion
+)
+SELECT
+    tm.id_tema,
+    'TABLA',
+    e.id_esquema,
+    td.id_tabla,
+    NULL,
+    'ALTA',
+    'Relaciona destinos con fuentes de respaldo.',
+    'Tikal con UNESCO y SICultura.'
+FROM meta.tema_datos tm
+JOIN meta.esquema_datos e ON e.nombre_esquema = 'turismo'
+JOIN meta.tabla_datos td ON td.id_esquema = e.id_esquema AND td.nombre_tabla = 'destino_fuente'
+
+WHERE tm.nombre_tema = 'Fuentes'
+  AND NOT EXISTS (
+      SELECT 1 FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tm.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND COALESCE(ot.id_esquema, -1) = COALESCE(e.id_esquema, -1)
+        AND COALESCE(ot.id_tabla, -1) = COALESCE(td.id_tabla, -1)
+        AND COALESCE(ot.id_columna, -1) = COALESCE(NULL, -1)
+  );
+
+
+INSERT INTO meta.objeto_tema (
+    id_tema, nivel_objeto, id_esquema, id_tabla, id_columna,
+    relevancia, justificacion, ejemplo_relacion
+)
+SELECT
+    tm.id_tema,
+    'TABLA',
+    e.id_esquema,
+    td.id_tabla,
+    NULL,
+    'ALTA',
+    'Agrupa destinos por región turística.',
+    'Petén Aventura en el Mundo Maya.'
+FROM meta.tema_datos tm
+JOIN meta.esquema_datos e ON e.nombre_esquema = 'turismo'
+JOIN meta.tabla_datos td ON td.id_esquema = e.id_esquema AND td.nombre_tabla = 'region_turistica'
+
+WHERE tm.nombre_tema = 'Regiones turísticas'
+  AND NOT EXISTS (
+      SELECT 1 FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tm.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND COALESCE(ot.id_esquema, -1) = COALESCE(e.id_esquema, -1)
+        AND COALESCE(ot.id_tabla, -1) = COALESCE(td.id_tabla, -1)
+        AND COALESCE(ot.id_columna, -1) = COALESCE(NULL, -1)
+  );
+
+
+INSERT INTO meta.objeto_tema (
+    id_tema, nivel_objeto, id_esquema, id_tabla, id_columna,
+    relevancia, justificacion, ejemplo_relacion
+)
+SELECT
+    tm.id_tema,
+    'TABLA',
+    e.id_esquema,
+    td.id_tabla,
+    NULL,
+    'ALTA',
+    'Catálogo de actividades que puede realizar un visitante.',
+    'Senderismo, fotografía.'
+FROM meta.tema_datos tm
+JOIN meta.esquema_datos e ON e.nombre_esquema = 'turismo'
+JOIN meta.tabla_datos td ON td.id_esquema = e.id_esquema AND td.nombre_tabla = 'actividad_turistica'
+
+WHERE tm.nombre_tema = 'Actividades turísticas'
+  AND NOT EXISTS (
+      SELECT 1 FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tm.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND COALESCE(ot.id_esquema, -1) = COALESCE(e.id_esquema, -1)
+        AND COALESCE(ot.id_tabla, -1) = COALESCE(td.id_tabla, -1)
+        AND COALESCE(ot.id_columna, -1) = COALESCE(NULL, -1)
+  );
+
+
+INSERT INTO meta.objeto_tema (
+    id_tema, nivel_objeto, id_esquema, id_tabla, id_columna,
+    relevancia, justificacion, ejemplo_relacion
+)
+SELECT
+    tm.id_tema,
+    'TABLA',
+    e.id_esquema,
+    td.id_tabla,
+    NULL,
+    'ALTA',
+    'Relaciona actividades con destinos.',
+    'Pacaya con senderismo.'
+FROM meta.tema_datos tm
+JOIN meta.esquema_datos e ON e.nombre_esquema = 'turismo'
+JOIN meta.tabla_datos td ON td.id_esquema = e.id_esquema AND td.nombre_tabla = 'destino_actividad'
+
+WHERE tm.nombre_tema = 'Actividades turísticas'
+  AND NOT EXISTS (
+      SELECT 1 FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tm.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND COALESCE(ot.id_esquema, -1) = COALESCE(e.id_esquema, -1)
+        AND COALESCE(ot.id_tabla, -1) = COALESCE(td.id_tabla, -1)
+        AND COALESCE(ot.id_columna, -1) = COALESCE(NULL, -1)
+  );
+
+
+INSERT INTO meta.objeto_tema (
+    id_tema, nivel_objeto, id_esquema, id_tabla, id_columna,
+    relevancia, justificacion, ejemplo_relacion
+)
+SELECT
+    tm.id_tema,
+    'TABLA',
+    e.id_esquema,
+    td.id_tabla,
+    NULL,
+    'ALTA',
+    'Define rutas turísticas sugeridas.',
+    'Ruta Patrimonio UNESCO.'
+FROM meta.tema_datos tm
+JOIN meta.esquema_datos e ON e.nombre_esquema = 'turismo'
+JOIN meta.tabla_datos td ON td.id_esquema = e.id_esquema AND td.nombre_tabla = 'ruta_turistica'
+
+WHERE tm.nombre_tema = 'Rutas turísticas'
+  AND NOT EXISTS (
+      SELECT 1 FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tm.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND COALESCE(ot.id_esquema, -1) = COALESCE(e.id_esquema, -1)
+        AND COALESCE(ot.id_tabla, -1) = COALESCE(td.id_tabla, -1)
+        AND COALESCE(ot.id_columna, -1) = COALESCE(NULL, -1)
+  );
+
+
+INSERT INTO meta.objeto_tema (
+    id_tema, nivel_objeto, id_esquema, id_tabla, id_columna,
+    relevancia, justificacion, ejemplo_relacion
+)
+SELECT
+    tm.id_tema,
+    'TABLA',
+    e.id_esquema,
+    td.id_tabla,
+    NULL,
+    'ALTA',
+    'Define destinos incluidos en una ruta y su orden de visita.',
+    'Tikal dentro de ruta UNESCO.'
+FROM meta.tema_datos tm
+JOIN meta.esquema_datos e ON e.nombre_esquema = 'turismo'
+JOIN meta.tabla_datos td ON td.id_esquema = e.id_esquema AND td.nombre_tabla = 'ruta_destino'
+
+WHERE tm.nombre_tema = 'Rutas turísticas'
+  AND NOT EXISTS (
+      SELECT 1 FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tm.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND COALESCE(ot.id_esquema, -1) = COALESCE(e.id_esquema, -1)
+        AND COALESCE(ot.id_tabla, -1) = COALESCE(td.id_tabla, -1)
+        AND COALESCE(ot.id_columna, -1) = COALESCE(NULL, -1)
+  );
+
+
+INSERT INTO meta.objeto_tema (
+    id_tema, nivel_objeto, id_esquema, id_tabla, id_columna,
+    relevancia, justificacion, ejemplo_relacion
+)
+SELECT
+    tm.id_tema,
+    'ESQUEMA',
+    e.id_esquema,
+    NULL,
+    NULL,
+    'BAJA',
+    'Turismo no almacena festividades como regla general; solo podrían incorporarse si se modelan como evento turístico futuro.',
+    'Semana Santa como atractivo turístico requeriría una tabla evento_turistico.'
+FROM meta.tema_datos tm
+JOIN meta.esquema_datos e ON e.nombre_esquema = 'turismo'
+
+
+WHERE tm.nombre_tema = 'Festividades'
+  AND NOT EXISTS (
+      SELECT 1 FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tm.id_tema
+        AND ot.nivel_objeto = 'ESQUEMA'
+        AND COALESCE(ot.id_esquema, -1) = COALESCE(e.id_esquema, -1)
+        AND COALESCE(ot.id_tabla, -1) = COALESCE(NULL, -1)
+        AND COALESCE(ot.id_columna, -1) = COALESCE(NULL, -1)
+  );
+
+
+INSERT INTO meta.objeto_tema (
+    id_tema, nivel_objeto, id_esquema, id_tabla, id_columna,
+    relevancia, justificacion, ejemplo_relacion
+)
+SELECT
+    tm.id_tema,
+    'ESQUEMA',
+    e.id_esquema,
+    NULL,
+    NULL,
+    'BAJA',
+    'El esquema turismo no cubre deportes competitivos; solo actividades turísticas como senderismo o montañismo.',
+    'Fútbol o ligas deportivas deberían ir en un esquema deportes.'
+FROM meta.tema_datos tm
+JOIN meta.esquema_datos e ON e.nombre_esquema = 'turismo'
+
+
+WHERE tm.nombre_tema = 'Deportes'
+  AND NOT EXISTS (
+      SELECT 1 FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tm.id_tema
+        AND ot.nivel_objeto = 'ESQUEMA'
+        AND COALESCE(ot.id_esquema, -1) = COALESCE(e.id_esquema, -1)
+        AND COALESCE(ot.id_tabla, -1) = COALESCE(NULL, -1)
+        AND COALESCE(ot.id_columna, -1) = COALESCE(NULL, -1)
+  );
+
+
+INSERT INTO meta.objeto_tema (
+    id_tema, nivel_objeto, id_esquema, id_tabla, id_columna,
+    relevancia, justificacion, ejemplo_relacion
+)
+SELECT
+    tm.id_tema,
+    'TABLA',
+    e.id_esquema,
+    td.id_tabla,
+    NULL,
+    'MEDIA',
+    'Algunas categorías turísticas pueden tener enfoque cultural, pero no reemplazan un esquema cultural completo.',
+    'Categoría cultural o arqueológica.'
+FROM meta.tema_datos tm
+JOIN meta.esquema_datos e ON e.nombre_esquema = 'turismo'
+JOIN meta.tabla_datos td ON td.id_esquema = e.id_esquema AND td.nombre_tabla = 'categoria_destino'
+
+WHERE tm.nombre_tema = 'Cultura'
+  AND NOT EXISTS (
+      SELECT 1 FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tm.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND COALESCE(ot.id_esquema, -1) = COALESCE(e.id_esquema, -1)
+        AND COALESCE(ot.id_tabla, -1) = COALESCE(td.id_tabla, -1)
+        AND COALESCE(ot.id_columna, -1) = COALESCE(NULL, -1)
+  );
+
+
+INSERT INTO meta.objeto_tema (
+    id_tema, nivel_objeto, id_esquema, id_tabla, id_columna,
+    relevancia, justificacion, ejemplo_relacion
+)
+SELECT
+    tm.id_tema,
+    'TABLA',
+    e.id_esquema,
+    td.id_tabla,
+    NULL,
+    'ALTA',
+    'Los departamentos se usan como referencia territorial oficial para turismo.',
+    'destino_turistico.departamento_id.'
+FROM meta.tema_datos tm
+JOIN meta.esquema_datos e ON e.nombre_esquema = 'geografia'
+JOIN meta.tabla_datos td ON td.id_esquema = e.id_esquema AND td.nombre_tabla = 'departamento'
+
+WHERE tm.nombre_tema = 'Geografía'
+  AND NOT EXISTS (
+      SELECT 1 FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tm.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND COALESCE(ot.id_esquema, -1) = COALESCE(e.id_esquema, -1)
+        AND COALESCE(ot.id_tabla, -1) = COALESCE(td.id_tabla, -1)
+        AND COALESCE(ot.id_columna, -1) = COALESCE(NULL, -1)
+  );
+
+
+INSERT INTO meta.objeto_tema (
+    id_tema, nivel_objeto, id_esquema, id_tabla, id_columna,
+    relevancia, justificacion, ejemplo_relacion
+)
+SELECT
+    tm.id_tema,
+    'TABLA',
+    e.id_esquema,
+    td.id_tabla,
+    NULL,
+    'ALTA',
+    'Los municipios se usan para ubicar destinos turísticos sin duplicar geografía.',
+    'destino_turistico.municipio_id.'
+FROM meta.tema_datos tm
+JOIN meta.esquema_datos e ON e.nombre_esquema = 'geografia'
+JOIN meta.tabla_datos td ON td.id_esquema = e.id_esquema AND td.nombre_tabla = 'municipio'
+
+WHERE tm.nombre_tema = 'Geografía'
+  AND NOT EXISTS (
+      SELECT 1 FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tm.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND COALESCE(ot.id_esquema, -1) = COALESCE(e.id_esquema, -1)
+        AND COALESCE(ot.id_tabla, -1) = COALESCE(td.id_tabla, -1)
+        AND COALESCE(ot.id_columna, -1) = COALESCE(NULL, -1)
+  );
+
+
+-- ============================================================
+-- 10. Fuentes generales del proyecto
+-- ============================================================
+
+
+INSERT INTO meta.fuente_datos (
+    codigo_fuente, nombre_fuente, institucion, tipo_fuente, url,
+    fecha_consulta, descripcion, confiabilidad, cobertura_geografica,
+    licencia_uso, estado, observaciones
+)
+VALUES (
+    'GCB_REGIONES_GT', 'Guatemala Convention Bureau - Regiones de Guatemala', 'Guatemala Convention Bureau', 'INSTITUCIONAL', 'https://guatemalacvb.com/regiones-de-guatemala/',
+    CURRENT_DATE, 'Fuente base para documentar las siete regiones turísticas de Guatemala.', 'ALTA', 'Guatemala',
+    'Uso informativo institucional.', 'ACTIVA',
+    'Fuente registrada para trazabilidad del módulo Turismo y Patrimonio.'
+)
+ON CONFLICT (codigo_fuente) DO UPDATE SET
+    nombre_fuente = EXCLUDED.nombre_fuente,
+    institucion = EXCLUDED.institucion,
+    tipo_fuente = EXCLUDED.tipo_fuente,
+    url = EXCLUDED.url,
+    fecha_consulta = EXCLUDED.fecha_consulta,
+    descripcion = EXCLUDED.descripcion,
+    confiabilidad = EXCLUDED.confiabilidad,
+    cobertura_geografica = EXCLUDED.cobertura_geografica,
+    licencia_uso = EXCLUDED.licencia_uso,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.fuente_datos (
+    codigo_fuente, nombre_fuente, institucion, tipo_fuente, url,
+    fecha_consulta, descripcion, confiabilidad, cobertura_geografica,
+    licencia_uso, estado, observaciones
+)
+VALUES (
+    'INGUAT_GENERAL', 'Instituto Guatemalteco de Turismo - INGUAT', 'INGUAT', 'INSTITUCIONAL', 'https://inguat.gob.gt/',
+    CURRENT_DATE, 'Fuente institucional general del turismo en Guatemala.', 'MEDIA', 'Guatemala',
+    'Verificar disponibilidad de páginas específicas.', 'ACTIVA',
+    'Fuente registrada para trazabilidad del módulo Turismo y Patrimonio.'
+)
+ON CONFLICT (codigo_fuente) DO UPDATE SET
+    nombre_fuente = EXCLUDED.nombre_fuente,
+    institucion = EXCLUDED.institucion,
+    tipo_fuente = EXCLUDED.tipo_fuente,
+    url = EXCLUDED.url,
+    fecha_consulta = EXCLUDED.fecha_consulta,
+    descripcion = EXCLUDED.descripcion,
+    confiabilidad = EXCLUDED.confiabilidad,
+    cobertura_geografica = EXCLUDED.cobertura_geografica,
+    licencia_uso = EXCLUDED.licencia_uso,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.fuente_datos (
+    codigo_fuente, nombre_fuente, institucion, tipo_fuente, url,
+    fecha_consulta, descripcion, confiabilidad, cobertura_geografica,
+    licencia_uso, estado, observaciones
+)
+VALUES (
+    'UNESCO_GUATEMALA', 'UNESCO World Heritage Centre - Guatemala', 'UNESCO', 'INTERNACIONAL', 'https://whc.unesco.org/en/statesparties/gt',
+    CURRENT_DATE, 'Página general de Guatemala en UNESCO World Heritage Centre.', 'ALTA', 'Guatemala',
+    'Uso de datos patrimoniales oficiales.', 'ACTIVA',
+    'Fuente registrada para trazabilidad del módulo Turismo y Patrimonio.'
+)
+ON CONFLICT (codigo_fuente) DO UPDATE SET
+    nombre_fuente = EXCLUDED.nombre_fuente,
+    institucion = EXCLUDED.institucion,
+    tipo_fuente = EXCLUDED.tipo_fuente,
+    url = EXCLUDED.url,
+    fecha_consulta = EXCLUDED.fecha_consulta,
+    descripcion = EXCLUDED.descripcion,
+    confiabilidad = EXCLUDED.confiabilidad,
+    cobertura_geografica = EXCLUDED.cobertura_geografica,
+    licencia_uso = EXCLUDED.licencia_uso,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.fuente_datos (
+    codigo_fuente, nombre_fuente, institucion, tipo_fuente, url,
+    fecha_consulta, descripcion, confiabilidad, cobertura_geografica,
+    licencia_uso, estado, observaciones
+)
+VALUES (
+    'UNESCO_TIKAL', 'UNESCO World Heritage Centre - Tikal National Park', 'UNESCO', 'INTERNACIONAL', 'https://whc.unesco.org/en/list/64/',
+    CURRENT_DATE, 'Fuente oficial para Parque Nacional Tikal como Patrimonio Mundial.', 'ALTA', 'Petén, Guatemala',
+    'Uso de datos patrimoniales oficiales.', 'ACTIVA',
+    'Fuente registrada para trazabilidad del módulo Turismo y Patrimonio.'
+)
+ON CONFLICT (codigo_fuente) DO UPDATE SET
+    nombre_fuente = EXCLUDED.nombre_fuente,
+    institucion = EXCLUDED.institucion,
+    tipo_fuente = EXCLUDED.tipo_fuente,
+    url = EXCLUDED.url,
+    fecha_consulta = EXCLUDED.fecha_consulta,
+    descripcion = EXCLUDED.descripcion,
+    confiabilidad = EXCLUDED.confiabilidad,
+    cobertura_geografica = EXCLUDED.cobertura_geografica,
+    licencia_uso = EXCLUDED.licencia_uso,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.fuente_datos (
+    codigo_fuente, nombre_fuente, institucion, tipo_fuente, url,
+    fecha_consulta, descripcion, confiabilidad, cobertura_geografica,
+    licencia_uso, estado, observaciones
+)
+VALUES (
+    'UNESCO_ANTIGUA', 'UNESCO World Heritage Centre - Antigua Guatemala', 'UNESCO', 'INTERNACIONAL', 'https://whc.unesco.org/en/list/65/',
+    CURRENT_DATE, 'Fuente oficial para Antigua Guatemala como Patrimonio Mundial.', 'ALTA', 'Sacatepéquez, Guatemala',
+    'Uso de datos patrimoniales oficiales.', 'ACTIVA',
+    'Fuente registrada para trazabilidad del módulo Turismo y Patrimonio.'
+)
+ON CONFLICT (codigo_fuente) DO UPDATE SET
+    nombre_fuente = EXCLUDED.nombre_fuente,
+    institucion = EXCLUDED.institucion,
+    tipo_fuente = EXCLUDED.tipo_fuente,
+    url = EXCLUDED.url,
+    fecha_consulta = EXCLUDED.fecha_consulta,
+    descripcion = EXCLUDED.descripcion,
+    confiabilidad = EXCLUDED.confiabilidad,
+    cobertura_geografica = EXCLUDED.cobertura_geografica,
+    licencia_uso = EXCLUDED.licencia_uso,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.fuente_datos (
+    codigo_fuente, nombre_fuente, institucion, tipo_fuente, url,
+    fecha_consulta, descripcion, confiabilidad, cobertura_geografica,
+    licencia_uso, estado, observaciones
+)
+VALUES (
+    'UNESCO_QUIRIGUA', 'UNESCO World Heritage Centre - Archaeological Park and Ruins of Quirigua', 'UNESCO', 'INTERNACIONAL', 'https://whc.unesco.org/en/list/149/',
+    CURRENT_DATE, 'Fuente oficial para Quiriguá como Patrimonio Mundial.', 'ALTA', 'Izabal, Guatemala',
+    'Uso de datos patrimoniales oficiales.', 'ACTIVA',
+    'Fuente registrada para trazabilidad del módulo Turismo y Patrimonio.'
+)
+ON CONFLICT (codigo_fuente) DO UPDATE SET
+    nombre_fuente = EXCLUDED.nombre_fuente,
+    institucion = EXCLUDED.institucion,
+    tipo_fuente = EXCLUDED.tipo_fuente,
+    url = EXCLUDED.url,
+    fecha_consulta = EXCLUDED.fecha_consulta,
+    descripcion = EXCLUDED.descripcion,
+    confiabilidad = EXCLUDED.confiabilidad,
+    cobertura_geografica = EXCLUDED.cobertura_geografica,
+    licencia_uso = EXCLUDED.licencia_uso,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.fuente_datos (
+    codigo_fuente, nombre_fuente, institucion, tipo_fuente, url,
+    fecha_consulta, descripcion, confiabilidad, cobertura_geografica,
+    licencia_uso, estado, observaciones
+)
+VALUES (
+    'UNESCO_TAKALIK_ABAJ', 'UNESCO World Heritage Centre - National Archaeological Park Tak’alik Ab’aj', 'UNESCO', 'INTERNACIONAL', 'https://whc.unesco.org/en/list/1663/',
+    CURRENT_DATE, 'Fuente oficial para Tak’alik Ab’aj como Patrimonio Mundial.', 'ALTA', 'Retalhuleu, Guatemala',
+    'Uso de datos patrimoniales oficiales.', 'ACTIVA',
+    'Fuente registrada para trazabilidad del módulo Turismo y Patrimonio.'
+)
+ON CONFLICT (codigo_fuente) DO UPDATE SET
+    nombre_fuente = EXCLUDED.nombre_fuente,
+    institucion = EXCLUDED.institucion,
+    tipo_fuente = EXCLUDED.tipo_fuente,
+    url = EXCLUDED.url,
+    fecha_consulta = EXCLUDED.fecha_consulta,
+    descripcion = EXCLUDED.descripcion,
+    confiabilidad = EXCLUDED.confiabilidad,
+    cobertura_geografica = EXCLUDED.cobertura_geografica,
+    licencia_uso = EXCLUDED.licencia_uso,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.fuente_datos (
+    codigo_fuente, nombre_fuente, institucion, tipo_fuente, url,
+    fecha_consulta, descripcion, confiabilidad, cobertura_geografica,
+    licencia_uso, estado, observaciones
+)
+VALUES (
+    'CONAP_GENERAL', 'Consejo Nacional de Areas Protegidas - CONAP', 'CONAP', 'INSTITUCIONAL', 'https://conap.gob.gt/',
+    CURRENT_DATE, 'Fuente institucional general sobre áreas protegidas de Guatemala.', 'ALTA', 'Guatemala',
+    'Información pública institucional.', 'ACTIVA',
+    'Fuente registrada para trazabilidad del módulo Turismo y Patrimonio.'
+)
+ON CONFLICT (codigo_fuente) DO UPDATE SET
+    nombre_fuente = EXCLUDED.nombre_fuente,
+    institucion = EXCLUDED.institucion,
+    tipo_fuente = EXCLUDED.tipo_fuente,
+    url = EXCLUDED.url,
+    fecha_consulta = EXCLUDED.fecha_consulta,
+    descripcion = EXCLUDED.descripcion,
+    confiabilidad = EXCLUDED.confiabilidad,
+    cobertura_geografica = EXCLUDED.cobertura_geografica,
+    licencia_uso = EXCLUDED.licencia_uso,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.fuente_datos (
+    codigo_fuente, nombre_fuente, institucion, tipo_fuente, url,
+    fecha_consulta, descripcion, confiabilidad, cobertura_geografica,
+    licencia_uso, estado, observaciones
+)
+VALUES (
+    'CONAP_SIGAP_GENERAL', 'CONAP/SIGAP Turismo', 'CONAP', 'INSTITUCIONAL', 'https://turismo-sigap.conap.gob.gt/',
+    CURRENT_DATE, 'Portal turístico SIGAP para áreas protegidas y rutas asociadas.', 'ALTA', 'Guatemala',
+    'Información turística de áreas protegidas.', 'ACTIVA',
+    'Fuente registrada para trazabilidad del módulo Turismo y Patrimonio.'
+)
+ON CONFLICT (codigo_fuente) DO UPDATE SET
+    nombre_fuente = EXCLUDED.nombre_fuente,
+    institucion = EXCLUDED.institucion,
+    tipo_fuente = EXCLUDED.tipo_fuente,
+    url = EXCLUDED.url,
+    fecha_consulta = EXCLUDED.fecha_consulta,
+    descripcion = EXCLUDED.descripcion,
+    confiabilidad = EXCLUDED.confiabilidad,
+    cobertura_geografica = EXCLUDED.cobertura_geografica,
+    licencia_uso = EXCLUDED.licencia_uso,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.fuente_datos (
+    codigo_fuente, nombre_fuente, institucion, tipo_fuente, url,
+    fecha_consulta, descripcion, confiabilidad, cobertura_geografica,
+    licencia_uso, estado, observaciones
+)
+VALUES (
+    'SICULTURA_GENERAL', 'SICultura - Sistema de Información Cultural', 'Ministerio de Cultura y Deportes', 'INSTITUCIONAL', 'https://www.sicultura.gob.gt/',
+    CURRENT_DATE, 'Directorio cultural y patrimonial de Guatemala.', 'ALTA', 'Guatemala',
+    'Información cultural institucional.', 'ACTIVA',
+    'Fuente registrada para trazabilidad del módulo Turismo y Patrimonio.'
+)
+ON CONFLICT (codigo_fuente) DO UPDATE SET
+    nombre_fuente = EXCLUDED.nombre_fuente,
+    institucion = EXCLUDED.institucion,
+    tipo_fuente = EXCLUDED.tipo_fuente,
+    url = EXCLUDED.url,
+    fecha_consulta = EXCLUDED.fecha_consulta,
+    descripcion = EXCLUDED.descripcion,
+    confiabilidad = EXCLUDED.confiabilidad,
+    cobertura_geografica = EXCLUDED.cobertura_geografica,
+    licencia_uso = EXCLUDED.licencia_uso,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+INSERT INTO meta.fuente_datos (
+    codigo_fuente, nombre_fuente, institucion, tipo_fuente, url,
+    fecha_consulta, descripcion, confiabilidad, cobertura_geografica,
+    licencia_uso, estado, observaciones
+)
+VALUES (
+    'SIC_TIKAL', 'SICultura - Parque Nacional Tikal Corazón del Mundo Maya', 'Ministerio de Cultura y Deportes', 'INSTITUCIONAL', 'https://www.sicultura.gob.gt/directory-directorio_c/listing/parque-nacional-tikal-corazon-del-mundo-maya/',
+    CURRENT_DATE, 'Información complementaria sobre Tikal.', 'ALTA', 'Petén, Guatemala',
+    'Información cultural y turística institucional.', 'ACTIVA',
+    'Fuente registrada para trazabilidad del módulo Turismo y Patrimonio.'
+)
+ON CONFLICT (codigo_fuente) DO UPDATE SET
+    nombre_fuente = EXCLUDED.nombre_fuente,
+    institucion = EXCLUDED.institucion,
+    tipo_fuente = EXCLUDED.tipo_fuente,
+    url = EXCLUDED.url,
+    fecha_consulta = EXCLUDED.fecha_consulta,
+    descripcion = EXCLUDED.descripcion,
+    confiabilidad = EXCLUDED.confiabilidad,
+    cobertura_geografica = EXCLUDED.cobertura_geografica,
+    licencia_uso = EXCLUDED.licencia_uso,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+-- ============================================================
+-- Relación fuentes-tablas
+-- ============================================================
+
+
+INSERT INTO meta.tabla_fuente (
+    id_fuente, nivel_respaldo, id_esquema, id_tabla, id_columna,
+    uso_fuente, campos_respalda, observaciones
+)
+SELECT
+    f.id_fuente,
+    'TABLA',
+    e.id_esquema,
+    t.id_tabla,
+    NULL,
+    'Respalda la clasificación de regiones turísticas de Guatemala.',
+    'codigo, nombre, descripcion',
+    'Usada para documentar las siete regiones turísticas.'
+FROM meta.fuente_datos f
+JOIN meta.esquema_datos e ON e.nombre_esquema = 'turismo'
+JOIN meta.tabla_datos t ON t.id_esquema = e.id_esquema AND t.nombre_tabla = 'region_turistica'
+WHERE f.codigo_fuente = 'GCB_REGIONES_GT'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.tabla_fuente tf
+      WHERE tf.id_fuente = f.id_fuente
+        AND tf.nivel_respaldo = 'TABLA'
+        AND tf.id_tabla = t.id_tabla
+        AND tf.uso_fuente = 'Respalda la clasificación de regiones turísticas de Guatemala.'
+  );
+
+
+INSERT INTO meta.tabla_fuente (
+    id_fuente, nivel_respaldo, id_esquema, id_tabla, id_columna,
+    uso_fuente, campos_respalda, observaciones
+)
+SELECT
+    f.id_fuente,
+    'TABLA',
+    e.id_esquema,
+    t.id_tabla,
+    NULL,
+    'Respalda la relación general entre departamentos y regiones turísticas.',
+    'region_turistica_id, departamento_id',
+    'Relación territorial turística.'
+FROM meta.fuente_datos f
+JOIN meta.esquema_datos e ON e.nombre_esquema = 'turismo'
+JOIN meta.tabla_datos t ON t.id_esquema = e.id_esquema AND t.nombre_tabla = 'departamento_region_turistica'
+WHERE f.codigo_fuente = 'GCB_REGIONES_GT'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.tabla_fuente tf
+      WHERE tf.id_fuente = f.id_fuente
+        AND tf.nivel_respaldo = 'TABLA'
+        AND tf.id_tabla = t.id_tabla
+        AND tf.uso_fuente = 'Respalda la relación general entre departamentos y regiones turísticas.'
+  );
+
+
+INSERT INTO meta.tabla_fuente (
+    id_fuente, nivel_respaldo, id_esquema, id_tabla, id_columna,
+    uso_fuente, campos_respalda, observaciones
+)
+SELECT
+    f.id_fuente,
+    'TABLA',
+    e.id_esquema,
+    t.id_tabla,
+    NULL,
+    'Respalda el catálogo general de patrimonios mundiales de Guatemala.',
+    'codigo, nombre, tipo, organismo, anio_inscripcion',
+    'Fuente general UNESCO.'
+FROM meta.fuente_datos f
+JOIN meta.esquema_datos e ON e.nombre_esquema = 'turismo'
+JOIN meta.tabla_datos t ON t.id_esquema = e.id_esquema AND t.nombre_tabla = 'patrimonio_turistico'
+WHERE f.codigo_fuente = 'UNESCO_GUATEMALA'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.tabla_fuente tf
+      WHERE tf.id_fuente = f.id_fuente
+        AND tf.nivel_respaldo = 'TABLA'
+        AND tf.id_tabla = t.id_tabla
+        AND tf.uso_fuente = 'Respalda el catálogo general de patrimonios mundiales de Guatemala.'
+  );
+
+
+INSERT INTO meta.tabla_fuente (
+    id_fuente, nivel_respaldo, id_esquema, id_tabla, id_columna,
+    uso_fuente, campos_respalda, observaciones
+)
+SELECT
+    f.id_fuente,
+    'REGISTRO',
+    e.id_esquema,
+    t.id_tabla,
+    NULL,
+    'Respalda el reconocimiento patrimonial del Parque Nacional Tikal.',
+    'nombre, tipo, organismo, anio_inscripcion',
+    'Patrimonio Mundial UNESCO.'
+FROM meta.fuente_datos f
+JOIN meta.esquema_datos e ON e.nombre_esquema = 'turismo'
+JOIN meta.tabla_datos t ON t.id_esquema = e.id_esquema AND t.nombre_tabla = 'patrimonio_turistico'
+WHERE f.codigo_fuente = 'UNESCO_TIKAL'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.tabla_fuente tf
+      WHERE tf.id_fuente = f.id_fuente
+        AND tf.nivel_respaldo = 'REGISTRO'
+        AND tf.id_tabla = t.id_tabla
+        AND tf.uso_fuente = 'Respalda el reconocimiento patrimonial del Parque Nacional Tikal.'
+  );
+
+
+INSERT INTO meta.tabla_fuente (
+    id_fuente, nivel_respaldo, id_esquema, id_tabla, id_columna,
+    uso_fuente, campos_respalda, observaciones
+)
+SELECT
+    f.id_fuente,
+    'REGISTRO',
+    e.id_esquema,
+    t.id_tabla,
+    NULL,
+    'Respalda el reconocimiento patrimonial de Antigua Guatemala.',
+    'nombre, tipo, organismo, anio_inscripcion',
+    'Patrimonio Mundial UNESCO.'
+FROM meta.fuente_datos f
+JOIN meta.esquema_datos e ON e.nombre_esquema = 'turismo'
+JOIN meta.tabla_datos t ON t.id_esquema = e.id_esquema AND t.nombre_tabla = 'patrimonio_turistico'
+WHERE f.codigo_fuente = 'UNESCO_ANTIGUA'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.tabla_fuente tf
+      WHERE tf.id_fuente = f.id_fuente
+        AND tf.nivel_respaldo = 'REGISTRO'
+        AND tf.id_tabla = t.id_tabla
+        AND tf.uso_fuente = 'Respalda el reconocimiento patrimonial de Antigua Guatemala.'
+  );
+
+
+INSERT INTO meta.tabla_fuente (
+    id_fuente, nivel_respaldo, id_esquema, id_tabla, id_columna,
+    uso_fuente, campos_respalda, observaciones
+)
+SELECT
+    f.id_fuente,
+    'REGISTRO',
+    e.id_esquema,
+    t.id_tabla,
+    NULL,
+    'Respalda el reconocimiento patrimonial de Quiriguá.',
+    'nombre, tipo, organismo, anio_inscripcion',
+    'Patrimonio Mundial UNESCO.'
+FROM meta.fuente_datos f
+JOIN meta.esquema_datos e ON e.nombre_esquema = 'turismo'
+JOIN meta.tabla_datos t ON t.id_esquema = e.id_esquema AND t.nombre_tabla = 'patrimonio_turistico'
+WHERE f.codigo_fuente = 'UNESCO_QUIRIGUA'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.tabla_fuente tf
+      WHERE tf.id_fuente = f.id_fuente
+        AND tf.nivel_respaldo = 'REGISTRO'
+        AND tf.id_tabla = t.id_tabla
+        AND tf.uso_fuente = 'Respalda el reconocimiento patrimonial de Quiriguá.'
+  );
+
+
+INSERT INTO meta.tabla_fuente (
+    id_fuente, nivel_respaldo, id_esquema, id_tabla, id_columna,
+    uso_fuente, campos_respalda, observaciones
+)
+SELECT
+    f.id_fuente,
+    'REGISTRO',
+    e.id_esquema,
+    t.id_tabla,
+    NULL,
+    'Respalda el reconocimiento patrimonial de Tak’alik Ab’aj.',
+    'nombre, tipo, organismo, anio_inscripcion',
+    'Patrimonio Mundial UNESCO.'
+FROM meta.fuente_datos f
+JOIN meta.esquema_datos e ON e.nombre_esquema = 'turismo'
+JOIN meta.tabla_datos t ON t.id_esquema = e.id_esquema AND t.nombre_tabla = 'patrimonio_turistico'
+WHERE f.codigo_fuente = 'UNESCO_TAKALIK_ABAJ'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.tabla_fuente tf
+      WHERE tf.id_fuente = f.id_fuente
+        AND tf.nivel_respaldo = 'REGISTRO'
+        AND tf.id_tabla = t.id_tabla
+        AND tf.uso_fuente = 'Respalda el reconocimiento patrimonial de Tak’alik Ab’aj.'
+  );
+
+
+INSERT INTO meta.tabla_fuente (
+    id_fuente, nivel_respaldo, id_esquema, id_tabla, id_columna,
+    uso_fuente, campos_respalda, observaciones
+)
+SELECT
+    f.id_fuente,
+    'TABLA',
+    e.id_esquema,
+    t.id_tabla,
+    NULL,
+    'Respalda datos generales de áreas protegidas y destinos naturales.',
+    'es_area_protegida, descripcion',
+    'Aplica a destinos naturales y áreas protegidas.'
+FROM meta.fuente_datos f
+JOIN meta.esquema_datos e ON e.nombre_esquema = 'turismo'
+JOIN meta.tabla_datos t ON t.id_esquema = e.id_esquema AND t.nombre_tabla = 'destino_turistico'
+WHERE f.codigo_fuente = 'CONAP_GENERAL'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.tabla_fuente tf
+      WHERE tf.id_fuente = f.id_fuente
+        AND tf.nivel_respaldo = 'TABLA'
+        AND tf.id_tabla = t.id_tabla
+        AND tf.uso_fuente = 'Respalda datos generales de áreas protegidas y destinos naturales.'
+  );
+
+
+INSERT INTO meta.tabla_fuente (
+    id_fuente, nivel_respaldo, id_esquema, id_tabla, id_columna,
+    uso_fuente, campos_respalda, observaciones
+)
+SELECT
+    f.id_fuente,
+    'TABLA',
+    e.id_esquema,
+    t.id_tabla,
+    NULL,
+    'Respalda información turística de áreas protegidas disponibles en SIGAP.',
+    'descripcion, horario, recomendaciones',
+    'Aplica a áreas protegidas turísticas.'
+FROM meta.fuente_datos f
+JOIN meta.esquema_datos e ON e.nombre_esquema = 'turismo'
+JOIN meta.tabla_datos t ON t.id_esquema = e.id_esquema AND t.nombre_tabla = 'destino_turistico'
+WHERE f.codigo_fuente = 'CONAP_SIGAP_GENERAL'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.tabla_fuente tf
+      WHERE tf.id_fuente = f.id_fuente
+        AND tf.nivel_respaldo = 'TABLA'
+        AND tf.id_tabla = t.id_tabla
+        AND tf.uso_fuente = 'Respalda información turística de áreas protegidas disponibles en SIGAP.'
+  );
+
+
+INSERT INTO meta.tabla_fuente (
+    id_fuente, nivel_respaldo, id_esquema, id_tabla, id_columna,
+    uso_fuente, campos_respalda, observaciones
+)
+SELECT
+    f.id_fuente,
+    'TABLA',
+    e.id_esquema,
+    t.id_tabla,
+    NULL,
+    'Respalda datos culturales y patrimoniales de destinos.',
+    'descripcion, categoria, patrimonio',
+    'Aplica a sitios culturales, arqueológicos o museos.'
+FROM meta.fuente_datos f
+JOIN meta.esquema_datos e ON e.nombre_esquema = 'turismo'
+JOIN meta.tabla_datos t ON t.id_esquema = e.id_esquema AND t.nombre_tabla = 'destino_turistico'
+WHERE f.codigo_fuente = 'SICULTURA_GENERAL'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.tabla_fuente tf
+      WHERE tf.id_fuente = f.id_fuente
+        AND tf.nivel_respaldo = 'TABLA'
+        AND tf.id_tabla = t.id_tabla
+        AND tf.uso_fuente = 'Respalda datos culturales y patrimoniales de destinos.'
+  );
+
+
+INSERT INTO meta.tabla_fuente (
+    id_fuente, nivel_respaldo, id_esquema, id_tabla, id_columna,
+    uso_fuente, campos_respalda, observaciones
+)
+SELECT
+    f.id_fuente,
+    'TABLA',
+    e.id_esquema,
+    t.id_tabla,
+    NULL,
+    'Respalda información general de promoción turística y rutas.',
+    'nombre, descripcion, duracion_dias',
+    'Fuente institucional general de turismo.'
+FROM meta.fuente_datos f
+JOIN meta.esquema_datos e ON e.nombre_esquema = 'turismo'
+JOIN meta.tabla_datos t ON t.id_esquema = e.id_esquema AND t.nombre_tabla = 'ruta_turistica'
+WHERE f.codigo_fuente = 'INGUAT_GENERAL'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.tabla_fuente tf
+      WHERE tf.id_fuente = f.id_fuente
+        AND tf.nivel_respaldo = 'TABLA'
+        AND tf.id_tabla = t.id_tabla
+        AND tf.uso_fuente = 'Respalda información general de promoción turística y rutas.'
+  );
+
+
+INSERT INTO meta.regla_calidad (
+    id_tabla, id_columna, nombre_regla, descripcion, tipo_regla,
+    severidad, expresion_validacion, accion_si_falla, estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    c.id_columna,
+    'Departamento debe pertenecer a un país',
+    'Todo departamento debe referenciar un país existente.',
+    'REFERENCIAL',
+    'ALTA',
+    'pais_id IS NOT NULL AND EXISTS (SELECT 1 FROM geografia.pais p WHERE p.id = pais_id)',
+    'No aprobar el registro hasta corregir la relación con país.',
+    'ACTIVA',
+    v.id_version
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t ON t.id_esquema = e.id_esquema AND t.nombre_tabla = 'departamento'
+LEFT JOIN meta.columna_datos c ON c.id_tabla = t.id_tabla AND c.nombre_columna = 'pais_id'
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'geografia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.nombre_regla = 'Departamento debe pertenecer a un país'
+        AND COALESCE(r.id_columna, -1) = COALESCE(c.id_columna, -1)
+  );
+
+
+INSERT INTO meta.regla_calidad (
+    id_tabla, id_columna, nombre_regla, descripcion, tipo_regla,
+    severidad, expresion_validacion, accion_si_falla, estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    c.id_columna,
+    'Municipio debe pertenecer a un departamento',
+    'Todo municipio debe referenciar un departamento existente.',
+    'REFERENCIAL',
+    'ALTA',
+    'departamento_id IS NOT NULL AND EXISTS (SELECT 1 FROM geografia.departamento d WHERE d.id = departamento_id)',
+    'No aprobar el registro hasta corregir el departamento.',
+    'ACTIVA',
+    v.id_version
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t ON t.id_esquema = e.id_esquema AND t.nombre_tabla = 'municipio'
+LEFT JOIN meta.columna_datos c ON c.id_tabla = t.id_tabla AND c.nombre_columna = 'departamento_id'
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'geografia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.nombre_regla = 'Municipio debe pertenecer a un departamento'
+        AND COALESCE(r.id_columna, -1) = COALESCE(c.id_columna, -1)
+  );
+
+
+INSERT INTO meta.regla_calidad (
+    id_tabla, id_columna, nombre_regla, descripcion, tipo_regla,
+    severidad, expresion_validacion, accion_si_falla, estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    c.id_columna,
+    'Fuente debe tener URL verificable',
+    'Toda fuente turística debe registrar una URL o enlace institucional para trazabilidad.',
+    'FUENTE',
+    'ALTA',
+    'url IS NOT NULL AND trim(url) <> ''''',
+    'No usar la fuente hasta completar URL verificable.',
+    'ACTIVA',
+    v.id_version
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t ON t.id_esquema = e.id_esquema AND t.nombre_tabla = 'fuente_turistica'
+LEFT JOIN meta.columna_datos c ON c.id_tabla = t.id_tabla AND c.nombre_columna = 'url'
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.nombre_regla = 'Fuente debe tener URL verificable'
+        AND COALESCE(r.id_columna, -1) = COALESCE(c.id_columna, -1)
+  );
+
+
+INSERT INTO meta.regla_calidad (
+    id_tabla, id_columna, nombre_regla, descripcion, tipo_regla,
+    severidad, expresion_validacion, accion_si_falla, estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    c.id_columna,
+    'Destino debe tener departamento oficial',
+    'Todo destino debe asociarse a un departamento existente del esquema geografia.',
+    'REFERENCIAL',
+    'ALTA',
+    'departamento_id IS NOT NULL AND EXISTS (SELECT 1 FROM geografia.departamento d WHERE d.id = departamento_id)',
+    'No aprobar el destino hasta corregir su ubicación departamental.',
+    'ACTIVA',
+    v.id_version
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t ON t.id_esquema = e.id_esquema AND t.nombre_tabla = 'destino_turistico'
+LEFT JOIN meta.columna_datos c ON c.id_tabla = t.id_tabla AND c.nombre_columna = 'departamento_id'
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.nombre_regla = 'Destino debe tener departamento oficial'
+        AND COALESCE(r.id_columna, -1) = COALESCE(c.id_columna, -1)
+  );
+
+
+INSERT INTO meta.regla_calidad (
+    id_tabla, id_columna, nombre_regla, descripcion, tipo_regla,
+    severidad, expresion_validacion, accion_si_falla, estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    c.id_columna,
+    'Municipio debe corresponder al departamento del destino',
+    'Si el destino tiene municipio, ese municipio debe pertenecer al departamento indicado.',
+    'COHERENCIA',
+    'ALTA',
+    'municipio_id IS NULL OR EXISTS (SELECT 1 FROM geografia.municipio m WHERE m.id = municipio_id AND m.departamento_id = departamento_id)',
+    'Corregir municipio o departamento antes de aprobar.',
+    'ACTIVA',
+    v.id_version
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t ON t.id_esquema = e.id_esquema AND t.nombre_tabla = 'destino_turistico'
+LEFT JOIN meta.columna_datos c ON c.id_tabla = t.id_tabla AND c.nombre_columna = 'municipio_id'
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.nombre_regla = 'Municipio debe corresponder al departamento del destino'
+        AND COALESCE(r.id_columna, -1) = COALESCE(c.id_columna, -1)
+  );
+
+
+INSERT INTO meta.regla_calidad (
+    id_tabla, id_columna, nombre_regla, descripcion, tipo_regla,
+    severidad, expresion_validacion, accion_si_falla, estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    c.id_columna,
+    'Destino debe tener fuente principal',
+    'Todo destino turístico debe contar con una fuente principal verificable.',
+    'FUENTE',
+    'ALTA',
+    'fuente_principal_id IS NOT NULL',
+    'Asignar fuente principal antes de aprobar el registro.',
+    'ACTIVA',
+    v.id_version
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t ON t.id_esquema = e.id_esquema AND t.nombre_tabla = 'destino_turistico'
+LEFT JOIN meta.columna_datos c ON c.id_tabla = t.id_tabla AND c.nombre_columna = 'fuente_principal_id'
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.nombre_regla = 'Destino debe tener fuente principal'
+        AND COALESCE(r.id_columna, -1) = COALESCE(c.id_columna, -1)
+  );
+
+
+INSERT INTO meta.regla_calidad (
+    id_tabla, id_columna, nombre_regla, descripcion, tipo_regla,
+    severidad, expresion_validacion, accion_si_falla, estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    NULL,
+    'Destino debe tener al menos una categoría',
+    'Todo destino turístico publicado debe estar clasificado en al menos una categoría.',
+    'CATALOGO',
+    'MEDIA',
+    'EXISTS (SELECT 1 FROM turismo.destino_categoria dc WHERE dc.destino_id = destino_id)',
+    'Revisar clasificación del destino.',
+    'ACTIVA',
+    v.id_version
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t ON t.id_esquema = e.id_esquema AND t.nombre_tabla = 'destino_categoria'
+LEFT JOIN meta.columna_datos c ON FALSE
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.nombre_regla = 'Destino debe tener al menos una categoría'
+        AND COALESCE(r.id_columna, -1) = COALESCE(NULL, -1)
+  );
+
+
+INSERT INTO meta.regla_calidad (
+    id_tabla, id_columna, nombre_regla, descripcion, tipo_regla,
+    severidad, expresion_validacion, accion_si_falla, estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    NULL,
+    'Destino debe tener trazabilidad documental',
+    'Cada destino debe contar con al menos una fuente asociada en destino_fuente.',
+    'FUENTE',
+    'ALTA',
+    'EXISTS (SELECT 1 FROM turismo.destino_fuente df WHERE df.destino_id = destino_id)',
+    'Agregar una fuente de respaldo.',
+    'ACTIVA',
+    v.id_version
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t ON t.id_esquema = e.id_esquema AND t.nombre_tabla = 'destino_fuente'
+LEFT JOIN meta.columna_datos c ON FALSE
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.nombre_regla = 'Destino debe tener trazabilidad documental'
+        AND COALESCE(r.id_columna, -1) = COALESCE(NULL, -1)
+  );
+
+
+INSERT INTO meta.regla_calidad (
+    id_tabla, id_columna, nombre_regla, descripcion, tipo_regla,
+    severidad, expresion_validacion, accion_si_falla, estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    c.id_columna,
+    'Orden de visita no debe repetirse en la misma ruta',
+    'Dentro de una ruta, el orden de visita debe ser único.',
+    'UNICIDAD',
+    'MEDIA',
+    'UNIQUE (ruta_id, orden_visita)',
+    'Corregir el orden de visita duplicado.',
+    'ACTIVA',
+    v.id_version
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t ON t.id_esquema = e.id_esquema AND t.nombre_tabla = 'ruta_destino'
+LEFT JOIN meta.columna_datos c ON c.id_tabla = t.id_tabla AND c.nombre_columna = 'orden_visita'
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.nombre_regla = 'Orden de visita no debe repetirse en la misma ruta'
+        AND COALESCE(r.id_columna, -1) = COALESCE(c.id_columna, -1)
+  );
+
+
+INSERT INTO meta.regla_calidad (
+    id_tabla, id_columna, nombre_regla, descripcion, tipo_regla,
+    severidad, expresion_validacion, accion_si_falla, estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    c.id_columna,
+    'Año de inscripción patrimonial debe ser razonable',
+    'El año de inscripción, si existe, debe ser coherente con reconocimientos patrimoniales modernos.',
+    'RANGO',
+    'MEDIA',
+    'anio_inscripcion IS NULL OR anio_inscripcion BETWEEN 1900 AND EXTRACT(YEAR FROM CURRENT_DATE)',
+    'Verificar año contra la fuente oficial.',
+    'ACTIVA',
+    v.id_version
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t ON t.id_esquema = e.id_esquema AND t.nombre_tabla = 'patrimonio_turistico'
+LEFT JOIN meta.columna_datos c ON c.id_tabla = t.id_tabla AND c.nombre_columna = 'anio_inscripcion'
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'turismo'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.nombre_regla = 'Año de inscripción patrimonial debe ser razonable'
+        AND COALESCE(r.id_columna, -1) = COALESCE(c.id_columna, -1)
+  );
+
+
+-- ============================================================
+-- 13. Revisión por pares
+-- ============================================================
+
+
+INSERT INTO meta.revision_pares (
+    nivel_revision, id_esquema, id_tabla, id_columna, id_regla,
+    tipo_revision, descripcion_revision,
+    revisor_1, estado_revisor_1, fecha_revisor_1, comentario_revisor_1,
+    revisor_2, estado_revisor_2, fecha_revisor_2, comentario_revisor_2,
+    estado_final, observaciones
+)
+SELECT
+    'ESQUEMA',
+    e.id_esquema,
+    NULL,
+    NULL,
+    NULL,
+    'MODELO',
+    'Revisión del alcance general del esquema turismo y sus límites frente a cultura, deportes y geografía.',
+    'Bryan Santiago',
+    'APROBADO',
+    CURRENT_DATE,
+    'Revisión inicial del modelo y documentación del módulo turismo.',
+    'Integrante revisor 2',
+    'PENDIENTE',
+    NULL,
+    'Reemplazar por el nombre real del segundo revisor y actualizar estado antes de la entrega final.',
+    'PENDIENTE',
+    'Debe completarse con la aprobación formal del segundo revisor.'
+FROM meta.esquema_datos e
+LEFT JOIN meta.tabla_datos t ON FALSE
+LEFT JOIN meta.columna_datos c ON FALSE
+WHERE e.nombre_esquema = 'turismo'
+  AND NOT EXISTS (
+      SELECT 1 FROM meta.revision_pares rp
+      WHERE rp.nivel_revision = 'ESQUEMA'
+        AND rp.tipo_revision = 'MODELO'
+        AND COALESCE(rp.id_esquema, -1) = COALESCE(e.id_esquema, -1)
+        AND COALESCE(rp.id_tabla, -1) = COALESCE(NULL, -1)
+        AND COALESCE(rp.id_columna, -1) = COALESCE(NULL, -1)
+  );
+
+
+INSERT INTO meta.revision_pares (
+    nivel_revision, id_esquema, id_tabla, id_columna, id_regla,
+    tipo_revision, descripcion_revision,
+    revisor_1, estado_revisor_1, fecha_revisor_1, comentario_revisor_1,
+    revisor_2, estado_revisor_2, fecha_revisor_2, comentario_revisor_2,
+    estado_final, observaciones
+)
+SELECT
+    'TABLA',
+    e.id_esquema,
+    t.id_tabla,
+    NULL,
+    NULL,
+    'MODELO',
+    'Revisión de la tabla central de destinos turísticos, criterios de inclusión, exclusión y relación con geografía.',
+    'Bryan Santiago',
+    'APROBADO',
+    CURRENT_DATE,
+    'Revisión inicial del modelo y documentación del módulo turismo.',
+    'Integrante revisor 2',
+    'PENDIENTE',
+    NULL,
+    'Reemplazar por el nombre real del segundo revisor y actualizar estado antes de la entrega final.',
+    'PENDIENTE',
+    'Tabla crítica del módulo.'
+FROM meta.esquema_datos e
+LEFT JOIN meta.tabla_datos t ON t.id_esquema = e.id_esquema AND t.nombre_tabla = 'destino_turistico'
+LEFT JOIN meta.columna_datos c ON FALSE
+WHERE e.nombre_esquema = 'turismo'
+  AND NOT EXISTS (
+      SELECT 1 FROM meta.revision_pares rp
+      WHERE rp.nivel_revision = 'TABLA'
+        AND rp.tipo_revision = 'MODELO'
+        AND COALESCE(rp.id_esquema, -1) = COALESCE(e.id_esquema, -1)
+        AND COALESCE(rp.id_tabla, -1) = COALESCE(t.id_tabla, -1)
+        AND COALESCE(rp.id_columna, -1) = COALESCE(NULL, -1)
+  );
+
+
+INSERT INTO meta.revision_pares (
+    nivel_revision, id_esquema, id_tabla, id_columna, id_regla,
+    tipo_revision, descripcion_revision,
+    revisor_1, estado_revisor_1, fecha_revisor_1, comentario_revisor_1,
+    revisor_2, estado_revisor_2, fecha_revisor_2, comentario_revisor_2,
+    estado_final, observaciones
+)
+SELECT
+    'TABLA',
+    e.id_esquema,
+    t.id_tabla,
+    NULL,
+    NULL,
+    'FUENTE',
+    'Revisión de la tabla de fuentes turísticas y sus campos mínimos de trazabilidad.',
+    'Bryan Santiago',
+    'APROBADO',
+    CURRENT_DATE,
+    'Revisión inicial del modelo y documentación del módulo turismo.',
+    'Integrante revisor 2',
+    'PENDIENTE',
+    NULL,
+    'Reemplazar por el nombre real del segundo revisor y actualizar estado antes de la entrega final.',
+    'PENDIENTE',
+    'Debe validarse que las fuentes sean verificables.'
+FROM meta.esquema_datos e
+LEFT JOIN meta.tabla_datos t ON t.id_esquema = e.id_esquema AND t.nombre_tabla = 'fuente_turistica'
+LEFT JOIN meta.columna_datos c ON FALSE
+WHERE e.nombre_esquema = 'turismo'
+  AND NOT EXISTS (
+      SELECT 1 FROM meta.revision_pares rp
+      WHERE rp.nivel_revision = 'TABLA'
+        AND rp.tipo_revision = 'FUENTE'
+        AND COALESCE(rp.id_esquema, -1) = COALESCE(e.id_esquema, -1)
+        AND COALESCE(rp.id_tabla, -1) = COALESCE(t.id_tabla, -1)
+        AND COALESCE(rp.id_columna, -1) = COALESCE(NULL, -1)
+  );
+
+
+INSERT INTO meta.revision_pares (
+    nivel_revision, id_esquema, id_tabla, id_columna, id_regla,
+    tipo_revision, descripcion_revision,
+    revisor_1, estado_revisor_1, fecha_revisor_1, comentario_revisor_1,
+    revisor_2, estado_revisor_2, fecha_revisor_2, comentario_revisor_2,
+    estado_final, observaciones
+)
+SELECT
+    'TABLA',
+    e.id_esquema,
+    t.id_tabla,
+    NULL,
+    NULL,
+    'FUENTE',
+    'Revisión de patrimonio turístico y uso de fuentes UNESCO o institucionales.',
+    'Bryan Santiago',
+    'APROBADO',
+    CURRENT_DATE,
+    'Revisión inicial del modelo y documentación del módulo turismo.',
+    'Integrante revisor 2',
+    'PENDIENTE',
+    NULL,
+    'Reemplazar por el nombre real del segundo revisor y actualizar estado antes de la entrega final.',
+    'PENDIENTE',
+    'Tabla sensible por requerir respaldo oficial.'
+FROM meta.esquema_datos e
+LEFT JOIN meta.tabla_datos t ON t.id_esquema = e.id_esquema AND t.nombre_tabla = 'patrimonio_turistico'
+LEFT JOIN meta.columna_datos c ON FALSE
+WHERE e.nombre_esquema = 'turismo'
+  AND NOT EXISTS (
+      SELECT 1 FROM meta.revision_pares rp
+      WHERE rp.nivel_revision = 'TABLA'
+        AND rp.tipo_revision = 'FUENTE'
+        AND COALESCE(rp.id_esquema, -1) = COALESCE(e.id_esquema, -1)
+        AND COALESCE(rp.id_tabla, -1) = COALESCE(t.id_tabla, -1)
+        AND COALESCE(rp.id_columna, -1) = COALESCE(NULL, -1)
+  );
+
+
+INSERT INTO meta.revision_pares (
+    nivel_revision, id_esquema, id_tabla, id_columna, id_regla,
+    tipo_revision, descripcion_revision,
+    revisor_1, estado_revisor_1, fecha_revisor_1, comentario_revisor_1,
+    revisor_2, estado_revisor_2, fecha_revisor_2, comentario_revisor_2,
+    estado_final, observaciones
+)
+SELECT
+    'ESQUEMA',
+    e.id_esquema,
+    NULL,
+    NULL,
+    NULL,
+    'MODELO',
+    'Revisión del uso de geografía como fuente territorial única para otros esquemas.',
+    'Bryan Santiago',
+    'APROBADO',
+    CURRENT_DATE,
+    'Revisión inicial del modelo y documentación del módulo turismo.',
+    'Integrante revisor 2',
+    'PENDIENTE',
+    NULL,
+    'Reemplazar por el nombre real del segundo revisor y actualizar estado antes de la entrega final.',
+    'PENDIENTE',
+    'Evita duplicidad de departamentos y municipios.'
+FROM meta.esquema_datos e
+LEFT JOIN meta.tabla_datos t ON FALSE
+LEFT JOIN meta.columna_datos c ON FALSE
+WHERE e.nombre_esquema = 'geografia'
+  AND NOT EXISTS (
+      SELECT 1 FROM meta.revision_pares rp
+      WHERE rp.nivel_revision = 'ESQUEMA'
+        AND rp.tipo_revision = 'MODELO'
+        AND COALESCE(rp.id_esquema, -1) = COALESCE(e.id_esquema, -1)
+        AND COALESCE(rp.id_tabla, -1) = COALESCE(NULL, -1)
+        AND COALESCE(rp.id_columna, -1) = COALESCE(NULL, -1)
+  );
+
+
+-- ============================================================
+-- 14. Decisiones de modelado
+-- ============================================================
+
+
+INSERT INTO meta.decision_modelado (
+    id_tema, tema, pregunta, decision, justificacion, ejemplo,
+    id_esquema_recomendado, id_tabla_recomendada, alternativa,
+    responsable, fecha_decision, id_version_desde, estado, observaciones
+)
+SELECT
+    tm.id_tema,
+    'Uso de geografía oficial',
+    '¿Turismo debe crear sus propias tablas de departamentos y municipios?',
+    'No. Turismo debe referenciar geografia.departamento y geografia.municipio.',
+    'La división territorial debe existir una sola vez para evitar inconsistencias y facilitar cruces entre módulos.',
+    'Un destino turístico en Antigua Guatemala referencia geografia.departamento y geografia.municipio.',
+    e.id_esquema,
+    t.id_tabla,
+    'Duplicar departamentos en turismo generaría inconsistencias.',
+    'Equipo SS2-CONOSE-OCCIDENTE',
+    CURRENT_DATE,
+    v.id_version,
+    'VIGENTE',
+    'Decisión documentada para orientar el crecimiento del modelo de datos.'
+FROM meta.tema_datos tm
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+LEFT JOIN meta.esquema_datos e ON e.nombre_esquema = 'geografia'
+LEFT JOIN meta.tabla_datos t ON t.id_esquema = e.id_esquema AND t.nombre_tabla = 'departamento'
+WHERE tm.nombre_tema = 'Geografía'
+  AND NOT EXISTS (
+      SELECT 1 FROM meta.decision_modelado d
+      WHERE d.tema = 'Uso de geografía oficial'
+        AND d.pregunta = '¿Turismo debe crear sus propias tablas de departamentos y municipios?'
+  );
+
+
+INSERT INTO meta.decision_modelado (
+    id_tema, tema, pregunta, decision, justificacion, ejemplo,
+    id_esquema_recomendado, id_tabla_recomendada, alternativa,
+    responsable, fecha_decision, id_version_desde, estado, observaciones
+)
+SELECT
+    tm.id_tema,
+    'Festividades y eventos',
+    '¿Las festividades van en el esquema turismo?',
+    'Solo si se modelan desde el enfoque turístico. En la versión 1.0 no se crea una tabla de festividades; si se requiere, se recomienda una tabla futura turismo.evento_turistico o un esquema cultura.',
+    'Una festividad puede ser atractiva para visitantes, pero también puede ser una manifestación cultural o religiosa. La ubicación depende del enfoque del análisis.',
+    'Semana Santa en Antigua puede ser turismo si se analiza como atractivo turístico; puede ser cultura si se analiza como manifestación religiosa.',
+    e.id_esquema,
+    NULL,
+    'Crear cultura.festividad si el proyecto decide estudiar tradiciones y expresiones culturales de forma independiente.',
+    'Equipo SS2-CONOSE-OCCIDENTE',
+    CURRENT_DATE,
+    v.id_version,
+    'VIGENTE',
+    'Decisión documentada para orientar el crecimiento del modelo de datos.'
+FROM meta.tema_datos tm
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+LEFT JOIN meta.esquema_datos e ON e.nombre_esquema = 'turismo'
+LEFT JOIN meta.tabla_datos t ON FALSE
+WHERE tm.nombre_tema = 'Festividades'
+  AND NOT EXISTS (
+      SELECT 1 FROM meta.decision_modelado d
+      WHERE d.tema = 'Festividades y eventos'
+        AND d.pregunta = '¿Las festividades van en el esquema turismo?'
+  );
+
+
+INSERT INTO meta.decision_modelado (
+    id_tema, tema, pregunta, decision, justificacion, ejemplo,
+    id_esquema_recomendado, id_tabla_recomendada, alternativa,
+    responsable, fecha_decision, id_version_desde, estado, observaciones
+)
+SELECT
+    tm.id_tema,
+    'Datos deportivos',
+    '¿La información deportiva pertenece a turismo?',
+    'No como regla general. Los deportes competitivos, ligas, resultados, torneos o equipos deberían ir en un esquema deportes si el proyecto los incorpora.',
+    'Turismo solo registra actividades turísticas como senderismo o montañismo; no estadísticas deportivas.',
+    'Un partido de fútbol no va en turismo; una actividad de senderismo en un volcán puede ir en turismo.actividad_turistica.',
+    e.id_esquema,
+    t.id_tabla,
+    'Crear un esquema deportes para competencias, equipos, torneos, estadios y resultados.',
+    'Equipo SS2-CONOSE-OCCIDENTE',
+    CURRENT_DATE,
+    v.id_version,
+    'VIGENTE',
+    'Decisión documentada para orientar el crecimiento del modelo de datos.'
+FROM meta.tema_datos tm
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+LEFT JOIN meta.esquema_datos e ON e.nombre_esquema = 'turismo'
+LEFT JOIN meta.tabla_datos t ON t.id_esquema = e.id_esquema AND t.nombre_tabla = 'actividad_turistica'
+WHERE tm.nombre_tema = 'Deportes'
+  AND NOT EXISTS (
+      SELECT 1 FROM meta.decision_modelado d
+      WHERE d.tema = 'Datos deportivos'
+        AND d.pregunta = '¿La información deportiva pertenece a turismo?'
+  );
+
+
+INSERT INTO meta.decision_modelado (
+    id_tema, tema, pregunta, decision, justificacion, ejemplo,
+    id_esquema_recomendado, id_tabla_recomendada, alternativa,
+    responsable, fecha_decision, id_version_desde, estado, observaciones
+)
+SELECT
+    tm.id_tema,
+    'Patrimonio turístico',
+    '¿Patrimonio debe ir en turismo o en un esquema patrimonio/cultura?',
+    'En esta versión, turismo registra patrimonio cuando está relacionado con destinos turísticos. Si el proyecto requiere inventario patrimonial completo, se recomienda un esquema patrimonio o cultura especializado.',
+    'El enfoque de esta tabla es turístico, no inventario nacional completo de bienes culturales.',
+    'Tikal se registra por su relación con turismo y UNESCO.',
+    e.id_esquema,
+    t.id_tabla,
+    'Crear un esquema cultura/patrimonio si se amplía el alcance patrimonial.',
+    'Equipo SS2-CONOSE-OCCIDENTE',
+    CURRENT_DATE,
+    v.id_version,
+    'VIGENTE',
+    'Decisión documentada para orientar el crecimiento del modelo de datos.'
+FROM meta.tema_datos tm
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+LEFT JOIN meta.esquema_datos e ON e.nombre_esquema = 'turismo'
+LEFT JOIN meta.tabla_datos t ON t.id_esquema = e.id_esquema AND t.nombre_tabla = 'patrimonio_turistico'
+WHERE tm.nombre_tema = 'Patrimonio'
+  AND NOT EXISTS (
+      SELECT 1 FROM meta.decision_modelado d
+      WHERE d.tema = 'Patrimonio turístico'
+        AND d.pregunta = '¿Patrimonio debe ir en turismo o en un esquema patrimonio/cultura?'
+  );
+
+
+INSERT INTO meta.decision_modelado (
+    id_tema, tema, pregunta, decision, justificacion, ejemplo,
+    id_esquema_recomendado, id_tabla_recomendada, alternativa,
+    responsable, fecha_decision, id_version_desde, estado, observaciones
+)
+SELECT
+    tm.id_tema,
+    'Trazabilidad de fuentes',
+    '¿Cada dato turístico debe tener fuente?',
+    'Sí. Los destinos, patrimonios, rutas o regiones deben relacionarse con fuentes verificables.',
+    'La trazabilidad permite corroborar datos y cumplir calidad académica.',
+    'Un destino puede relacionarse con UNESCO, SICultura o CONAP mediante destino_fuente.',
+    e.id_esquema,
+    t.id_tabla,
+    'Los datos sin fuente deben quedar pendientes de aprobación.',
+    'Equipo SS2-CONOSE-OCCIDENTE',
+    CURRENT_DATE,
+    v.id_version,
+    'VIGENTE',
+    'Decisión documentada para orientar el crecimiento del modelo de datos.'
+FROM meta.tema_datos tm
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+LEFT JOIN meta.esquema_datos e ON e.nombre_esquema = 'turismo'
+LEFT JOIN meta.tabla_datos t ON t.id_esquema = e.id_esquema AND t.nombre_tabla = 'destino_fuente'
+WHERE tm.nombre_tema = 'Fuentes'
+  AND NOT EXISTS (
+      SELECT 1 FROM meta.decision_modelado d
+      WHERE d.tema = 'Trazabilidad de fuentes'
+        AND d.pregunta = '¿Cada dato turístico debe tener fuente?'
+  );
+
+
+INSERT INTO meta.decision_modelado (
+    id_tema, tema, pregunta, decision, justificacion, ejemplo,
+    id_esquema_recomendado, id_tabla_recomendada, alternativa,
+    responsable, fecha_decision, id_version_desde, estado, observaciones
+)
+SELECT
+    tm.id_tema,
+    'Alcance de destinos turísticos',
+    '¿Qué tipo de dato entra en destino_turistico?',
+    'Solo lugares físicos o territoriales que funcionen como atractivos turísticos.',
+    'La tabla destino_turistico representa lugares; eventos, personas, instituciones o estadísticas no deben mezclarse allí.',
+    'Antigua Guatemala sí entra; Semana Santa como evento no entra directamente.',
+    e.id_esquema,
+    t.id_tabla,
+    'Usar tablas especializadas para eventos, festividades o estadísticas si se agregan en futuras versiones.',
+    'Equipo SS2-CONOSE-OCCIDENTE',
+    CURRENT_DATE,
+    v.id_version,
+    'VIGENTE',
+    'Decisión documentada para orientar el crecimiento del modelo de datos.'
+FROM meta.tema_datos tm
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+LEFT JOIN meta.esquema_datos e ON e.nombre_esquema = 'turismo'
+LEFT JOIN meta.tabla_datos t ON t.id_esquema = e.id_esquema AND t.nombre_tabla = 'destino_turistico'
+WHERE tm.nombre_tema = 'Turismo'
+  AND NOT EXISTS (
+      SELECT 1 FROM meta.decision_modelado d
+      WHERE d.tema = 'Alcance de destinos turísticos'
+        AND d.pregunta = '¿Qué tipo de dato entra en destino_turistico?'
+  );
+
+
+COMMIT;
+-- ============================================================
+-- insertar catalogo real de turismo
+-- ============================================================
+-- ============================================================
+
+INSERT INTO turismo.fuente_turistica (codigo, nombre, institucion, tipo, url, fecha_consulta, descripcion) VALUES
+('GUATEMALA_CVB_REGIONES', 'Regiones de Guatemala', 'Buró de Convenciones de Guatemala', 'turismo', 'https://guatemalacvb.com/regiones-de-guatemala/', '2026-07-06'::date, 'Fuente base para las siete regiones turísticas de Guatemala, sus departamentos asociados y descripciones generales de atractivos por región.')
+ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, institucion=EXCLUDED.institucion, tipo=EXCLUDED.tipo, url=EXCLUDED.url, fecha_consulta=EXCLUDED.fecha_consulta, descripcion=EXCLUDED.descripcion;
+
+INSERT INTO turismo.fuente_turistica (codigo, nombre, institucion, tipo, url, fecha_consulta, descripcion) VALUES
+('UNESCO_GUATEMALA', 'Guatemala - World Heritage', 'UNESCO World Heritage Centre', 'internacional', 'https://whc.unesco.org/en/statesparties/gt', '2026-07-06'::date, 'Página general de Guatemala en UNESCO World Heritage Centre; lista las propiedades inscritas del país.')
+ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, institucion=EXCLUDED.institucion, tipo=EXCLUDED.tipo, url=EXCLUDED.url, fecha_consulta=EXCLUDED.fecha_consulta, descripcion=EXCLUDED.descripcion;
+
+INSERT INTO turismo.fuente_turistica (codigo, nombre, institucion, tipo, url, fecha_consulta, descripcion) VALUES
+('UNESCO_ANTIGUA', 'Antigua Guatemala', 'UNESCO World Heritage Centre', 'internacional', 'https://whc.unesco.org/en/list/65/', '2026-07-06'::date, 'Ficha oficial UNESCO del sitio Antigua Guatemala, inscrito como Patrimonio Mundial cultural.')
+ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, institucion=EXCLUDED.institucion, tipo=EXCLUDED.tipo, url=EXCLUDED.url, fecha_consulta=EXCLUDED.fecha_consulta, descripcion=EXCLUDED.descripcion;
+
+INSERT INTO turismo.fuente_turistica (codigo, nombre, institucion, tipo, url, fecha_consulta, descripcion) VALUES
+('UNESCO_TIKAL', 'Tikal National Park', 'UNESCO World Heritage Centre', 'internacional', 'https://whc.unesco.org/en/list/64/', '2026-07-06'::date, 'Ficha oficial UNESCO del Parque Nacional Tikal, propiedad de Patrimonio Mundial mixto cultural y natural.')
+ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, institucion=EXCLUDED.institucion, tipo=EXCLUDED.tipo, url=EXCLUDED.url, fecha_consulta=EXCLUDED.fecha_consulta, descripcion=EXCLUDED.descripcion;
+
+INSERT INTO turismo.fuente_turistica (codigo, nombre, institucion, tipo, url, fecha_consulta, descripcion) VALUES
+('UNESCO_QUIRIGUA', 'Archaeological Park and Ruins of Quirigua', 'UNESCO World Heritage Centre', 'internacional', 'https://whc.unesco.org/en/list/149/', '2026-07-06'::date, 'Ficha oficial UNESCO del Parque Arqueológico y Ruinas de Quiriguá, Patrimonio Mundial cultural.')
+ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, institucion=EXCLUDED.institucion, tipo=EXCLUDED.tipo, url=EXCLUDED.url, fecha_consulta=EXCLUDED.fecha_consulta, descripcion=EXCLUDED.descripcion;
+
+INSERT INTO turismo.fuente_turistica (codigo, nombre, institucion, tipo, url, fecha_consulta, descripcion) VALUES
+('UNESCO_TAKALIK_ABAJ', 'National Archaeological Park Tak’alik Ab’aj', 'UNESCO World Heritage Centre', 'internacional', 'https://whc.unesco.org/en/list/1663/', '2026-07-06'::date, 'Ficha oficial UNESCO del Parque Arqueológico Nacional Tak’alik Ab’aj, inscrito como Patrimonio Mundial cultural en 2023.')
+ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, institucion=EXCLUDED.institucion, tipo=EXCLUDED.tipo, url=EXCLUDED.url, fecha_consulta=EXCLUDED.fecha_consulta, descripcion=EXCLUDED.descripcion;
+
+INSERT INTO turismo.fuente_turistica (codigo, nombre, institucion, tipo, url, fecha_consulta, descripcion) VALUES
+('UNESCO_RABINAL_ACHI', 'Rabinal Achí dance drama tradition', 'UNESCO Intangible Cultural Heritage', 'internacional', 'https://ich.unesco.org/en/RL/rabinal-achi-dance-drama-tradition-00144', '2026-07-06'::date, 'Ficha UNESCO de Patrimonio Cultural Inmaterial relacionada con la tradición Rabinal Achí.')
+ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, institucion=EXCLUDED.institucion, tipo=EXCLUDED.tipo, url=EXCLUDED.url, fecha_consulta=EXCLUDED.fecha_consulta, descripcion=EXCLUDED.descripcion;
+
+INSERT INTO turismo.fuente_turistica (codigo, nombre, institucion, tipo, url, fecha_consulta, descripcion) VALUES
+('CONAP_GENERAL', 'Consejo Nacional de Áreas Protegidas - CONAP', 'Consejo Nacional de Áreas Protegidas', 'conservacion', 'https://conap.gob.gt/', '2026-07-06'::date, 'Fuente institucional general sobre áreas protegidas, conservación y SIGAP en Guatemala.')
+ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, institucion=EXCLUDED.institucion, tipo=EXCLUDED.tipo, url=EXCLUDED.url, fecha_consulta=EXCLUDED.fecha_consulta, descripcion=EXCLUDED.descripcion;
+
+INSERT INTO turismo.fuente_turistica (codigo, nombre, institucion, tipo, url, fecha_consulta, descripcion) VALUES
+('CONAP_SIGAP_GENERAL', 'Turismo SIGAP', 'Consejo Nacional de Áreas Protegidas', 'conservacion', 'https://turismo-sigap.conap.gob.gt/', '2026-07-06'::date, 'Portal turístico del SIGAP utilizado como referencia general para áreas protegidas con uso turístico.')
+ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, institucion=EXCLUDED.institucion, tipo=EXCLUDED.tipo, url=EXCLUDED.url, fecha_consulta=EXCLUDED.fecha_consulta, descripcion=EXCLUDED.descripcion;
+
+INSERT INTO turismo.fuente_turistica (codigo, nombre, institucion, tipo, url, fecha_consulta, descripcion) VALUES
+('CONAP_SIGAP_PACAYA', 'Parque Nacional Volcán Pacaya y Laguna de Calderas', 'Consejo Nacional de Áreas Protegidas / Turismo SIGAP', 'conservacion', 'https://turismo-sigap.conap.gob.gt/en/rutas-turisticas/ruta-de-montanas-y-playas-boca-costa-pacifico/parque-nacional-volcan-pacaya-y-laguna-de-calderas/', '2026-07-06'::date, 'Ficha específica de Turismo SIGAP para el Parque Nacional Volcán Pacaya y Laguna de Calderas.')
+ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, institucion=EXCLUDED.institucion, tipo=EXCLUDED.tipo, url=EXCLUDED.url, fecha_consulta=EXCLUDED.fecha_consulta, descripcion=EXCLUDED.descripcion;
+
+INSERT INTO turismo.fuente_turistica (codigo, nombre, institucion, tipo, url, fecha_consulta, descripcion) VALUES
+('SIC_GENERAL', 'Sistema de Información Cultural de Guatemala', 'Ministerio de Cultura y Deportes', 'cultural', 'https://www.sicultura.gob.gt/', '2026-07-06'::date, 'Directorio cultural utilizado como fuente general para sitios culturales, museos y patrimonio.')
+ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, institucion=EXCLUDED.institucion, tipo=EXCLUDED.tipo, url=EXCLUDED.url, fecha_consulta=EXCLUDED.fecha_consulta, descripcion=EXCLUDED.descripcion;
+
+INSERT INTO turismo.fuente_turistica (codigo, nombre, institucion, tipo, url, fecha_consulta, descripcion) VALUES
+('SIC_TIKAL', 'Parque Nacional Tikal, Corazón del Mundo Maya', 'Sistema de Información Cultural / Ministerio de Cultura y Deportes', 'cultural', 'https://www.sicultura.gob.gt/directory-directorio_c/listing/parque-nacional-tikal-corazon-del-mundo-maya/', '2026-07-06'::date, 'Ficha específica de SICultura para Parque Nacional Tikal; utilizada como fuente complementaria de descripción, ubicación, horarios y tarifas.')
+ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, institucion=EXCLUDED.institucion, tipo=EXCLUDED.tipo, url=EXCLUDED.url, fecha_consulta=EXCLUDED.fecha_consulta, descripcion=EXCLUDED.descripcion;
+
+INSERT INTO turismo.fuente_turistica (codigo, nombre, institucion, tipo, url, fecha_consulta, descripcion) VALUES
+('MUNIGUATE_TURISMO', 'Turismo MuniGuate', 'Municipalidad de Guatemala', 'municipal', 'https://turismo.muniguate.com/', '2026-07-06'::date, 'Portal municipal utilizado para atractivos urbanos de la Ciudad de Guatemala.')
+ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, institucion=EXCLUDED.institucion, tipo=EXCLUDED.tipo, url=EXCLUDED.url, fecha_consulta=EXCLUDED.fecha_consulta, descripcion=EXCLUDED.descripcion;
+
+INSERT INTO turismo.fuente_turistica (codigo, nombre, institucion, tipo, url, fecha_consulta, descripcion) VALUES
+('INGUAT_GENERAL', 'Instituto Guatemalteco de Turismo - INGUAT', 'Instituto Guatemalteco de Turismo', 'turismo', 'https://inguat.gob.gt/', '2026-07-06'::date, 'Fuente institucional general de turismo; no se usa como fuente principal masiva de destinos por posibles restricciones de acceso.')
+ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, institucion=EXCLUDED.institucion, tipo=EXCLUDED.tipo, url=EXCLUDED.url, fecha_consulta=EXCLUDED.fecha_consulta, descripcion=EXCLUDED.descripcion;
+
+INSERT INTO turismo.fuente_turistica (codigo, nombre, institucion, tipo, url, fecha_consulta, descripcion) VALUES
+('IRTRA_GENERAL', 'Instituto de Recreación de los Trabajadores - IRTRA', 'IRTRA', 'recreativo', 'https://irtra.org.gt/', '2026-07-06'::date, 'Fuente institucional para parques recreativos IRTRA, incluyendo Xetulul y Xocomil como parte de su oferta de parques.')
+ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, institucion=EXCLUDED.institucion, tipo=EXCLUDED.tipo, url=EXCLUDED.url, fecha_consulta=EXCLUDED.fecha_consulta, descripcion=EXCLUDED.descripcion;
+
+INSERT INTO turismo.fuente_turistica (codigo, nombre, institucion, tipo, url, fecha_consulta, descripcion) VALUES
+('ZOO_LA_AURORA_OFICIAL', 'Zoológico La Aurora', 'Zoológico La Aurora', 'recreativo', 'https://www.aurorazoo.org.gt/', '2026-07-06'::date, 'Sitio oficial del Zoológico La Aurora; fuente para destino recreativo urbano y servicios de visita.')
+ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, institucion=EXCLUDED.institucion, tipo=EXCLUDED.tipo, url=EXCLUDED.url, fecha_consulta=EXCLUDED.fecha_consulta, descripcion=EXCLUDED.descripcion;
+
+INSERT INTO turismo.fuente_turistica (codigo, nombre, institucion, tipo, url, fecha_consulta, descripcion) VALUES
+('MUSEO_MIRAFLORES_OFICIAL', 'Museo Miraflores Guatemala', 'Museo Miraflores', 'cultural', 'https://www.museomiraflores.org.gt/', '2026-07-06'::date, 'Sitio oficial del Museo Miraflores; fuente para el destino cultural vinculado con Kaminaljuyú.')
+ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, institucion=EXCLUDED.institucion, tipo=EXCLUDED.tipo, url=EXCLUDED.url, fecha_consulta=EXCLUDED.fecha_consulta, descripcion=EXCLUDED.descripcion;
+
+INSERT INTO turismo.fuente_turistica (codigo, nombre, institucion, tipo, url, fecha_consulta, descripcion) VALUES
+('HOBBITENANGO_OFICIAL', 'Hobbitenango', 'Hobbitenango', 'recreativo', 'https://hobbitenango.com/', '2026-07-06'::date, 'Sitio del operador turístico Hobbitenango; se usa únicamente para identificar el atractivo recreativo privado.')
+ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, institucion=EXCLUDED.institucion, tipo=EXCLUDED.tipo, url=EXCLUDED.url, fecha_consulta=EXCLUDED.fecha_consulta, descripcion=EXCLUDED.descripcion;
+
+INSERT INTO turismo.region_turistica (id_region, codigo, nombre, descripcion, fuente_id) VALUES (1, 'GUATEMALA_MODERNA_COLONIAL', 'GUATEMALA, Moderna y Colonial', 'Región turística integrada principalmente por Guatemala y Sacatepéquez; destaca la Ciudad de Guatemala, Antigua Guatemala, servicios urbanos, patrimonio colonial, eventos y turismo cultural.', (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES')) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion, fuente_id=EXCLUDED.fuente_id;
+INSERT INTO turismo.region_turistica (id_region, codigo, nombre, descripcion, fuente_id) VALUES (2, 'ALTIPLANO_CULTURA_MAYA_VIVA', 'ALTIPLANO, Cultura Maya Viva', 'Región del altiplano con cultura maya viva, mercados, pueblos, volcanes, lagos, artesanías, turismo comunitario y paisaje montañoso.', (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES')) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion, fuente_id=EXCLUDED.fuente_id;
+INSERT INTO turismo.region_turistica (id_region, codigo, nombre, descripcion, fuente_id) VALUES (3, 'PETEN_MUNDO_MAYA', 'PETÉN, Aventura en el Mundo Maya', 'Región asociada con la selva maya, sitios arqueológicos monumentales, aventura, ecoturismo, observación de aves y reservas naturales.', (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES')) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion, fuente_id=EXCLUDED.fuente_id;
+INSERT INTO turismo.region_turistica (id_region, codigo, nombre, descripcion, fuente_id) VALUES (4, 'IZABAL_CARIBE_VERDE', 'IZABAL, Un Caribe Verde', 'Región caribeña vinculada con Río Dulce, Lago de Izabal, Livingston, Castillo de San Felipe y Quiriguá.', (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES')) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion, fuente_id=EXCLUDED.fuente_id;
+INSERT INTO turismo.region_turistica (id_region, codigo, nombre, descripcion, fuente_id) VALUES (5, 'VERAPACES_PARAISO_NATURAL', 'LAS VERAPACES, Paraíso Natural', 'Región de Alta Verapaz y Baja Verapaz con bosques nubosos, cuevas, ríos, Semuc Champey, Biotopo del Quetzal y cultura local.', (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES')) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion, fuente_id=EXCLUDED.fuente_id;
+INSERT INTO turismo.region_turistica (id_region, codigo, nombre, descripcion, fuente_id) VALUES (6, 'PACIFICO_MAGICO_DIVERSO', 'PACÍFICO, Mágico y Diverso', 'Región de costa, playas de arena volcánica, manglares, pesca deportiva, parques recreativos, volcanes y sitios arqueológicos del sur.', (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES')) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion, fuente_id=EXCLUDED.fuente_id;
+INSERT INTO turismo.region_turistica (id_region, codigo, nombre, descripcion, fuente_id) VALUES (7, 'ORIENTE_MISTICO_NATURAL', 'ORIENTE, Místico y Natural', 'Región cálida de peregrinaje, paleontología, montañas, Sierra de las Minas, volcanes, lagunas y tradición religiosa.', (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES')) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion, fuente_id=EXCLUDED.fuente_id;
+
+INSERT INTO turismo.departamento_region_turistica (region_turistica_id, departamento_id, observacion) VALUES (1, turismo.fn_departamento_id('Guatemala'), 'Departamento incluido por la fuente en la región Guatemala, Moderna y Colonial.') ON CONFLICT (region_turistica_id, departamento_id) DO UPDATE SET observacion=EXCLUDED.observacion;
+INSERT INTO turismo.departamento_region_turistica (region_turistica_id, departamento_id, observacion) VALUES (1, turismo.fn_departamento_id('Sacatepéquez'), 'Departamento incluido por la fuente en la región Guatemala, Moderna y Colonial.') ON CONFLICT (region_turistica_id, departamento_id) DO UPDATE SET observacion=EXCLUDED.observacion;
+INSERT INTO turismo.departamento_region_turistica (region_turistica_id, departamento_id, observacion) VALUES (2, turismo.fn_departamento_id('Huehuetenango'), 'Departamento incluido por la fuente en Altiplano, Cultura Maya Viva.') ON CONFLICT (region_turistica_id, departamento_id) DO UPDATE SET observacion=EXCLUDED.observacion;
+INSERT INTO turismo.departamento_region_turistica (region_turistica_id, departamento_id, observacion) VALUES (2, turismo.fn_departamento_id('Quiché'), 'Departamento incluido por la fuente en Altiplano, Cultura Maya Viva.') ON CONFLICT (region_turistica_id, departamento_id) DO UPDATE SET observacion=EXCLUDED.observacion;
+INSERT INTO turismo.departamento_region_turistica (region_turistica_id, departamento_id, observacion) VALUES (2, turismo.fn_departamento_id('Chimaltenango'), 'Departamento incluido por la fuente en Altiplano, Cultura Maya Viva.') ON CONFLICT (region_turistica_id, departamento_id) DO UPDATE SET observacion=EXCLUDED.observacion;
+INSERT INTO turismo.departamento_region_turistica (region_turistica_id, departamento_id, observacion) VALUES (2, turismo.fn_departamento_id('Totonicapán'), 'Departamento incluido por la fuente en Altiplano, Cultura Maya Viva.') ON CONFLICT (region_turistica_id, departamento_id) DO UPDATE SET observacion=EXCLUDED.observacion;
+INSERT INTO turismo.departamento_region_turistica (region_turistica_id, departamento_id, observacion) VALUES (2, turismo.fn_departamento_id('Sololá'), 'Departamento incluido por la fuente en Altiplano, Cultura Maya Viva.') ON CONFLICT (region_turistica_id, departamento_id) DO UPDATE SET observacion=EXCLUDED.observacion;
+INSERT INTO turismo.departamento_region_turistica (region_turistica_id, departamento_id, observacion) VALUES (2, turismo.fn_departamento_id('San Marcos'), 'La fuente ubica la parte norte de San Marcos en Altiplano; también se asocia parcialmente con Pacífico.') ON CONFLICT (region_turistica_id, departamento_id) DO UPDATE SET observacion=EXCLUDED.observacion;
+INSERT INTO turismo.departamento_region_turistica (region_turistica_id, departamento_id, observacion) VALUES (3, turismo.fn_departamento_id('Petén'), 'Departamento asociado a la región Petén, Aventura en el Mundo Maya.') ON CONFLICT (region_turistica_id, departamento_id) DO UPDATE SET observacion=EXCLUDED.observacion;
+INSERT INTO turismo.departamento_region_turistica (region_turistica_id, departamento_id, observacion) VALUES (4, turismo.fn_departamento_id('Izabal'), 'Departamento asociado a la región Izabal, Un Caribe Verde.') ON CONFLICT (region_turistica_id, departamento_id) DO UPDATE SET observacion=EXCLUDED.observacion;
+INSERT INTO turismo.departamento_region_turistica (region_turistica_id, departamento_id, observacion) VALUES (5, turismo.fn_departamento_id('Alta Verapaz'), 'Departamento asociado a Las Verapaces.') ON CONFLICT (region_turistica_id, departamento_id) DO UPDATE SET observacion=EXCLUDED.observacion;
+INSERT INTO turismo.departamento_region_turistica (region_turistica_id, departamento_id, observacion) VALUES (5, turismo.fn_departamento_id('Baja Verapaz'), 'Departamento asociado a Las Verapaces.') ON CONFLICT (region_turistica_id, departamento_id) DO UPDATE SET observacion=EXCLUDED.observacion;
+INSERT INTO turismo.departamento_region_turistica (region_turistica_id, departamento_id, observacion) VALUES (6, turismo.fn_departamento_id('San Marcos'), 'La fuente asocia la parte sur de San Marcos con Pacífico; por eso aparece también en Altiplano.') ON CONFLICT (region_turistica_id, departamento_id) DO UPDATE SET observacion=EXCLUDED.observacion;
+INSERT INTO turismo.departamento_region_turistica (region_turistica_id, departamento_id, observacion) VALUES (6, turismo.fn_departamento_id('Retalhuleu'), 'Departamento asociado a Pacífico, Mágico y Diverso.') ON CONFLICT (region_turistica_id, departamento_id) DO UPDATE SET observacion=EXCLUDED.observacion;
+INSERT INTO turismo.departamento_region_turistica (region_turistica_id, departamento_id, observacion) VALUES (6, turismo.fn_departamento_id('Suchitepéquez'), 'Departamento asociado a Pacífico, Mágico y Diverso.') ON CONFLICT (region_turistica_id, departamento_id) DO UPDATE SET observacion=EXCLUDED.observacion;
+INSERT INTO turismo.departamento_region_turistica (region_turistica_id, departamento_id, observacion) VALUES (6, turismo.fn_departamento_id('Escuintla'), 'Departamento asociado a Pacífico, Mágico y Diverso.') ON CONFLICT (region_turistica_id, departamento_id) DO UPDATE SET observacion=EXCLUDED.observacion;
+INSERT INTO turismo.departamento_region_turistica (region_turistica_id, departamento_id, observacion) VALUES (6, turismo.fn_departamento_id('Santa Rosa'), 'Departamento asociado a Pacífico, Mágico y Diverso.') ON CONFLICT (region_turistica_id, departamento_id) DO UPDATE SET observacion=EXCLUDED.observacion;
+INSERT INTO turismo.departamento_region_turistica (region_turistica_id, departamento_id, observacion) VALUES (6, turismo.fn_departamento_id('Jutiapa'), 'La fuente asocia la parte sur de Jutiapa con Pacífico; también aparece parcialmente en Oriente.') ON CONFLICT (region_turistica_id, departamento_id) DO UPDATE SET observacion=EXCLUDED.observacion;
+INSERT INTO turismo.departamento_region_turistica (region_turistica_id, departamento_id, observacion) VALUES (7, turismo.fn_departamento_id('El Progreso'), 'Departamento asociado a Oriente, Místico y Natural.') ON CONFLICT (region_turistica_id, departamento_id) DO UPDATE SET observacion=EXCLUDED.observacion;
+INSERT INTO turismo.departamento_region_turistica (region_turistica_id, departamento_id, observacion) VALUES (7, turismo.fn_departamento_id('Chiquimula'), 'Departamento asociado a Oriente, Místico y Natural.') ON CONFLICT (region_turistica_id, departamento_id) DO UPDATE SET observacion=EXCLUDED.observacion;
+INSERT INTO turismo.departamento_region_turistica (region_turistica_id, departamento_id, observacion) VALUES (7, turismo.fn_departamento_id('Jalapa'), 'Departamento asociado a Oriente, Místico y Natural.') ON CONFLICT (region_turistica_id, departamento_id) DO UPDATE SET observacion=EXCLUDED.observacion;
+INSERT INTO turismo.departamento_region_turistica (region_turistica_id, departamento_id, observacion) VALUES (7, turismo.fn_departamento_id('Zacapa'), 'Departamento asociado a Oriente, Místico y Natural.') ON CONFLICT (region_turistica_id, departamento_id) DO UPDATE SET observacion=EXCLUDED.observacion;
+INSERT INTO turismo.departamento_region_turistica (region_turistica_id, departamento_id, observacion) VALUES (7, turismo.fn_departamento_id('Jutiapa'), 'La fuente asocia la parte norte de Jutiapa con Oriente; también aparece parcialmente en Pacífico.') ON CONFLICT (region_turistica_id, departamento_id) DO UPDATE SET observacion=EXCLUDED.observacion;
+
+INSERT INTO turismo.categoria_destino (id_categoria, codigo, nombre, descripcion) VALUES (1, 'ARQUEOLOGIA', 'Arqueología', 'Sitios arqueológicos prehispánicos, parques arqueológicos, estelas, acrópolis y ciudades mayas.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.categoria_destino (id_categoria, codigo, nombre, descripcion) VALUES (2, 'PATRIMONIO_UNESCO', 'Patrimonio UNESCO', 'Destinos o expresiones vinculadas con listas de Patrimonio Mundial o Patrimonio Cultural Inmaterial.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.categoria_destino (id_categoria, codigo, nombre, descripcion) VALUES (3, 'COLONIAL', 'Arquitectura colonial', 'Ciudades, templos, conventos, plazas y conjuntos urbanos coloniales.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.categoria_destino (id_categoria, codigo, nombre, descripcion) VALUES (4, 'NATURALEZA', 'Naturaleza', 'Atractivos naturales como lagos, ríos, bosques, montañas, cascadas, cuevas y paisajes.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.categoria_destino (id_categoria, codigo, nombre, descripcion) VALUES (5, 'AREA_PROTEGIDA', 'Área protegida', 'Destinos dentro o vinculados al Sistema Guatemalteco de Áreas Protegidas.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.categoria_destino (id_categoria, codigo, nombre, descripcion) VALUES (6, 'AVENTURA', 'Aventura', 'Destinos que permiten senderismo, ascenso, exploración, canopy, navegación u otras actividades de aventura.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.categoria_destino (id_categoria, codigo, nombre, descripcion) VALUES (7, 'PLAYA', 'Playa y costa', 'Playas, costas, manglares, litoral del Pacífico o Caribe y actividades marinas.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.categoria_destino (id_categoria, codigo, nombre, descripcion) VALUES (8, 'VOLCAN', 'Volcanes', 'Volcanes activos o inactivos, miradores volcánicos y rutas de ascenso.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.categoria_destino (id_categoria, codigo, nombre, descripcion) VALUES (9, 'LAGO_RIO', 'Lagos y ríos', 'Lagos, lagunas, ríos navegables, pozas y cuerpos de agua con valor turístico.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.categoria_destino (id_categoria, codigo, nombre, descripcion) VALUES (10, 'TURISMO_COMUNITARIO', 'Turismo comunitario', 'Destinos donde destaca convivencia comunitaria, cultura local, textiles, talleres o experiencias rurales.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.categoria_destino (id_categoria, codigo, nombre, descripcion) VALUES (11, 'RELIGIOSO', 'Turismo religioso', 'Basílicas, templos, peregrinajes, celebraciones religiosas y tradición espiritual.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.categoria_destino (id_categoria, codigo, nombre, descripcion) VALUES (12, 'URBANO', 'Turismo urbano', 'Centros históricos, museos, plazas, zoológicos, servicios, gastronomía y oferta urbana.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.categoria_destino (id_categoria, codigo, nombre, descripcion) VALUES (13, 'MUSEO', 'Museos', 'Museos, centros de interpretación y espacios de exhibición patrimonial.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.categoria_destino (id_categoria, codigo, nombre, descripcion) VALUES (14, 'GASTRONOMIA', 'Gastronomía', 'Destinos donde la comida local o mercados tienen valor turístico.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.categoria_destino (id_categoria, codigo, nombre, descripcion) VALUES (15, 'ARTESANIA', 'Artesanía', 'Mercados, textiles, cerámica, talleres, productos artesanales y cultura material.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.categoria_destino (id_categoria, codigo, nombre, descripcion) VALUES (16, 'OBSERVACION_AVES', 'Observación de aves', 'Destinos apropiados para observación de aves o biodiversidad.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.categoria_destino (id_categoria, codigo, nombre, descripcion) VALUES (17, 'FAMILIAR', 'Turismo familiar', 'Parques recreativos, zoológicos, museos y destinos de visita familiar.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.categoria_destino (id_categoria, codigo, nombre, descripcion) VALUES (18, 'CULTURA_VIVA', 'Cultura viva', 'Manifestaciones culturales, pueblos vivos, trajes, idiomas, tradiciones y fiestas.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion;
+
+INSERT INTO turismo.actividad_turistica (id_actividad, codigo, nombre, descripcion) VALUES (1, 'CAMINATA', 'Caminata', 'Recorridos a pie en áreas urbanas, naturales o culturales.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.actividad_turistica (id_actividad, codigo, nombre, descripcion) VALUES (2, 'SENDERISMO', 'Senderismo', 'Caminatas de mayor esfuerzo en volcanes, montañas, bosques o senderos.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.actividad_turistica (id_actividad, codigo, nombre, descripcion) VALUES (3, 'FOTOGRAFIA', 'Fotografía', 'Registro visual de arquitectura, paisaje, naturaleza, cultura o patrimonio.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.actividad_turistica (id_actividad, codigo, nombre, descripcion) VALUES (4, 'OBSERVACION_AVES', 'Observación de aves', 'Actividad de observación de avifauna en áreas naturales o protegidas.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.actividad_turistica (id_actividad, codigo, nombre, descripcion) VALUES (5, 'NAVEGACION', 'Navegación', 'Paseos en lancha, recorrido en río, lago o costa.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.actividad_turistica (id_actividad, codigo, nombre, descripcion) VALUES (6, 'NATACION', 'Natación', 'Uso recreativo de pozas, playas o cuerpos de agua donde sea permitido.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.actividad_turistica (id_actividad, codigo, nombre, descripcion) VALUES (7, 'ARQUEOLOGIA', 'Recorrido arqueológico', 'Visita guiada o interpretativa a sitios arqueológicos.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.actividad_turistica (id_actividad, codigo, nombre, descripcion) VALUES (8, 'MUSEOS', 'Visita a museos', 'Visita a museos y centros de interpretación.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.actividad_turistica (id_actividad, codigo, nombre, descripcion) VALUES (9, 'COMPRAS_ARTESANIA', 'Compra de artesanías', 'Compra o apreciación de textiles, cerámica, madera, joyería u otros productos locales.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.actividad_turistica (id_actividad, codigo, nombre, descripcion) VALUES (10, 'GASTRONOMIA', 'Gastronomía local', 'Degustación de comida local, mercados o restaurantes tradicionales.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.actividad_turistica (id_actividad, codigo, nombre, descripcion) VALUES (11, 'PEREGRINAJE', 'Peregrinaje', 'Visita religiosa o devocional.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.actividad_turistica (id_actividad, codigo, nombre, descripcion) VALUES (12, 'CAMPING', 'Camping', 'Pernocta en áreas naturales o rutas de montaña donde esté permitido.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.actividad_turistica (id_actividad, codigo, nombre, descripcion) VALUES (13, 'ASCENSO_VOLCAN', 'Ascenso a volcán', 'Ascenso a volcanes o miradores volcánicos.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.actividad_turistica (id_actividad, codigo, nombre, descripcion) VALUES (14, 'SURF', 'Surf', 'Actividad en playas aptas para surf.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.actividad_turistica (id_actividad, codigo, nombre, descripcion) VALUES (15, 'PESCA_DEPORTIVA', 'Pesca deportiva', 'Actividad recreativa vinculada a pesca deportiva.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.actividad_turistica (id_actividad, codigo, nombre, descripcion) VALUES (16, 'TURISMO_COMUNITARIO', 'Turismo comunitario', 'Participación en experiencias comunitarias y rurales.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.actividad_turistica (id_actividad, codigo, nombre, descripcion) VALUES (17, 'RELAX_TERMAL', 'Aguas termales', 'Visita a aguas termales o espacios de relajación.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.actividad_turistica (id_actividad, codigo, nombre, descripcion) VALUES (18, 'EDUCACION_AMBIENTAL', 'Educación ambiental', 'Actividades de aprendizaje sobre conservación, biodiversidad o áreas protegidas.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.actividad_turistica (id_actividad, codigo, nombre, descripcion) VALUES (19, 'CULTURA_VIVA', 'Cultura viva', 'Participación o apreciación de tradiciones, mercados, idiomas, trajes y prácticas culturales.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.actividad_turistica (id_actividad, codigo, nombre, descripcion) VALUES (20, 'AVENTURA_EXTREMA', 'Aventura extrema', 'Actividades de mayor riesgo o esfuerzo físico como exploración, canopy o trekking largo.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, descripcion=EXCLUDED.descripcion;
+
+INSERT INTO turismo.temporada_turistica (id_temporada, codigo, nombre, meses, descripcion) VALUES (1, 'SECA', 'Temporada seca', 'noviembre-abril', 'Periodo generalmente más favorable para caminatas, volcanes, arqueología y recorridos por carretera.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, meses=EXCLUDED.meses, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.temporada_turistica (id_temporada, codigo, nombre, meses, descripcion) VALUES (2, 'LLUVIOSA', 'Temporada lluviosa', 'mayo-octubre', 'Periodo con paisajes verdes y mayor caudal de ríos, pero requiere prever lluvia y estado de caminos.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, meses=EXCLUDED.meses, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.temporada_turistica (id_temporada, codigo, nombre, meses, descripcion) VALUES (3, 'SEMANA_SANTA', 'Semana Santa', 'marzo-abril', 'Periodo de alta afluencia turística y tradición religiosa, especialmente en Antigua Guatemala y centros históricos.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, meses=EXCLUDED.meses, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.temporada_turistica (id_temporada, codigo, nombre, meses, descripcion) VALUES (4, 'FIN_DE_ANIO', 'Fin de año', 'noviembre-enero', 'Periodo de vacaciones, festividades, clima fresco en altiplano y mayor demanda de hospedaje.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, meses=EXCLUDED.meses, descripcion=EXCLUDED.descripcion;
+INSERT INTO turismo.temporada_turistica (id_temporada, codigo, nombre, meses, descripcion) VALUES (5, 'TODO_EL_ANIO', 'Todo el año', 'enero-diciembre', 'Destino visitable durante todo el año, sujeto a condiciones locales y clima.') ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, meses=EXCLUDED.meses, descripcion=EXCLUDED.descripcion;
+
+-- Destinos turisticos
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (1, 'ANTIGUA_GUATEMALA', 'Antigua Guatemala', 'CULTURAL'::turismo.tipo_destino, turismo.fn_departamento_id('Sacatepéquez'), turismo.fn_municipio_id('Sacatepéquez', 'Antigua Guatemala', FALSE), 'Ciudad colonial ubicada en el valle de Panchoy, reconocida por su arquitectura, ruinas, iglesias, plazas, tradiciones religiosas y valor patrimonial.', 'Centro histórico de Antigua Guatemala', NULL, NULL, NULL, 'BAJA'::turismo.dificultad_destino, '1 a 2 días', NULL, NULL, NULL, FALSE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='UNESCO_ANTIGUA'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (2, 'PARQUE_NACIONAL_TIKAL', 'Parque Nacional Tikal', 'MIXTO'::turismo.tipo_destino, turismo.fn_departamento_id('Petén'), turismo.fn_municipio_id('Petén', 'Flores', FALSE), 'Uno de los principales sitios de la civilización maya, rodeado de selva y reconocido por templos, plazas ceremoniales, biodiversidad y patrimonio mixto UNESCO.', 'Parque Nacional Tikal, Reserva de la Biosfera Maya', NULL, NULL, NULL, 'MEDIA'::turismo.dificultad_destino, '1 día completo', NULL, NULL, NULL, TRUE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='UNESCO_TIKAL'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (3, 'YAXHA', 'Parque Nacional Yaxhá-Nakum-Naranjo', 'ARQUEOLOGICO'::turismo.tipo_destino, turismo.fn_departamento_id('Petén'), turismo.fn_municipio_id('Petén', 'Flores', FALSE), 'Conjunto arqueológico maya rodeado por lagunas y bosque tropical, importante para arqueología, naturaleza y observación de aves.', 'Área protegida Yaxhá-Nakum-Naranjo', NULL, NULL, NULL, 'MEDIA'::turismo.dificultad_destino, '1 día', NULL, NULL, NULL, TRUE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='CONAP_GENERAL'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (4, 'EL_MIRADOR', 'Sitio arqueológico El Mirador', 'ARQUEOLOGICO'::turismo.tipo_destino, turismo.fn_departamento_id('Petén'), turismo.fn_municipio_id('Petén', 'San Andrés', FALSE), 'Ciudad maya preclásica en la selva de Petén, visitada mediante expediciones de varios días por su localización remota.', 'Reserva de la Biosfera Maya, norte de Petén', NULL, NULL, NULL, 'ALTA'::turismo.dificultad_destino, '5 a 6 días', NULL, NULL, NULL, TRUE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='CONAP_GENERAL'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (5, 'UAXACTUN', 'Uaxactún', 'ARQUEOLOGICO'::turismo.tipo_destino, turismo.fn_departamento_id('Petén'), turismo.fn_municipio_id('Petén', 'Flores', FALSE), 'Sitio arqueológico y comunidad vinculada con astronomía maya, bosque y cultura local en Petén.', 'Comunidad de Uaxactún, Petén', NULL, NULL, NULL, 'MEDIA'::turismo.dificultad_destino, 'medio día a 1 día', NULL, NULL, NULL, TRUE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (6, 'LAGO_ATITLAN', 'Lago de Atitlán', 'NATURAL'::turismo.tipo_destino, turismo.fn_departamento_id('Sololá'), turismo.fn_municipio_id('Sololá', 'Panajachel', FALSE), 'Lago rodeado por volcanes y pueblos mayas, reconocido por su paisaje, navegación, cultura viva, artesanías y turismo comunitario.', 'Cuenca del Lago de Atitlán', NULL, NULL, NULL, 'BAJA'::turismo.dificultad_destino, '1 a 3 días', NULL, NULL, NULL, FALSE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (7, 'PANAJACHEL', 'Panajachel', 'URBANO'::turismo.tipo_destino, turismo.fn_departamento_id('Sololá'), turismo.fn_municipio_id('Sololá', 'Panajachel', FALSE), 'Principal punto de acceso turístico al Lago de Atitlán, con embarcaderos, comercio, hospedaje, gastronomía y vistas panorámicas.', 'Ribera norte del Lago de Atitlán', NULL, NULL, NULL, 'BAJA'::turismo.dificultad_destino, 'medio día a 1 día', NULL, NULL, NULL, FALSE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (8, 'SAN_JUAN_LA_LAGUNA', 'San Juan La Laguna', 'CULTURAL'::turismo.tipo_destino, turismo.fn_departamento_id('Sololá'), turismo.fn_municipio_id('Sololá', 'San Juan La Laguna', FALSE), 'Pueblo del Lago de Atitlán reconocido por murales, cooperativas textiles, arte local, turismo comunitario y cultura tz’utujil.', 'Ribera occidental del Lago de Atitlán', NULL, NULL, NULL, 'BAJA'::turismo.dificultad_destino, 'medio día', NULL, NULL, NULL, FALSE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (9, 'CHICHICASTENANGO', 'Chichicastenango', 'CULTURAL'::turismo.tipo_destino, turismo.fn_departamento_id('Quiché'), turismo.fn_municipio_id('Quiché', 'Chichicastenango', FALSE), 'Municipio conocido por su mercado, iglesia de Santo Tomás, tradiciones mayas, textiles, artesanías y sincretismo religioso.', 'Centro de Chichicastenango', NULL, NULL, NULL, 'BAJA'::turismo.dificultad_destino, 'medio día a 1 día', NULL, NULL, NULL, FALSE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (10, 'IXIMCHE', 'Iximché', 'ARQUEOLOGICO'::turismo.tipo_destino, turismo.fn_departamento_id('Chimaltenango'), turismo.fn_municipio_id('Chimaltenango', 'Tecpán Guatemala', FALSE), 'Sitio arqueológico kaqchikel con plazas, estructuras ceremoniales y valor histórico en el altiplano guatemalteco.', 'Tecpán Guatemala, Chimaltenango', NULL, NULL, NULL, 'BAJA'::turismo.dificultad_destino, 'medio día', NULL, NULL, NULL, FALSE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='SIC_GENERAL'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (11, 'QUIRIGUA', 'Parque Arqueológico Quiriguá', 'ARQUEOLOGICO'::turismo.tipo_destino, turismo.fn_departamento_id('Izabal'), turismo.fn_municipio_id('Izabal', 'Los Amates', FALSE), 'Parque arqueológico maya reconocido por sus estelas monumentales y esculturas, inscrito como Patrimonio Mundial UNESCO.', 'Los Amates, Izabal', NULL, NULL, NULL, 'BAJA'::turismo.dificultad_destino, 'medio día', NULL, NULL, NULL, FALSE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='UNESCO_QUIRIGUA'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (12, 'RIO_DULCE', 'Río Dulce', 'NATURAL'::turismo.tipo_destino, turismo.fn_departamento_id('Izabal'), turismo.fn_municipio_id('Izabal', 'Livingston', FALSE), 'Corredor fluvial y lacustre que conecta el Lago de Izabal con el Caribe, usado para navegación, naturaleza y conexión hacia Livingston.', 'Río Dulce - Lago de Izabal - Livingston', NULL, NULL, NULL, 'BAJA'::turismo.dificultad_destino, '1 día', NULL, NULL, NULL, TRUE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (13, 'CASTILLO_SAN_FELIPE', 'Castillo de San Felipe de Lara', 'CULTURAL'::turismo.tipo_destino, turismo.fn_departamento_id('Izabal'), turismo.fn_municipio_id('Izabal', 'Livingston', FALSE), 'Fortaleza histórica ubicada en la entrada del Río Dulce, asociada con la defensa colonial y turismo familiar.', 'Entrada del Río Dulce, Izabal', NULL, NULL, NULL, 'BAJA'::turismo.dificultad_destino, '2 a 3 horas', NULL, NULL, NULL, FALSE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (14, 'LIVINGSTON', 'Livingston', 'CULTURAL'::turismo.tipo_destino, turismo.fn_departamento_id('Izabal'), turismo.fn_municipio_id('Izabal', 'Livingston', FALSE), 'Población caribeña con cultura garífuna, gastronomía, acceso marítimo, playa, río y diversidad cultural.', 'Costa Caribe de Izabal', NULL, NULL, NULL, 'BAJA'::turismo.dificultad_destino, '1 a 2 días', NULL, NULL, NULL, FALSE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (15, 'SEMUC_CHAMPEY', 'Semuc Champey', 'NATURAL'::turismo.tipo_destino, turismo.fn_departamento_id('Alta Verapaz'), turismo.fn_municipio_id('Alta Verapaz', 'Lanquín', FALSE), 'Monumento natural de pozas escalonadas de agua turquesa sobre un puente natural de piedra caliza, rodeado de bosque tropical.', 'Lanquín, Alta Verapaz', NULL, NULL, NULL, 'MEDIA'::turismo.dificultad_destino, '1 día', NULL, NULL, NULL, TRUE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='CONAP_GENERAL'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (16, 'CUEVAS_CANDELARIA_AV', 'Cuevas de Candelaria', 'NATURAL'::turismo.tipo_destino, turismo.fn_departamento_id('Alta Verapaz'), turismo.fn_municipio_id('Alta Verapaz', 'Chisec', FALSE), 'Sistema de cuevas y ríos subterráneos asociado con naturaleza, aventura y valor cultural en Alta Verapaz.', 'Chisec, Alta Verapaz', NULL, NULL, NULL, 'MEDIA'::turismo.dificultad_destino, 'medio día a 1 día', NULL, NULL, NULL, FALSE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (17, 'BIOTOPO_QUETZAL', 'Biotopo del Quetzal Mario Dary Rivera', 'NATURAL'::turismo.tipo_destino, turismo.fn_departamento_id('Baja Verapaz'), turismo.fn_municipio_id('Baja Verapaz', 'Purulhá', FALSE), 'Área protegida de bosque nuboso creada para conservación del quetzal y biodiversidad, con senderos y educación ambiental.', 'Purulhá, Baja Verapaz', NULL, NULL, NULL, 'MEDIA'::turismo.dificultad_destino, 'medio día', NULL, NULL, NULL, TRUE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='CONAP_GENERAL'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (18, 'COBAN', 'Cobán', 'URBANO'::turismo.tipo_destino, turismo.fn_departamento_id('Alta Verapaz'), turismo.fn_municipio_id('Alta Verapaz', 'Cobán', FALSE), 'Centro urbano de Alta Verapaz, punto base para visitar cuevas, orquídeas, café, bosques y atractivos naturales cercanos.', 'Cabecera departamental de Alta Verapaz', NULL, NULL, NULL, 'BAJA'::turismo.dificultad_destino, 'medio día a 1 día', NULL, NULL, NULL, FALSE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (19, 'ESQUIPULAS', 'Esquipulas', 'RELIGIOSO'::turismo.tipo_destino, turismo.fn_departamento_id('Chiquimula'), turismo.fn_municipio_id('Chiquimula', 'Esquipulas', FALSE), 'Municipio reconocido por peregrinación religiosa, servicios turísticos y la Basílica del Cristo Negro.', 'Esquipulas, Chiquimula', NULL, NULL, NULL, 'BAJA'::turismo.dificultad_destino, '1 día', NULL, NULL, NULL, FALSE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (20, 'BASILICA_ESQUIPULAS', 'Basílica del Cristo Negro de Esquipulas', 'RELIGIOSO'::turismo.tipo_destino, turismo.fn_departamento_id('Chiquimula'), turismo.fn_municipio_id('Chiquimula', 'Esquipulas', FALSE), 'Templo de peregrinación católica de relevancia regional, asociado al Cristo Negro de Esquipulas.', 'Centro de Esquipulas', NULL, NULL, NULL, 'BAJA'::turismo.dificultad_destino, '2 a 4 horas', NULL, NULL, NULL, FALSE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (21, 'VOLCAN_PACAYA', 'Volcán de Pacaya', 'NATURAL'::turismo.tipo_destino, turismo.fn_departamento_id('Escuintla'), turismo.fn_municipio_id('Escuintla', 'San Vicente Pacaya', FALSE), 'Volcán activo y parque nacional cercano a la ciudad, popular para senderismo, paisajes volcánicos y observación geológica.', 'San Vicente Pacaya, Escuintla', NULL, NULL, NULL, 'MEDIA'::turismo.dificultad_destino, 'medio día', NULL, NULL, NULL, TRUE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='CONAP_SIGAP_PACAYA'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (22, 'MONTERRICO', 'Monterrico', 'NATURAL'::turismo.tipo_destino, turismo.fn_departamento_id('Santa Rosa'), turismo.fn_municipio_id('Santa Rosa', 'Taxisco', FALSE), 'Playa del Pacífico con arena volcánica, manglares cercanos y actividades vinculadas a descanso, naturaleza y tortugarios.', 'Costa del Pacífico, Taxisco', NULL, NULL, NULL, 'BAJA'::turismo.dificultad_destino, '1 a 2 días', NULL, NULL, NULL, TRUE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (23, 'SIPACATE_NARANJO', 'Parque Nacional Sipacate-Naranjo', 'NATURAL'::turismo.tipo_destino, turismo.fn_departamento_id('Escuintla'), turismo.fn_municipio_id('Escuintla', 'Sipacate', FALSE), 'Área costera de manglar, playa y humedales del Pacífico con importancia para conservación y recreación.', 'Sipacate, Escuintla', NULL, NULL, NULL, 'BAJA'::turismo.dificultad_destino, '1 día', NULL, NULL, NULL, TRUE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='CONAP_GENERAL'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (24, 'TAKALIK_ABAJ', 'Parque Arqueológico Nacional Tak’alik Ab’aj', 'ARQUEOLOGICO'::turismo.tipo_destino, turismo.fn_departamento_id('Retalhuleu'), turismo.fn_municipio_id('Retalhuleu', 'El Asintal', FALSE), 'Sitio arqueológico con larga ocupación y transición olmeca-maya, inscrito como Patrimonio Mundial UNESCO en 2023.', 'El Asintal, Retalhuleu', NULL, NULL, NULL, 'BAJA'::turismo.dificultad_destino, 'medio día', NULL, NULL, NULL, FALSE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='UNESCO_TAKALIK_ABAJ'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (25, 'XETULUL_XOCOMIL', 'Parques Xetulul y Xocomil', 'RECREATIVO'::turismo.tipo_destino, turismo.fn_departamento_id('Retalhuleu'), turismo.fn_municipio_id('Retalhuleu', 'San Martín Zapotitlán', FALSE), 'Complejo recreativo y familiar con parque temático, juegos mecánicos y parque acuático en Retalhuleu.', 'San Martín Zapotitlán, Retalhuleu', NULL, NULL, NULL, 'BAJA'::turismo.dificultad_destino, '1 día', NULL, NULL, NULL, FALSE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='IRTRA_GENERAL'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (26, 'PUERTO_SAN_JOSE', 'Puerto San José', 'NATURAL'::turismo.tipo_destino, turismo.fn_departamento_id('Escuintla'), turismo.fn_municipio_id('Escuintla', 'San José', FALSE), 'Destino costero del Pacífico asociado con playa, pesca, descanso y conectividad hacia otros atractivos del litoral.', 'Costa del Pacífico, Escuintla', NULL, NULL, NULL, 'BAJA'::turismo.dificultad_destino, '1 día', NULL, NULL, NULL, FALSE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (27, 'PLAYA_TILAPA', 'Playa Tilapa', 'NATURAL'::turismo.tipo_destino, turismo.fn_departamento_id('San Marcos'), turismo.fn_municipio_id('San Marcos', 'Ocós', FALSE), 'Playa y comunidad costera del Pacífico en San Marcos, vinculada con descanso, pesca y paisaje costero.', 'Ocós, San Marcos', NULL, NULL, NULL, 'BAJA'::turismo.dificultad_destino, '1 día', NULL, NULL, NULL, FALSE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (28, 'FUENTES_GEORGINAS', 'Fuentes Georginas', 'NATURAL'::turismo.tipo_destino, turismo.fn_departamento_id('Quetzaltenango'), turismo.fn_municipio_id('Quetzaltenango', 'Zunil', FALSE), 'Aguas termales ubicadas entre montañas y bosque nuboso, visitadas por relajación y paisaje natural.', 'Zunil, Quetzaltenango', NULL, NULL, NULL, 'BAJA'::turismo.dificultad_destino, 'medio día', NULL, NULL, NULL, FALSE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (29, 'QUETZALTENANGO_CENTRO', 'Centro Histórico de Quetzaltenango', 'URBANO'::turismo.tipo_destino, turismo.fn_departamento_id('Quetzaltenango'), turismo.fn_municipio_id('Quetzaltenango', 'Quetzaltenango', FALSE), 'Centro urbano del occidente con arquitectura, parques, museos, gastronomía, cultura y servicios turísticos.', 'Centro de Quetzaltenango', NULL, NULL, NULL, 'BAJA'::turismo.dificultad_destino, 'medio día a 1 día', NULL, NULL, NULL, FALSE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (30, 'VOLCAN_TAJUMULCO', 'Volcán Tajumulco', 'NATURAL'::turismo.tipo_destino, turismo.fn_departamento_id('San Marcos'), turismo.fn_municipio_id('San Marcos', 'Tajumulco', FALSE), 'Volcán más alto de Guatemala y Centroamérica, destino de montañismo y senderismo de alta montaña.', 'Tajumulco, San Marcos', NULL, NULL, NULL, 'ALTA'::turismo.dificultad_destino, '1 a 2 días', NULL, NULL, NULL, FALSE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (31, 'LAGUNA_BRAVA', 'Laguna Brava', 'NATURAL'::turismo.tipo_destino, turismo.fn_departamento_id('Huehuetenango'), turismo.fn_municipio_id('Huehuetenango', 'Nentón', FALSE), 'Laguna de color turquesa en Huehuetenango, visitada por naturaleza, caminata, fotografía y paisaje.', 'Nentón, Huehuetenango', NULL, NULL, NULL, 'MEDIA'::turismo.dificultad_destino, '1 día', NULL, NULL, NULL, FALSE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (32, 'CENOTES_CANDELARIA_HUEHUE', 'Cenotes de Candelaria', 'NATURAL'::turismo.tipo_destino, turismo.fn_departamento_id('Huehuetenango'), turismo.fn_municipio_id('Huehuetenango', 'Nentón', FALSE), 'Conjunto de cenotes de agua azul en Nentón, asociados con paisaje kárstico y turismo natural.', 'Nentón, Huehuetenango', NULL, NULL, NULL, 'MEDIA'::turismo.dificultad_destino, '1 día', NULL, NULL, NULL, FALSE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (33, 'TODOS_SANTOS_CUCHUMATAN', 'Todos Santos Cuchumatán', 'CULTURAL'::turismo.tipo_destino, turismo.fn_departamento_id('Huehuetenango'), turismo.fn_municipio_id('Huehuetenango', 'Todos Santos Cuchumatán', FALSE), 'Municipio de los Cuchumatanes reconocido por cultura mam, trajes tradicionales, mercado y tradiciones locales.', 'Sierra de los Cuchumatanes', NULL, NULL, NULL, 'BAJA'::turismo.dificultad_destino, '1 día', NULL, NULL, NULL, FALSE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (34, 'NEBAJ', 'Nebaj', 'CULTURAL'::turismo.tipo_destino, turismo.fn_departamento_id('Quiché'), turismo.fn_municipio_id('Quiché', 'Nebaj', FALSE), 'Pueblo del área ixil con cultura viva, textiles, paisaje montañoso y rutas de turismo comunitario.', 'Área Ixil, Quiché', NULL, NULL, NULL, 'BAJA'::turismo.dificultad_destino, '1 día', NULL, NULL, NULL, FALSE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (35, 'MUNAE', 'Museo Nacional de Arqueología y Etnología', 'CULTURAL'::turismo.tipo_destino, turismo.fn_departamento_id('Guatemala'), turismo.fn_municipio_id('Guatemala', 'Guatemala', FALSE), 'Museo de referencia para colecciones arqueológicas y etnológicas de Guatemala, ubicado en la zona 13 de la Ciudad de Guatemala.', 'Zona 13, Ciudad de Guatemala', NULL, NULL, NULL, 'BAJA'::turismo.dificultad_destino, '2 a 3 horas', NULL, NULL, NULL, FALSE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='SIC_GENERAL'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (36, 'KAMINALJUYU', 'Kaminaljuyú', 'ARQUEOLOGICO'::turismo.tipo_destino, turismo.fn_departamento_id('Guatemala'), turismo.fn_municipio_id('Guatemala', 'Guatemala', FALSE), 'Sitio arqueológico prehispánico ubicado dentro del área metropolitana de Guatemala, vinculado con la historia maya del altiplano central.', 'Zona 7, Ciudad de Guatemala', NULL, NULL, NULL, 'BAJA'::turismo.dificultad_destino, '1 a 2 horas', NULL, NULL, NULL, FALSE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='SIC_GENERAL'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (37, 'ZOO_LA_AURORA', 'Zoológico La Aurora', 'RECREATIVO'::turismo.tipo_destino, turismo.fn_departamento_id('Guatemala'), turismo.fn_municipio_id('Guatemala', 'Guatemala', FALSE), 'Zoológico urbano de la Ciudad de Guatemala, destino familiar y educativo con colecciones de fauna.', 'Zona 13, Ciudad de Guatemala', NULL, NULL, NULL, 'BAJA'::turismo.dificultad_destino, 'medio día', NULL, NULL, NULL, FALSE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='ZOO_LA_AURORA_OFICIAL'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (38, 'CENTRO_HISTORICO_GUATEMALA', 'Centro Histórico de la Ciudad de Guatemala', 'URBANO'::turismo.tipo_destino, turismo.fn_departamento_id('Guatemala'), turismo.fn_municipio_id('Guatemala', 'Guatemala', FALSE), 'Centro urbano con plazas, edificios históricos, Catedral, Palacio Nacional, mercados y actividades culturales.', 'Zona 1, Ciudad de Guatemala', NULL, NULL, NULL, 'BAJA'::turismo.dificultad_destino, 'medio día', NULL, NULL, NULL, FALSE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='MUNIGUATE_TURISMO'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (39, 'MIXCO_VIEJO', 'Mixco Viejo', 'ARQUEOLOGICO'::turismo.tipo_destino, turismo.fn_departamento_id('Chimaltenango'), turismo.fn_municipio_id('Chimaltenango', 'San Martín Jilotepeque', FALSE), 'Sitio arqueológico fortificado asociado al periodo posclásico, con vistas y estructuras ceremoniales.', 'San Martín Jilotepeque, Chimaltenango', NULL, NULL, NULL, 'MEDIA'::turismo.dificultad_destino, 'medio día', NULL, NULL, NULL, FALSE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='SIC_GENERAL'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (40, 'VOLCAN_ACATENANGO', 'Volcán Acatenango', 'NATURAL'::turismo.tipo_destino, turismo.fn_departamento_id('Chimaltenango'), turismo.fn_municipio_id('Chimaltenango', 'Acatenango', FALSE), 'Volcán de alta montaña visitado por senderismo y campamento, con vistas al Volcán de Fuego.', 'Acatenango, Chimaltenango', NULL, NULL, NULL, 'ALTA'::turismo.dificultad_destino, '1 a 2 días', NULL, NULL, NULL, FALSE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (41, 'VOLCAN_AGUA', 'Volcán de Agua', 'NATURAL'::turismo.tipo_destino, turismo.fn_departamento_id('Sacatepéquez'), turismo.fn_municipio_id('Sacatepéquez', 'Santa María de Jesús', FALSE), 'Volcán emblemático cercano a Antigua Guatemala, visible desde el valle de Panchoy y asociado a rutas de ascenso.', 'Santa María de Jesús, Sacatepéquez', NULL, NULL, NULL, 'ALTA'::turismo.dificultad_destino, '1 día', NULL, NULL, NULL, FALSE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (42, 'HOBBITENANGO', 'Hobbitenango', 'RECREATIVO'::turismo.tipo_destino, turismo.fn_departamento_id('Sacatepéquez'), turismo.fn_municipio_id('Sacatepéquez', 'Antigua Guatemala', FALSE), 'Parque temático y mirador en las montañas de Antigua Guatemala, popular por fotografía, vistas y actividades familiares.', 'Aldea El Hato, Antigua Guatemala', NULL, NULL, NULL, 'BAJA'::turismo.dificultad_destino, 'medio día', NULL, NULL, NULL, FALSE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='HOBBITENANGO_OFICIAL'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (43, 'MUSEO_MIRAFLORES', 'Museo Miraflores', 'CULTURAL'::turismo.tipo_destino, turismo.fn_departamento_id('Guatemala'), turismo.fn_municipio_id('Guatemala', 'Guatemala', FALSE), 'Museo y centro cultural dedicado al patrimonio arqueológico de Kaminaljuyú y la historia prehispánica del valle de Guatemala.', 'Zona 11, Ciudad de Guatemala', NULL, NULL, NULL, 'BAJA'::turismo.dificultad_destino, '2 horas', NULL, NULL, NULL, FALSE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='MUSEO_MIRAFLORES_OFICIAL'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (44, 'SIERRA_MINAS', 'Reserva de Biosfera Sierra de las Minas', 'NATURAL'::turismo.tipo_destino, turismo.fn_departamento_id('Zacapa'), turismo.fn_municipio_id('Zacapa', 'Río Hondo', FALSE), 'Área montañosa de alto valor ecológico compartida por varios departamentos, importante para conservación, biodiversidad y recursos hídricos.', 'Sierra de las Minas, oriente de Guatemala', NULL, NULL, NULL, 'ALTA'::turismo.dificultad_destino, '1 a 2 días', NULL, NULL, NULL, TRUE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (45, 'MUSEO_PALEONTOLOGIA_ESTANZUELA', 'Museo de Paleontología y Arqueología de Estanzuela', 'CULTURAL'::turismo.tipo_destino, turismo.fn_departamento_id('Zacapa'), turismo.fn_municipio_id('Zacapa', 'Estanzuela', FALSE), 'Museo reconocido por fósiles, piezas paleontológicas y arqueológicas del oriente de Guatemala.', 'Estanzuela, Zacapa', NULL, NULL, NULL, 'BAJA'::turismo.dificultad_destino, '1 a 2 horas', NULL, NULL, NULL, FALSE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (46, 'VOLCAN_LAGUNA_IPALA', 'Volcán y Laguna de Ipala', 'NATURAL'::turismo.tipo_destino, turismo.fn_departamento_id('Chiquimula'), turismo.fn_municipio_id('Chiquimula', 'Ipala', FALSE), 'Volcán con laguna en el cráter, atractivo para senderismo, naturaleza, fotografía y recreación.', 'Ipala, Chiquimula', NULL, NULL, NULL, 'MEDIA'::turismo.dificultad_destino, 'medio día a 1 día', NULL, NULL, NULL, TRUE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='CONAP_GENERAL'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (47, 'LAGO_GUIJA', 'Lago de Güija', 'NATURAL'::turismo.tipo_destino, turismo.fn_departamento_id('Jutiapa'), turismo.fn_municipio_id('Jutiapa', 'Asunción Mita', FALSE), 'Lago fronterizo compartido con El Salvador, asociado con paisaje, pesca, naturaleza y patrimonio regional.', 'Asunción Mita, Jutiapa', NULL, NULL, NULL, 'BAJA'::turismo.dificultad_destino, 'medio día', NULL, NULL, NULL, FALSE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (48, 'VOLCAN_SUCHITAN', 'Volcán Suchitán', 'NATURAL'::turismo.tipo_destino, turismo.fn_departamento_id('Jutiapa'), turismo.fn_municipio_id('Jutiapa', 'Santa Catarina Mita', FALSE), 'Volcán del oriente de Guatemala con rutas de senderismo, naturaleza y vistas panorámicas.', 'Santa Catarina Mita, Jutiapa', NULL, NULL, NULL, 'MEDIA'::turismo.dificultad_destino, 'medio día a 1 día', NULL, NULL, NULL, FALSE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (49, 'PLAYA_BLANCA_IZABAL', 'Playa Blanca', 'NATURAL'::turismo.tipo_destino, turismo.fn_departamento_id('Izabal'), turismo.fn_municipio_id('Izabal', 'Livingston', FALSE), 'Playa de arena clara del Caribe guatemalteco, accesible principalmente por vía acuática desde Livingston o Río Dulce.', 'Costa Caribe de Izabal', NULL, NULL, NULL, 'BAJA'::turismo.dificultad_destino, 'medio día', NULL, NULL, NULL, FALSE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+INSERT INTO turismo.destino_turistico (id_destino, codigo, nombre, tipo, departamento_id, municipio_id, descripcion, direccion_referencia, latitud, longitud, altitud_msnm, dificultad, tiempo_recomendado, costo_aprox_nacional_q, costo_aprox_extranjero_q, horario, es_area_protegida, fuente_principal_id, activo) VALUES (50, 'LAGUNA_LACHUA', 'Laguna Lachuá', 'NATURAL'::turismo.tipo_destino, turismo.fn_departamento_id('Alta Verapaz'), turismo.fn_municipio_id('Alta Verapaz', 'Cobán', FALSE), 'Laguna circular de aguas claras ubicada dentro del Parque Nacional Laguna Lachuá, área protegida de alto valor natural.', 'Parque Nacional Laguna Lachuá, Cobán', NULL, NULL, NULL, 'MEDIA'::turismo.dificultad_destino, '1 día', NULL, NULL, NULL, TRUE, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='CONAP_GENERAL'), TRUE) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, tipo=EXCLUDED.tipo, departamento_id=EXCLUDED.departamento_id, municipio_id=EXCLUDED.municipio_id, descripcion=EXCLUDED.descripcion, direccion_referencia=EXCLUDED.direccion_referencia, latitud=EXCLUDED.latitud, longitud=EXCLUDED.longitud, altitud_msnm=EXCLUDED.altitud_msnm, dificultad=EXCLUDED.dificultad, tiempo_recomendado=EXCLUDED.tiempo_recomendado, costo_aprox_nacional_q=EXCLUDED.costo_aprox_nacional_q, costo_aprox_extranjero_q=EXCLUDED.costo_aprox_extranjero_q, horario=EXCLUDED.horario, es_area_protegida=EXCLUDED.es_area_protegida, fuente_principal_id=EXCLUDED.fuente_principal_id, activo=EXCLUDED.activo;
+
+-- Region turistica principal por destino; evita duplicidad en departamentos compartidos entre regiones turisticas.
+UPDATE turismo.destino_turistico SET region_turistica_id = 1 WHERE codigo IN ('ANTIGUA_GUATEMALA','MUNAE','KAMINALJUYU','ZOO_LA_AURORA','CENTRO_HISTORICO_GUATEMALA','HOBBITENANGO','MUSEO_MIRAFLORES','VOLCAN_AGUA');
+UPDATE turismo.destino_turistico SET region_turistica_id = 2 WHERE codigo IN ('LAGO_ATITLAN','PANAJACHEL','SAN_JUAN_LA_LAGUNA','CHICHICASTENANGO','IXIMCHE','FUENTES_GEORGINAS','QUETZALTENANGO_CENTRO','VOLCAN_TAJUMULCO','LAGUNA_BRAVA','CENOTES_CANDELARIA_HUEHUE','TODOS_SANTOS_CUCHUMATAN','NEBAJ','MIXCO_VIEJO','VOLCAN_ACATENANGO');
+UPDATE turismo.destino_turistico SET region_turistica_id = 3 WHERE codigo IN ('PARQUE_NACIONAL_TIKAL','YAXHA','EL_MIRADOR','UAXACTUN');
+UPDATE turismo.destino_turistico SET region_turistica_id = 4 WHERE codigo IN ('QUIRIGUA','RIO_DULCE','CASTILLO_SAN_FELIPE','LIVINGSTON','PLAYA_BLANCA_IZABAL');
+UPDATE turismo.destino_turistico SET region_turistica_id = 5 WHERE codigo IN ('SEMUC_CHAMPEY','CUEVAS_CANDELARIA_AV','BIOTOPO_QUETZAL','COBAN','LAGUNA_LACHUA');
+UPDATE turismo.destino_turistico SET region_turistica_id = 6 WHERE codigo IN ('VOLCAN_PACAYA','MONTERRICO','SIPACATE_NARANJO','TAKALIK_ABAJ','XETULUL_XOCOMIL','PUERTO_SAN_JOSE','PLAYA_TILAPA');
+UPDATE turismo.destino_turistico SET region_turistica_id = 7 WHERE codigo IN ('ESQUIPULAS','BASILICA_ESQUIPULAS','SIERRA_MINAS','MUSEO_PALEONTOLOGIA_ESTANZUELA','VOLCAN_LAGUNA_IPALA','LAGO_GUIJA','VOLCAN_SUCHITAN');
+
+-- Relaciones destino-categoria
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='ANTIGUA_GUATEMALA' AND c.codigo='PATRIMONIO_UNESCO' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='ANTIGUA_GUATEMALA' AND c.codigo='COLONIAL' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='ANTIGUA_GUATEMALA' AND c.codigo='CULTURA_VIVA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='ANTIGUA_GUATEMALA' AND c.codigo='URBANO' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='PARQUE_NACIONAL_TIKAL' AND c.codigo='PATRIMONIO_UNESCO' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='PARQUE_NACIONAL_TIKAL' AND c.codigo='ARQUEOLOGIA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='PARQUE_NACIONAL_TIKAL' AND c.codigo='AREA_PROTEGIDA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='PARQUE_NACIONAL_TIKAL' AND c.codigo='NATURALEZA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='PARQUE_NACIONAL_TIKAL' AND c.codigo='OBSERVACION_AVES' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='YAXHA' AND c.codigo='ARQUEOLOGIA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='YAXHA' AND c.codigo='AREA_PROTEGIDA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='YAXHA' AND c.codigo='NATURALEZA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='YAXHA' AND c.codigo='OBSERVACION_AVES' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='EL_MIRADOR' AND c.codigo='ARQUEOLOGIA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='EL_MIRADOR' AND c.codigo='AREA_PROTEGIDA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='EL_MIRADOR' AND c.codigo='AVENTURA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='EL_MIRADOR' AND c.codigo='NATURALEZA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='UAXACTUN' AND c.codigo='ARQUEOLOGIA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='UAXACTUN' AND c.codigo='NATURALEZA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='UAXACTUN' AND c.codigo='TURISMO_COMUNITARIO' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='LAGO_ATITLAN' AND c.codigo='NATURALEZA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='LAGO_ATITLAN' AND c.codigo='LAGO_RIO' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='LAGO_ATITLAN' AND c.codigo='CULTURA_VIVA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='LAGO_ATITLAN' AND c.codigo='TURISMO_COMUNITARIO' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='PANAJACHEL' AND c.codigo='LAGO_RIO' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='PANAJACHEL' AND c.codigo='URBANO' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='PANAJACHEL' AND c.codigo='GASTRONOMIA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='PANAJACHEL' AND c.codigo='ARTESANIA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='SAN_JUAN_LA_LAGUNA' AND c.codigo='CULTURA_VIVA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='SAN_JUAN_LA_LAGUNA' AND c.codigo='ARTESANIA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='SAN_JUAN_LA_LAGUNA' AND c.codigo='TURISMO_COMUNITARIO' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='SAN_JUAN_LA_LAGUNA' AND c.codigo='LAGO_RIO' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='CHICHICASTENANGO' AND c.codigo='CULTURA_VIVA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='CHICHICASTENANGO' AND c.codigo='ARTESANIA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='CHICHICASTENANGO' AND c.codigo='RELIGIOSO' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='CHICHICASTENANGO' AND c.codigo='GASTRONOMIA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='IXIMCHE' AND c.codigo='ARQUEOLOGIA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='IXIMCHE' AND c.codigo='CULTURA_VIVA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='QUIRIGUA' AND c.codigo='PATRIMONIO_UNESCO' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='QUIRIGUA' AND c.codigo='ARQUEOLOGIA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='RIO_DULCE' AND c.codigo='NATURALEZA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='RIO_DULCE' AND c.codigo='LAGO_RIO' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='RIO_DULCE' AND c.codigo='AREA_PROTEGIDA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='CASTILLO_SAN_FELIPE' AND c.codigo='COLONIAL' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='CASTILLO_SAN_FELIPE' AND c.codigo='CULTURA_VIVA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='CASTILLO_SAN_FELIPE' AND c.codigo='FAMILIAR' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='LIVINGSTON' AND c.codigo='CULTURA_VIVA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='LIVINGSTON' AND c.codigo='PLAYA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='LIVINGSTON' AND c.codigo='GASTRONOMIA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='SEMUC_CHAMPEY' AND c.codigo='NATURALEZA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='SEMUC_CHAMPEY' AND c.codigo='AREA_PROTEGIDA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='SEMUC_CHAMPEY' AND c.codigo='LAGO_RIO' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='SEMUC_CHAMPEY' AND c.codigo='AVENTURA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='CUEVAS_CANDELARIA_AV' AND c.codigo='NATURALEZA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='CUEVAS_CANDELARIA_AV' AND c.codigo='AVENTURA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='BIOTOPO_QUETZAL' AND c.codigo='AREA_PROTEGIDA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='BIOTOPO_QUETZAL' AND c.codigo='NATURALEZA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='BIOTOPO_QUETZAL' AND c.codigo='OBSERVACION_AVES' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='COBAN' AND c.codigo='URBANO' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='COBAN' AND c.codigo='GASTRONOMIA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='COBAN' AND c.codigo='CULTURA_VIVA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='ESQUIPULAS' AND c.codigo='RELIGIOSO' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='ESQUIPULAS' AND c.codigo='URBANO' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='BASILICA_ESQUIPULAS' AND c.codigo='RELIGIOSO' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='BASILICA_ESQUIPULAS' AND c.codigo='CULTURA_VIVA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='VOLCAN_PACAYA' AND c.codigo='VOLCAN' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='VOLCAN_PACAYA' AND c.codigo='AREA_PROTEGIDA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='VOLCAN_PACAYA' AND c.codigo='AVENTURA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='VOLCAN_PACAYA' AND c.codigo='NATURALEZA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='MONTERRICO' AND c.codigo='PLAYA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='MONTERRICO' AND c.codigo='AREA_PROTEGIDA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='MONTERRICO' AND c.codigo='NATURALEZA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='SIPACATE_NARANJO' AND c.codigo='PLAYA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='SIPACATE_NARANJO' AND c.codigo='AREA_PROTEGIDA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='SIPACATE_NARANJO' AND c.codigo='NATURALEZA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='TAKALIK_ABAJ' AND c.codigo='PATRIMONIO_UNESCO' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='TAKALIK_ABAJ' AND c.codigo='ARQUEOLOGIA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='XETULUL_XOCOMIL' AND c.codigo='FAMILIAR' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='XETULUL_XOCOMIL' AND c.codigo='AVENTURA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='PUERTO_SAN_JOSE' AND c.codigo='PLAYA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='PUERTO_SAN_JOSE' AND c.codigo='GASTRONOMIA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='PLAYA_TILAPA' AND c.codigo='PLAYA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='PLAYA_TILAPA' AND c.codigo='NATURALEZA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='FUENTES_GEORGINAS' AND c.codigo='NATURALEZA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='FUENTES_GEORGINAS' AND c.codigo='LAGO_RIO' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='QUETZALTENANGO_CENTRO' AND c.codigo='URBANO' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='QUETZALTENANGO_CENTRO' AND c.codigo='GASTRONOMIA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='QUETZALTENANGO_CENTRO' AND c.codigo='CULTURA_VIVA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='VOLCAN_TAJUMULCO' AND c.codigo='VOLCAN' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='VOLCAN_TAJUMULCO' AND c.codigo='AVENTURA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='VOLCAN_TAJUMULCO' AND c.codigo='NATURALEZA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='LAGUNA_BRAVA' AND c.codigo='NATURALEZA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='LAGUNA_BRAVA' AND c.codigo='LAGO_RIO' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='LAGUNA_BRAVA' AND c.codigo='AVENTURA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='CENOTES_CANDELARIA_HUEHUE' AND c.codigo='NATURALEZA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='CENOTES_CANDELARIA_HUEHUE' AND c.codigo='LAGO_RIO' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='CENOTES_CANDELARIA_HUEHUE' AND c.codigo='AVENTURA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='TODOS_SANTOS_CUCHUMATAN' AND c.codigo='CULTURA_VIVA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='TODOS_SANTOS_CUCHUMATAN' AND c.codigo='ARTESANIA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='TODOS_SANTOS_CUCHUMATAN' AND c.codigo='TURISMO_COMUNITARIO' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='NEBAJ' AND c.codigo='CULTURA_VIVA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='NEBAJ' AND c.codigo='TURISMO_COMUNITARIO' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='NEBAJ' AND c.codigo='ARTESANIA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='MUNAE' AND c.codigo='MUSEO' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='MUNAE' AND c.codigo='ARQUEOLOGIA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='MUNAE' AND c.codigo='URBANO' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='KAMINALJUYU' AND c.codigo='ARQUEOLOGIA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='KAMINALJUYU' AND c.codigo='URBANO' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='ZOO_LA_AURORA' AND c.codigo='FAMILIAR' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='ZOO_LA_AURORA' AND c.codigo='URBANO' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='ZOO_LA_AURORA' AND c.codigo='NATURALEZA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='CENTRO_HISTORICO_GUATEMALA' AND c.codigo='URBANO' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='CENTRO_HISTORICO_GUATEMALA' AND c.codigo='COLONIAL' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='CENTRO_HISTORICO_GUATEMALA' AND c.codigo='GASTRONOMIA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='MIXCO_VIEJO' AND c.codigo='ARQUEOLOGIA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='MIXCO_VIEJO' AND c.codigo='AVENTURA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='VOLCAN_ACATENANGO' AND c.codigo='VOLCAN' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='VOLCAN_ACATENANGO' AND c.codigo='AVENTURA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='VOLCAN_ACATENANGO' AND c.codigo='NATURALEZA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='VOLCAN_AGUA' AND c.codigo='VOLCAN' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='VOLCAN_AGUA' AND c.codigo='AVENTURA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='VOLCAN_AGUA' AND c.codigo='NATURALEZA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='HOBBITENANGO' AND c.codigo='FAMILIAR' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='HOBBITENANGO' AND c.codigo='NATURALEZA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='HOBBITENANGO' AND c.codigo='GASTRONOMIA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='MUSEO_MIRAFLORES' AND c.codigo='MUSEO' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='MUSEO_MIRAFLORES' AND c.codigo='ARQUEOLOGIA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='MUSEO_MIRAFLORES' AND c.codigo='URBANO' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='SIERRA_MINAS' AND c.codigo='AREA_PROTEGIDA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='SIERRA_MINAS' AND c.codigo='NATURALEZA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='SIERRA_MINAS' AND c.codigo='OBSERVACION_AVES' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='MUSEO_PALEONTOLOGIA_ESTANZUELA' AND c.codigo='MUSEO' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='MUSEO_PALEONTOLOGIA_ESTANZUELA' AND c.codigo='URBANO' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='VOLCAN_LAGUNA_IPALA' AND c.codigo='VOLCAN' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='VOLCAN_LAGUNA_IPALA' AND c.codigo='LAGO_RIO' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='VOLCAN_LAGUNA_IPALA' AND c.codigo='AREA_PROTEGIDA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='VOLCAN_LAGUNA_IPALA' AND c.codigo='NATURALEZA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='LAGO_GUIJA' AND c.codigo='LAGO_RIO' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='LAGO_GUIJA' AND c.codigo='NATURALEZA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='VOLCAN_SUCHITAN' AND c.codigo='VOLCAN' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='VOLCAN_SUCHITAN' AND c.codigo='AVENTURA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='VOLCAN_SUCHITAN' AND c.codigo='NATURALEZA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='PLAYA_BLANCA_IZABAL' AND c.codigo='PLAYA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='PLAYA_BLANCA_IZABAL' AND c.codigo='NATURALEZA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='LAGUNA_LACHUA' AND c.codigo='AREA_PROTEGIDA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='LAGUNA_LACHUA' AND c.codigo='NATURALEZA' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+INSERT INTO turismo.destino_categoria (destino_id, categoria_id) SELECT d.id_destino, c.id_categoria FROM turismo.destino_turistico d CROSS JOIN turismo.categoria_destino c WHERE d.codigo='LAGUNA_LACHUA' AND c.codigo='LAGO_RIO' ON CONFLICT (destino_id, categoria_id) DO NOTHING;
+
+-- Relaciones destino-actividad
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='ANTIGUA_GUATEMALA' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='ANTIGUA_GUATEMALA' AND a.codigo='CAMINATA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='ANTIGUA_GUATEMALA' AND a.codigo='CULTURA_VIVA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='ANTIGUA_GUATEMALA' AND a.codigo='GASTRONOMIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='PARQUE_NACIONAL_TIKAL' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='PARQUE_NACIONAL_TIKAL' AND a.codigo='CAMINATA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='PARQUE_NACIONAL_TIKAL' AND a.codigo='ARQUEOLOGIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='PARQUE_NACIONAL_TIKAL' AND a.codigo='EDUCACION_AMBIENTAL' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='PARQUE_NACIONAL_TIKAL' AND a.codigo='SENDERISMO' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='PARQUE_NACIONAL_TIKAL' AND a.codigo='OBSERVACION_AVES' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='YAXHA' AND a.codigo='ARQUEOLOGIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='YAXHA' AND a.codigo='CAMINATA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='YAXHA' AND a.codigo='EDUCACION_AMBIENTAL' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='YAXHA' AND a.codigo='SENDERISMO' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='YAXHA' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='YAXHA' AND a.codigo='OBSERVACION_AVES' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='EL_MIRADOR' AND a.codigo='ARQUEOLOGIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='EL_MIRADOR' AND a.codigo='CAMINATA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='EL_MIRADOR' AND a.codigo='EDUCACION_AMBIENTAL' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='EL_MIRADOR' AND a.codigo='SENDERISMO' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='EL_MIRADOR' AND a.codigo='AVENTURA_EXTREMA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='EL_MIRADOR' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='UAXACTUN' AND a.codigo='ARQUEOLOGIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='UAXACTUN' AND a.codigo='CAMINATA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='UAXACTUN' AND a.codigo='SENDERISMO' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='UAXACTUN' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='UAXACTUN' AND a.codigo='EDUCACION_AMBIENTAL' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='UAXACTUN' AND a.codigo='TURISMO_COMUNITARIO' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='LAGO_ATITLAN' AND a.codigo='SENDERISMO' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='LAGO_ATITLAN' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='LAGO_ATITLAN' AND a.codigo='EDUCACION_AMBIENTAL' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='LAGO_ATITLAN' AND a.codigo='NAVEGACION' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='LAGO_ATITLAN' AND a.codigo='CULTURA_VIVA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='LAGO_ATITLAN' AND a.codigo='TURISMO_COMUNITARIO' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='PANAJACHEL' AND a.codigo='NAVEGACION' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='PANAJACHEL' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='PANAJACHEL' AND a.codigo='CAMINATA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='PANAJACHEL' AND a.codigo='GASTRONOMIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='PANAJACHEL' AND a.codigo='COMPRAS_ARTESANIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='SAN_JUAN_LA_LAGUNA' AND a.codigo='CULTURA_VIVA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='SAN_JUAN_LA_LAGUNA' AND a.codigo='COMPRAS_ARTESANIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='SAN_JUAN_LA_LAGUNA' AND a.codigo='TURISMO_COMUNITARIO' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='SAN_JUAN_LA_LAGUNA' AND a.codigo='NAVEGACION' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='SAN_JUAN_LA_LAGUNA' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='CHICHICASTENANGO' AND a.codigo='CULTURA_VIVA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='CHICHICASTENANGO' AND a.codigo='COMPRAS_ARTESANIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='CHICHICASTENANGO' AND a.codigo='PEREGRINAJE' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='CHICHICASTENANGO' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='CHICHICASTENANGO' AND a.codigo='GASTRONOMIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='IXIMCHE' AND a.codigo='ARQUEOLOGIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='IXIMCHE' AND a.codigo='CAMINATA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='IXIMCHE' AND a.codigo='CULTURA_VIVA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='QUIRIGUA' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='QUIRIGUA' AND a.codigo='CAMINATA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='QUIRIGUA' AND a.codigo='ARQUEOLOGIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='RIO_DULCE' AND a.codigo='SENDERISMO' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='RIO_DULCE' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='RIO_DULCE' AND a.codigo='EDUCACION_AMBIENTAL' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='RIO_DULCE' AND a.codigo='NAVEGACION' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='CASTILLO_SAN_FELIPE' AND a.codigo='CAMINATA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='CASTILLO_SAN_FELIPE' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='CASTILLO_SAN_FELIPE' AND a.codigo='CULTURA_VIVA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='LIVINGSTON' AND a.codigo='CULTURA_VIVA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='LIVINGSTON' AND a.codigo='NATACION' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='LIVINGSTON' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='LIVINGSTON' AND a.codigo='GASTRONOMIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='SEMUC_CHAMPEY' AND a.codigo='SENDERISMO' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='SEMUC_CHAMPEY' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='SEMUC_CHAMPEY' AND a.codigo='EDUCACION_AMBIENTAL' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='SEMUC_CHAMPEY' AND a.codigo='NAVEGACION' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='SEMUC_CHAMPEY' AND a.codigo='AVENTURA_EXTREMA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='CUEVAS_CANDELARIA_AV' AND a.codigo='SENDERISMO' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='CUEVAS_CANDELARIA_AV' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='CUEVAS_CANDELARIA_AV' AND a.codigo='EDUCACION_AMBIENTAL' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='CUEVAS_CANDELARIA_AV' AND a.codigo='AVENTURA_EXTREMA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='BIOTOPO_QUETZAL' AND a.codigo='EDUCACION_AMBIENTAL' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='BIOTOPO_QUETZAL' AND a.codigo='SENDERISMO' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='BIOTOPO_QUETZAL' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='BIOTOPO_QUETZAL' AND a.codigo='OBSERVACION_AVES' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='COBAN' AND a.codigo='CAMINATA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='COBAN' AND a.codigo='GASTRONOMIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='COBAN' AND a.codigo='CULTURA_VIVA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='ESQUIPULAS' AND a.codigo='PEREGRINAJE' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='ESQUIPULAS' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='ESQUIPULAS' AND a.codigo='CAMINATA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='ESQUIPULAS' AND a.codigo='GASTRONOMIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='BASILICA_ESQUIPULAS' AND a.codigo='PEREGRINAJE' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='BASILICA_ESQUIPULAS' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='BASILICA_ESQUIPULAS' AND a.codigo='CULTURA_VIVA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='VOLCAN_PACAYA' AND a.codigo='ASCENSO_VOLCAN' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='VOLCAN_PACAYA' AND a.codigo='SENDERISMO' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='VOLCAN_PACAYA' AND a.codigo='EDUCACION_AMBIENTAL' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='VOLCAN_PACAYA' AND a.codigo='AVENTURA_EXTREMA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='VOLCAN_PACAYA' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='MONTERRICO' AND a.codigo='NATACION' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='MONTERRICO' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='MONTERRICO' AND a.codigo='EDUCACION_AMBIENTAL' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='MONTERRICO' AND a.codigo='SENDERISMO' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='SIPACATE_NARANJO' AND a.codigo='NATACION' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='SIPACATE_NARANJO' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='SIPACATE_NARANJO' AND a.codigo='EDUCACION_AMBIENTAL' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='SIPACATE_NARANJO' AND a.codigo='SENDERISMO' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='TAKALIK_ABAJ' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='TAKALIK_ABAJ' AND a.codigo='CAMINATA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='TAKALIK_ABAJ' AND a.codigo='ARQUEOLOGIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='XETULUL_XOCOMIL' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='XETULUL_XOCOMIL' AND a.codigo='SENDERISMO' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='XETULUL_XOCOMIL' AND a.codigo='AVENTURA_EXTREMA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='PUERTO_SAN_JOSE' AND a.codigo='NATACION' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='PUERTO_SAN_JOSE' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='PUERTO_SAN_JOSE' AND a.codigo='GASTRONOMIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='PLAYA_TILAPA' AND a.codigo='NATACION' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='PLAYA_TILAPA' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='PLAYA_TILAPA' AND a.codigo='SENDERISMO' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='PLAYA_TILAPA' AND a.codigo='EDUCACION_AMBIENTAL' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='FUENTES_GEORGINAS' AND a.codigo='SENDERISMO' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='FUENTES_GEORGINAS' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='FUENTES_GEORGINAS' AND a.codigo='EDUCACION_AMBIENTAL' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='FUENTES_GEORGINAS' AND a.codigo='NAVEGACION' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='QUETZALTENANGO_CENTRO' AND a.codigo='CAMINATA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='QUETZALTENANGO_CENTRO' AND a.codigo='GASTRONOMIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='QUETZALTENANGO_CENTRO' AND a.codigo='CULTURA_VIVA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='VOLCAN_TAJUMULCO' AND a.codigo='ASCENSO_VOLCAN' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='VOLCAN_TAJUMULCO' AND a.codigo='SENDERISMO' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='VOLCAN_TAJUMULCO' AND a.codigo='AVENTURA_EXTREMA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='VOLCAN_TAJUMULCO' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='VOLCAN_TAJUMULCO' AND a.codigo='EDUCACION_AMBIENTAL' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='LAGUNA_BRAVA' AND a.codigo='SENDERISMO' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='LAGUNA_BRAVA' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='LAGUNA_BRAVA' AND a.codigo='EDUCACION_AMBIENTAL' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='LAGUNA_BRAVA' AND a.codigo='NAVEGACION' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='LAGUNA_BRAVA' AND a.codigo='AVENTURA_EXTREMA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='CENOTES_CANDELARIA_HUEHUE' AND a.codigo='SENDERISMO' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='CENOTES_CANDELARIA_HUEHUE' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='CENOTES_CANDELARIA_HUEHUE' AND a.codigo='EDUCACION_AMBIENTAL' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='CENOTES_CANDELARIA_HUEHUE' AND a.codigo='NAVEGACION' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='CENOTES_CANDELARIA_HUEHUE' AND a.codigo='AVENTURA_EXTREMA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='TODOS_SANTOS_CUCHUMATAN' AND a.codigo='CULTURA_VIVA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='TODOS_SANTOS_CUCHUMATAN' AND a.codigo='COMPRAS_ARTESANIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='TODOS_SANTOS_CUCHUMATAN' AND a.codigo='TURISMO_COMUNITARIO' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='NEBAJ' AND a.codigo='CULTURA_VIVA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='NEBAJ' AND a.codigo='TURISMO_COMUNITARIO' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='NEBAJ' AND a.codigo='COMPRAS_ARTESANIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='MUNAE' AND a.codigo='MUSEOS' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='MUNAE' AND a.codigo='ARQUEOLOGIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='MUNAE' AND a.codigo='CAMINATA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='MUNAE' AND a.codigo='GASTRONOMIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='KAMINALJUYU' AND a.codigo='ARQUEOLOGIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='KAMINALJUYU' AND a.codigo='CAMINATA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='KAMINALJUYU' AND a.codigo='GASTRONOMIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='ZOO_LA_AURORA' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='ZOO_LA_AURORA' AND a.codigo='CAMINATA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='ZOO_LA_AURORA' AND a.codigo='GASTRONOMIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='ZOO_LA_AURORA' AND a.codigo='SENDERISMO' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='ZOO_LA_AURORA' AND a.codigo='EDUCACION_AMBIENTAL' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='CENTRO_HISTORICO_GUATEMALA' AND a.codigo='CAMINATA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='CENTRO_HISTORICO_GUATEMALA' AND a.codigo='GASTRONOMIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='CENTRO_HISTORICO_GUATEMALA' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='MIXCO_VIEJO' AND a.codigo='ARQUEOLOGIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='MIXCO_VIEJO' AND a.codigo='CAMINATA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='MIXCO_VIEJO' AND a.codigo='SENDERISMO' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='MIXCO_VIEJO' AND a.codigo='AVENTURA_EXTREMA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='VOLCAN_ACATENANGO' AND a.codigo='ASCENSO_VOLCAN' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='VOLCAN_ACATENANGO' AND a.codigo='SENDERISMO' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='VOLCAN_ACATENANGO' AND a.codigo='AVENTURA_EXTREMA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='VOLCAN_ACATENANGO' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='VOLCAN_ACATENANGO' AND a.codigo='EDUCACION_AMBIENTAL' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='VOLCAN_AGUA' AND a.codigo='ASCENSO_VOLCAN' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='VOLCAN_AGUA' AND a.codigo='SENDERISMO' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='VOLCAN_AGUA' AND a.codigo='AVENTURA_EXTREMA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='VOLCAN_AGUA' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='VOLCAN_AGUA' AND a.codigo='EDUCACION_AMBIENTAL' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='HOBBITENANGO' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='HOBBITENANGO' AND a.codigo='SENDERISMO' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='HOBBITENANGO' AND a.codigo='EDUCACION_AMBIENTAL' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='HOBBITENANGO' AND a.codigo='GASTRONOMIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='MUSEO_MIRAFLORES' AND a.codigo='MUSEOS' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='MUSEO_MIRAFLORES' AND a.codigo='ARQUEOLOGIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='MUSEO_MIRAFLORES' AND a.codigo='CAMINATA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='MUSEO_MIRAFLORES' AND a.codigo='GASTRONOMIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='SIERRA_MINAS' AND a.codigo='EDUCACION_AMBIENTAL' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='SIERRA_MINAS' AND a.codigo='SENDERISMO' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='SIERRA_MINAS' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='SIERRA_MINAS' AND a.codigo='OBSERVACION_AVES' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='MUSEO_PALEONTOLOGIA_ESTANZUELA' AND a.codigo='MUSEOS' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='MUSEO_PALEONTOLOGIA_ESTANZUELA' AND a.codigo='CAMINATA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='MUSEO_PALEONTOLOGIA_ESTANZUELA' AND a.codigo='GASTRONOMIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='VOLCAN_LAGUNA_IPALA' AND a.codigo='ASCENSO_VOLCAN' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='VOLCAN_LAGUNA_IPALA' AND a.codigo='SENDERISMO' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='VOLCAN_LAGUNA_IPALA' AND a.codigo='NAVEGACION' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='VOLCAN_LAGUNA_IPALA' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='VOLCAN_LAGUNA_IPALA' AND a.codigo='EDUCACION_AMBIENTAL' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='LAGO_GUIJA' AND a.codigo='NAVEGACION' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='LAGO_GUIJA' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='LAGO_GUIJA' AND a.codigo='SENDERISMO' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='LAGO_GUIJA' AND a.codigo='EDUCACION_AMBIENTAL' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='VOLCAN_SUCHITAN' AND a.codigo='ASCENSO_VOLCAN' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='VOLCAN_SUCHITAN' AND a.codigo='SENDERISMO' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='VOLCAN_SUCHITAN' AND a.codigo='AVENTURA_EXTREMA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='VOLCAN_SUCHITAN' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='VOLCAN_SUCHITAN' AND a.codigo='EDUCACION_AMBIENTAL' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='PLAYA_BLANCA_IZABAL' AND a.codigo='NATACION' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='PLAYA_BLANCA_IZABAL' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='PLAYA_BLANCA_IZABAL' AND a.codigo='SENDERISMO' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='PLAYA_BLANCA_IZABAL' AND a.codigo='EDUCACION_AMBIENTAL' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='LAGUNA_LACHUA' AND a.codigo='EDUCACION_AMBIENTAL' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='LAGUNA_LACHUA' AND a.codigo='SENDERISMO' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='LAGUNA_LACHUA' AND a.codigo='FOTOGRAFIA' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+INSERT INTO turismo.destino_actividad (destino_id, actividad_id, notas) SELECT d.id_destino, a.id_actividad, 'Actividad recomendada para el destino según su clasificación turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.actividad_turistica a WHERE d.codigo='LAGUNA_LACHUA' AND a.codigo='NAVEGACION' ON CONFLICT (destino_id, actividad_id) DO NOTHING;
+
+-- Temporadas
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='ANTIGUA_GUATEMALA' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='PARQUE_NACIONAL_TIKAL' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='YAXHA' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='EL_MIRADOR' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='UAXACTUN' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='LAGO_ATITLAN' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='PANAJACHEL' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='SAN_JUAN_LA_LAGUNA' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='CHICHICASTENANGO' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='IXIMCHE' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='QUIRIGUA' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='RIO_DULCE' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='CASTILLO_SAN_FELIPE' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='LIVINGSTON' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='SEMUC_CHAMPEY' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='CUEVAS_CANDELARIA_AV' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='BIOTOPO_QUETZAL' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='COBAN' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='ESQUIPULAS' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='BASILICA_ESQUIPULAS' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='VOLCAN_PACAYA' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='MONTERRICO' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='SIPACATE_NARANJO' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='TAKALIK_ABAJ' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='XETULUL_XOCOMIL' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='PUERTO_SAN_JOSE' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='PLAYA_TILAPA' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='FUENTES_GEORGINAS' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='QUETZALTENANGO_CENTRO' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='VOLCAN_TAJUMULCO' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='LAGUNA_BRAVA' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='CENOTES_CANDELARIA_HUEHUE' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='TODOS_SANTOS_CUCHUMATAN' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='NEBAJ' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='MUNAE' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='KAMINALJUYU' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='ZOO_LA_AURORA' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='CENTRO_HISTORICO_GUATEMALA' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='MIXCO_VIEJO' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='VOLCAN_ACATENANGO' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='VOLCAN_AGUA' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='HOBBITENANGO' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='MUSEO_MIRAFLORES' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='SIERRA_MINAS' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='MUSEO_PALEONTOLOGIA_ESTANZUELA' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='VOLCAN_LAGUNA_IPALA' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='LAGO_GUIJA' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='VOLCAN_SUCHITAN' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='PLAYA_BLANCA_IZABAL' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Destino visitable durante todo el año; validar clima, horarios y condiciones locales antes del viaje.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='LAGUNA_LACHUA' AND t.codigo='TODO_EL_ANIO' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'La temporada seca suele ser preferible para senderismo y ascenso por estabilidad de caminos y visibilidad.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='VOLCAN_ACATENANGO' AND t.codigo='SECA' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'La temporada seca suele ser preferible para senderismo y ascenso por estabilidad de caminos y visibilidad.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='VOLCAN_AGUA' AND t.codigo='SECA' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'La temporada seca suele ser preferible para senderismo y ascenso por estabilidad de caminos y visibilidad.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='VOLCAN_PACAYA' AND t.codigo='SECA' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'La temporada seca suele ser preferible para senderismo y ascenso por estabilidad de caminos y visibilidad.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='VOLCAN_TAJUMULCO' AND t.codigo='SECA' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'La temporada seca suele ser preferible para senderismo y ascenso por estabilidad de caminos y visibilidad.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='VOLCAN_LAGUNA_IPALA' AND t.codigo='SECA' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'La temporada seca suele ser preferible para senderismo y ascenso por estabilidad de caminos y visibilidad.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='VOLCAN_SUCHITAN' AND t.codigo='SECA' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Alta afluencia por actividades religiosas y culturales; reservar hospedaje y transporte con anticipación.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='ANTIGUA_GUATEMALA' AND t.codigo='SEMANA_SANTA' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Alta afluencia por actividades religiosas y culturales; reservar hospedaje y transporte con anticipación.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='CENTRO_HISTORICO_GUATEMALA' AND t.codigo='SEMANA_SANTA' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Alta afluencia por actividades religiosas y culturales; reservar hospedaje y transporte con anticipación.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='BASILICA_ESQUIPULAS' AND t.codigo='SEMANA_SANTA' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+INSERT INTO turismo.destino_temporada (destino_id, temporada_id, recomendacion) SELECT d.id_destino, t.id_temporada, 'Alta afluencia por actividades religiosas y culturales; reservar hospedaje y transporte con anticipación.' FROM turismo.destino_turistico d CROSS JOIN turismo.temporada_turistica t WHERE d.codigo='ESQUIPULAS' AND t.codigo='SEMANA_SANTA' ON CONFLICT (destino_id, temporada_id) DO NOTHING;
+
+-- Fuentes por destino
+-- Se relaciona cada destino con fuentes por codigo para evitar depender de IDs físicos.
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente oficial UNESCO utilizada para respaldar el reconocimiento patrimonial del destino.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='ANTIGUA_GUATEMALA' AND f.codigo='UNESCO_ANTIGUA' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente complementaria para clasificación por región turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='ANTIGUA_GUATEMALA' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente oficial UNESCO utilizada para respaldar el reconocimiento patrimonial del destino.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='PARQUE_NACIONAL_TIKAL' AND f.codigo='UNESCO_TIKAL' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente complementaria para clasificación por región turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='PARQUE_NACIONAL_TIKAL' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente institucional de CONAP/SIGAP utilizada para respaldar la condicion natural o de area protegida.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='YAXHA' AND f.codigo='CONAP_GENERAL' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente complementaria para clasificación por región turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='YAXHA' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente institucional de CONAP/SIGAP utilizada para respaldar la condicion natural o de area protegida.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='EL_MIRADOR' AND f.codigo='CONAP_GENERAL' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente complementaria para clasificación por región turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='EL_MIRADOR' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente regional utilizada para clasificar el destino dentro de las regiones turisticas de Guatemala.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='UAXACTUN' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente regional utilizada para clasificar el destino dentro de las regiones turisticas de Guatemala.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='LAGO_ATITLAN' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente regional utilizada para clasificar el destino dentro de las regiones turisticas de Guatemala.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='PANAJACHEL' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente regional utilizada para clasificar el destino dentro de las regiones turisticas de Guatemala.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='SAN_JUAN_LA_LAGUNA' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente regional utilizada para clasificar el destino dentro de las regiones turisticas de Guatemala.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='CHICHICASTENANGO' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente cultural utilizada para respaldar la naturaleza cultural, arqueologica o museistica del destino.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='IXIMCHE' AND f.codigo='SIC_GENERAL' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente complementaria para clasificación por región turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='IXIMCHE' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente oficial UNESCO utilizada para respaldar el reconocimiento patrimonial del destino.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='QUIRIGUA' AND f.codigo='UNESCO_QUIRIGUA' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente complementaria para clasificación por región turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='QUIRIGUA' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente regional utilizada para clasificar el destino dentro de las regiones turisticas de Guatemala.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='RIO_DULCE' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente regional utilizada para clasificar el destino dentro de las regiones turisticas de Guatemala.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='CASTILLO_SAN_FELIPE' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente regional utilizada para clasificar el destino dentro de las regiones turisticas de Guatemala.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='LIVINGSTON' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente institucional de CONAP/SIGAP utilizada para respaldar la condicion natural o de area protegida.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='SEMUC_CHAMPEY' AND f.codigo='CONAP_GENERAL' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente complementaria para clasificación por región turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='SEMUC_CHAMPEY' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente regional utilizada para clasificar el destino dentro de las regiones turisticas de Guatemala.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='CUEVAS_CANDELARIA_AV' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente institucional de CONAP/SIGAP utilizada para respaldar la condicion natural o de area protegida.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='BIOTOPO_QUETZAL' AND f.codigo='CONAP_GENERAL' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente complementaria para clasificación por región turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='BIOTOPO_QUETZAL' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente regional utilizada para clasificar el destino dentro de las regiones turisticas de Guatemala.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='COBAN' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente regional utilizada para clasificar el destino dentro de las regiones turisticas de Guatemala.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='ESQUIPULAS' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente regional utilizada para clasificar el destino dentro de las regiones turisticas de Guatemala.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='BASILICA_ESQUIPULAS' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente institucional de CONAP/SIGAP utilizada para respaldar la condicion natural o de area protegida.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='VOLCAN_PACAYA' AND f.codigo='CONAP_SIGAP_PACAYA' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente complementaria para clasificación por región turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='VOLCAN_PACAYA' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente regional utilizada para clasificar el destino dentro de las regiones turisticas de Guatemala.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='MONTERRICO' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente institucional de CONAP/SIGAP utilizada para respaldar la condicion natural o de area protegida.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='SIPACATE_NARANJO' AND f.codigo='CONAP_GENERAL' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente complementaria para clasificación por región turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='SIPACATE_NARANJO' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente oficial UNESCO utilizada para respaldar el reconocimiento patrimonial del destino.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='TAKALIK_ABAJ' AND f.codigo='UNESCO_TAKALIK_ABAJ' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente complementaria para clasificación por región turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='TAKALIK_ABAJ' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente especifica del operador o institucion utilizada para identificar el atractivo turistico.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='XETULUL_XOCOMIL' AND f.codigo='IRTRA_GENERAL' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente complementaria para clasificación por región turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='XETULUL_XOCOMIL' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente regional utilizada para clasificar el destino dentro de las regiones turisticas de Guatemala.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='PUERTO_SAN_JOSE' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente regional utilizada para clasificar el destino dentro de las regiones turisticas de Guatemala.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='PLAYA_TILAPA' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente regional utilizada para clasificar el destino dentro de las regiones turisticas de Guatemala.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='FUENTES_GEORGINAS' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente regional utilizada para clasificar el destino dentro de las regiones turisticas de Guatemala.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='QUETZALTENANGO_CENTRO' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente regional utilizada para clasificar el destino dentro de las regiones turisticas de Guatemala.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='VOLCAN_TAJUMULCO' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente regional utilizada para clasificar el destino dentro de las regiones turisticas de Guatemala.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='LAGUNA_BRAVA' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente regional utilizada para clasificar el destino dentro de las regiones turisticas de Guatemala.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='CENOTES_CANDELARIA_HUEHUE' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente regional utilizada para clasificar el destino dentro de las regiones turisticas de Guatemala.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='TODOS_SANTOS_CUCHUMATAN' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente regional utilizada para clasificar el destino dentro de las regiones turisticas de Guatemala.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='NEBAJ' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente cultural utilizada para respaldar la naturaleza cultural, arqueologica o museistica del destino.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='MUNAE' AND f.codigo='SIC_GENERAL' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente complementaria para clasificación por región turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='MUNAE' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente cultural utilizada para respaldar la naturaleza cultural, arqueologica o museistica del destino.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='KAMINALJUYU' AND f.codigo='SIC_GENERAL' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente complementaria para clasificación por región turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='KAMINALJUYU' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente especifica del operador o institucion utilizada para identificar el atractivo turistico.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='ZOO_LA_AURORA' AND f.codigo='ZOO_LA_AURORA_OFICIAL' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente complementaria para clasificación por región turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='ZOO_LA_AURORA' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente especifica del operador o institucion utilizada para identificar el atractivo turistico.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='CENTRO_HISTORICO_GUATEMALA' AND f.codigo='MUNIGUATE_TURISMO' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente complementaria para clasificación por región turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='CENTRO_HISTORICO_GUATEMALA' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente cultural utilizada para respaldar la naturaleza cultural, arqueologica o museistica del destino.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='MIXCO_VIEJO' AND f.codigo='SIC_GENERAL' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente complementaria para clasificación por región turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='MIXCO_VIEJO' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente regional utilizada para clasificar el destino dentro de las regiones turisticas de Guatemala.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='VOLCAN_ACATENANGO' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente regional utilizada para clasificar el destino dentro de las regiones turisticas de Guatemala.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='VOLCAN_AGUA' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente especifica del operador o institucion utilizada para identificar el atractivo turistico.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='HOBBITENANGO' AND f.codigo='HOBBITENANGO_OFICIAL' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente complementaria para clasificación por región turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='HOBBITENANGO' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente especifica del operador o institucion utilizada para identificar el atractivo turistico.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='MUSEO_MIRAFLORES' AND f.codigo='MUSEO_MIRAFLORES_OFICIAL' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente complementaria para clasificación por región turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='MUSEO_MIRAFLORES' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente regional utilizada para clasificar el destino dentro de las regiones turisticas de Guatemala.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='SIERRA_MINAS' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente regional utilizada para clasificar el destino dentro de las regiones turisticas de Guatemala.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='MUSEO_PALEONTOLOGIA_ESTANZUELA' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente institucional de CONAP/SIGAP utilizada para respaldar la condicion natural o de area protegida.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='VOLCAN_LAGUNA_IPALA' AND f.codigo='CONAP_GENERAL' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente complementaria para clasificación por región turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='VOLCAN_LAGUNA_IPALA' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente regional utilizada para clasificar el destino dentro de las regiones turisticas de Guatemala.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='LAGO_GUIJA' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente regional utilizada para clasificar el destino dentro de las regiones turisticas de Guatemala.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='VOLCAN_SUCHITAN' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente regional utilizada para clasificar el destino dentro de las regiones turisticas de Guatemala.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='PLAYA_BLANCA_IZABAL' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente institucional de CONAP/SIGAP utilizada para respaldar la condicion natural o de area protegida.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='LAGUNA_LACHUA' AND f.codigo='CONAP_GENERAL' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente complementaria para clasificación por región turística.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='LAGUNA_LACHUA' AND f.codigo='GUATEMALA_CVB_REGIONES' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente complementaria de respaldo documental.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='PARQUE_NACIONAL_TIKAL' AND f.codigo='SIC_TIKAL' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente complementaria de respaldo documental.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='PARQUE_NACIONAL_TIKAL' AND f.codigo='UNESCO_GUATEMALA' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente complementaria de respaldo documental.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='ANTIGUA_GUATEMALA' AND f.codigo='UNESCO_GUATEMALA' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente complementaria de respaldo documental.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='QUIRIGUA' AND f.codigo='UNESCO_GUATEMALA' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente complementaria de respaldo documental.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='TAKALIK_ABAJ' AND f.codigo='UNESCO_GUATEMALA' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente complementaria de respaldo documental.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='VOLCAN_PACAYA' AND f.codigo='CONAP_SIGAP_GENERAL' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente complementaria de respaldo documental.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='YAXHA' AND f.codigo='CONAP_SIGAP_GENERAL' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente complementaria de respaldo documental.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='EL_MIRADOR' AND f.codigo='CONAP_SIGAP_GENERAL' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente complementaria de respaldo documental.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='SEMUC_CHAMPEY' AND f.codigo='CONAP_SIGAP_GENERAL' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente complementaria de respaldo documental.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='BIOTOPO_QUETZAL' AND f.codigo='CONAP_SIGAP_GENERAL' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente complementaria de respaldo documental.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='SIPACATE_NARANJO' AND f.codigo='CONAP_SIGAP_GENERAL' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente complementaria de respaldo documental.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='VOLCAN_LAGUNA_IPALA' AND f.codigo='CONAP_SIGAP_GENERAL' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+INSERT INTO turismo.destino_fuente (destino_id, fuente_id, detalle) SELECT d.id_destino, f.id_fuente, 'Fuente complementaria de respaldo documental.' FROM turismo.destino_turistico d CROSS JOIN turismo.fuente_turistica f WHERE d.codigo='LAGUNA_LACHUA' AND f.codigo='CONAP_SIGAP_GENERAL' ON CONFLICT (destino_id, fuente_id) DO UPDATE SET detalle=EXCLUDED.detalle;
+
+-- Patrimonio
+INSERT INTO turismo.patrimonio_turistico (id_patrimonio, codigo, tipo, nombre, organismo, anio_inscripcion, descripcion, fuente_id) VALUES (1, 'UNESCO_ANTIGUA', 'UNESCO_CULTURAL'::turismo.tipo_patrimonio, 'Antigua Guatemala', 'UNESCO', 1979, 'Ciudad colonial inscrita como Patrimonio Mundial por su valor urbano, histórico y arquitectónico.', (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='UNESCO_ANTIGUA')) ON CONFLICT (codigo) DO UPDATE SET tipo=EXCLUDED.tipo, nombre=EXCLUDED.nombre, organismo=EXCLUDED.organismo, anio_inscripcion=EXCLUDED.anio_inscripcion, descripcion=EXCLUDED.descripcion, fuente_id=EXCLUDED.fuente_id;
+INSERT INTO turismo.patrimonio_turistico (id_patrimonio, codigo, tipo, nombre, organismo, anio_inscripcion, descripcion, fuente_id) VALUES (2, 'UNESCO_TIKAL', 'UNESCO_MIXTO'::turismo.tipo_patrimonio, 'Parque Nacional Tikal', 'UNESCO', 1979, 'Sitio de patrimonio mixto por sus valores culturales mayas y naturales de selva tropical.', (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='UNESCO_TIKAL')) ON CONFLICT (codigo) DO UPDATE SET tipo=EXCLUDED.tipo, nombre=EXCLUDED.nombre, organismo=EXCLUDED.organismo, anio_inscripcion=EXCLUDED.anio_inscripcion, descripcion=EXCLUDED.descripcion, fuente_id=EXCLUDED.fuente_id;
+INSERT INTO turismo.patrimonio_turistico (id_patrimonio, codigo, tipo, nombre, organismo, anio_inscripcion, descripcion, fuente_id) VALUES (3, 'UNESCO_QUIRIGUA', 'UNESCO_CULTURAL'::turismo.tipo_patrimonio, 'Parque Arqueológico y Ruinas de Quiriguá', 'UNESCO', 1981, 'Sitio arqueológico maya reconocido por estelas y monumentos tallados.', (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='UNESCO_QUIRIGUA')) ON CONFLICT (codigo) DO UPDATE SET tipo=EXCLUDED.tipo, nombre=EXCLUDED.nombre, organismo=EXCLUDED.organismo, anio_inscripcion=EXCLUDED.anio_inscripcion, descripcion=EXCLUDED.descripcion, fuente_id=EXCLUDED.fuente_id;
+INSERT INTO turismo.patrimonio_turistico (id_patrimonio, codigo, tipo, nombre, organismo, anio_inscripcion, descripcion, fuente_id) VALUES (4, 'UNESCO_TAKALIK_ABAJ', 'UNESCO_CULTURAL'::turismo.tipo_patrimonio, 'Parque Arqueológico Nacional Tak’alik Ab’aj', 'UNESCO', 2023, 'Sitio arqueológico vinculado con la transición olmeca-maya e inscrito como Patrimonio Mundial.', (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='UNESCO_TAKALIK_ABAJ')) ON CONFLICT (codigo) DO UPDATE SET tipo=EXCLUDED.tipo, nombre=EXCLUDED.nombre, organismo=EXCLUDED.organismo, anio_inscripcion=EXCLUDED.anio_inscripcion, descripcion=EXCLUDED.descripcion, fuente_id=EXCLUDED.fuente_id;
+INSERT INTO turismo.patrimonio_turistico (id_patrimonio, codigo, tipo, nombre, organismo, anio_inscripcion, descripcion, fuente_id) VALUES (5, 'UNESCO_RABINAL_ACHI', 'UNESCO_INTANGIBLE'::turismo.tipo_patrimonio, 'Tradición del teatro bailado Rabinal Achí', 'UNESCO', 2008, 'Patrimonio Cultural Inmaterial asociado con la tradición maya de Rabinal Achí.', (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='UNESCO_RABINAL_ACHI')) ON CONFLICT (codigo) DO UPDATE SET tipo=EXCLUDED.tipo, nombre=EXCLUDED.nombre, organismo=EXCLUDED.organismo, anio_inscripcion=EXCLUDED.anio_inscripcion, descripcion=EXCLUDED.descripcion, fuente_id=EXCLUDED.fuente_id;
+INSERT INTO turismo.destino_patrimonio (destino_id, patrimonio_id, observacion) SELECT d.id_destino, p.id_patrimonio, 'Destino asociado directamente con el reconocimiento patrimonial.' FROM turismo.destino_turistico d CROSS JOIN turismo.patrimonio_turistico p WHERE d.codigo='ANTIGUA_GUATEMALA' AND p.codigo='UNESCO_ANTIGUA' ON CONFLICT (destino_id, patrimonio_id) DO NOTHING;
+INSERT INTO turismo.destino_patrimonio (destino_id, patrimonio_id, observacion) SELECT d.id_destino, p.id_patrimonio, 'Destino asociado directamente con el reconocimiento patrimonial.' FROM turismo.destino_turistico d CROSS JOIN turismo.patrimonio_turistico p WHERE d.codigo='PARQUE_NACIONAL_TIKAL' AND p.codigo='UNESCO_TIKAL' ON CONFLICT (destino_id, patrimonio_id) DO NOTHING;
+INSERT INTO turismo.destino_patrimonio (destino_id, patrimonio_id, observacion) SELECT d.id_destino, p.id_patrimonio, 'Destino asociado directamente con el reconocimiento patrimonial.' FROM turismo.destino_turistico d CROSS JOIN turismo.patrimonio_turistico p WHERE d.codigo='QUIRIGUA' AND p.codigo='UNESCO_QUIRIGUA' ON CONFLICT (destino_id, patrimonio_id) DO NOTHING;
+INSERT INTO turismo.destino_patrimonio (destino_id, patrimonio_id, observacion) SELECT d.id_destino, p.id_patrimonio, 'Destino asociado directamente con el reconocimiento patrimonial.' FROM turismo.destino_turistico d CROSS JOIN turismo.patrimonio_turistico p WHERE d.codigo='TAKALIK_ABAJ' AND p.codigo='UNESCO_TAKALIK_ABAJ' ON CONFLICT (destino_id, patrimonio_id) DO NOTHING;
+
+-- Rutas
+INSERT INTO turismo.ruta_turistica (id_ruta, codigo, nombre, region_id, descripcion, duracion_dias, fuente_id) VALUES (1, 'RUTA_GUATEMALA_COLONIAL', 'Ruta Guatemala Moderna y Colonial', 1, 'Recorrido urbano y colonial por Ciudad de Guatemala, Antigua Guatemala y miradores cercanos.', 3, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES')) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, region_id=EXCLUDED.region_id, descripcion=EXCLUDED.descripcion, duracion_dias=EXCLUDED.duracion_dias, fuente_id=EXCLUDED.fuente_id;
+INSERT INTO turismo.ruta_turistica (id_ruta, codigo, nombre, region_id, descripcion, duracion_dias, fuente_id) VALUES (2, 'RUTA_ALTIPLANO_ATITLAN', 'Ruta Altiplano y Lago de Atitlán', 2, 'Ruta cultural y natural por Chichicastenango, Lago de Atitlán y pueblos mayas vivos.', 4, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES')) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, region_id=EXCLUDED.region_id, descripcion=EXCLUDED.descripcion, duracion_dias=EXCLUDED.duracion_dias, fuente_id=EXCLUDED.fuente_id;
+INSERT INTO turismo.ruta_turistica (id_ruta, codigo, nombre, region_id, descripcion, duracion_dias, fuente_id) VALUES (3, 'RUTA_MUNDO_MAYA_PETEN', 'Ruta Mundo Maya en Petén', 3, 'Ruta arqueológica y natural por Tikal, Yaxhá, Uaxactún y otros sitios de Petén.', 4, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES')) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, region_id=EXCLUDED.region_id, descripcion=EXCLUDED.descripcion, duracion_dias=EXCLUDED.duracion_dias, fuente_id=EXCLUDED.fuente_id;
+INSERT INTO turismo.ruta_turistica (id_ruta, codigo, nombre, region_id, descripcion, duracion_dias, fuente_id) VALUES (4, 'RUTA_CARIBE_VERDE', 'Ruta Caribe Verde', 4, 'Ruta por Río Dulce, Castillo de San Felipe, Livingston, Playa Blanca y Quiriguá.', 4, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES')) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, region_id=EXCLUDED.region_id, descripcion=EXCLUDED.descripcion, duracion_dias=EXCLUDED.duracion_dias, fuente_id=EXCLUDED.fuente_id;
+INSERT INTO turismo.ruta_turistica (id_ruta, codigo, nombre, region_id, descripcion, duracion_dias, fuente_id) VALUES (5, 'RUTA_VERAPACES_NATURAL', 'Ruta Paraíso Natural Verapaces', 5, 'Ruta de naturaleza por Semuc Champey, cuevas, Cobán, Biotopo del Quetzal y Laguna Lachuá.', 4, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES')) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, region_id=EXCLUDED.region_id, descripcion=EXCLUDED.descripcion, duracion_dias=EXCLUDED.duracion_dias, fuente_id=EXCLUDED.fuente_id;
+INSERT INTO turismo.ruta_turistica (id_ruta, codigo, nombre, region_id, descripcion, duracion_dias, fuente_id) VALUES (6, 'RUTA_PACIFICO_AVENTURA', 'Ruta Pacífico Mágico y Diverso', 6, 'Ruta de costa, arqueología, parques recreativos y playas del Pacífico.', 4, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES')) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, region_id=EXCLUDED.region_id, descripcion=EXCLUDED.descripcion, duracion_dias=EXCLUDED.duracion_dias, fuente_id=EXCLUDED.fuente_id;
+INSERT INTO turismo.ruta_turistica (id_ruta, codigo, nombre, region_id, descripcion, duracion_dias, fuente_id) VALUES (7, 'RUTA_ORIENTE_MISTICO', 'Ruta Oriente Místico y Natural', 7, 'Ruta de peregrinaje, paleontología, montañas, lagunas y naturaleza del oriente.', 3, (SELECT id_fuente FROM turismo.fuente_turistica WHERE codigo='GUATEMALA_CVB_REGIONES')) ON CONFLICT (codigo) DO UPDATE SET nombre=EXCLUDED.nombre, region_id=EXCLUDED.region_id, descripcion=EXCLUDED.descripcion, duracion_dias=EXCLUDED.duracion_dias, fuente_id=EXCLUDED.fuente_id;
+INSERT INTO turismo.ruta_destino (ruta_id, destino_id, orden_visita, tiempo_sugerido) SELECT r.id_ruta, d.id_destino, 1, 'medio día a 1 día' FROM turismo.ruta_turistica r CROSS JOIN turismo.destino_turistico d WHERE r.id_ruta=1 AND d.codigo='CENTRO_HISTORICO_GUATEMALA' ON CONFLICT (ruta_id, destino_id) DO UPDATE SET orden_visita=EXCLUDED.orden_visita, tiempo_sugerido=EXCLUDED.tiempo_sugerido;
+INSERT INTO turismo.ruta_destino (ruta_id, destino_id, orden_visita, tiempo_sugerido) SELECT r.id_ruta, d.id_destino, 2, 'medio día a 1 día' FROM turismo.ruta_turistica r CROSS JOIN turismo.destino_turistico d WHERE r.id_ruta=1 AND d.codigo='MUNAE' ON CONFLICT (ruta_id, destino_id) DO UPDATE SET orden_visita=EXCLUDED.orden_visita, tiempo_sugerido=EXCLUDED.tiempo_sugerido;
+INSERT INTO turismo.ruta_destino (ruta_id, destino_id, orden_visita, tiempo_sugerido) SELECT r.id_ruta, d.id_destino, 3, 'medio día a 1 día' FROM turismo.ruta_turistica r CROSS JOIN turismo.destino_turistico d WHERE r.id_ruta=1 AND d.codigo='KAMINALJUYU' ON CONFLICT (ruta_id, destino_id) DO UPDATE SET orden_visita=EXCLUDED.orden_visita, tiempo_sugerido=EXCLUDED.tiempo_sugerido;
+INSERT INTO turismo.ruta_destino (ruta_id, destino_id, orden_visita, tiempo_sugerido) SELECT r.id_ruta, d.id_destino, 4, 'medio día a 1 día' FROM turismo.ruta_turistica r CROSS JOIN turismo.destino_turistico d WHERE r.id_ruta=1 AND d.codigo='ANTIGUA_GUATEMALA' ON CONFLICT (ruta_id, destino_id) DO UPDATE SET orden_visita=EXCLUDED.orden_visita, tiempo_sugerido=EXCLUDED.tiempo_sugerido;
+INSERT INTO turismo.ruta_destino (ruta_id, destino_id, orden_visita, tiempo_sugerido) SELECT r.id_ruta, d.id_destino, 5, 'medio día a 1 día' FROM turismo.ruta_turistica r CROSS JOIN turismo.destino_turistico d WHERE r.id_ruta=1 AND d.codigo='HOBBITENANGO' ON CONFLICT (ruta_id, destino_id) DO UPDATE SET orden_visita=EXCLUDED.orden_visita, tiempo_sugerido=EXCLUDED.tiempo_sugerido;
+INSERT INTO turismo.ruta_destino (ruta_id, destino_id, orden_visita, tiempo_sugerido) SELECT r.id_ruta, d.id_destino, 1, 'medio día a 1 día' FROM turismo.ruta_turistica r CROSS JOIN turismo.destino_turistico d WHERE r.id_ruta=2 AND d.codigo='CHICHICASTENANGO' ON CONFLICT (ruta_id, destino_id) DO UPDATE SET orden_visita=EXCLUDED.orden_visita, tiempo_sugerido=EXCLUDED.tiempo_sugerido;
+INSERT INTO turismo.ruta_destino (ruta_id, destino_id, orden_visita, tiempo_sugerido) SELECT r.id_ruta, d.id_destino, 2, 'medio día a 1 día' FROM turismo.ruta_turistica r CROSS JOIN turismo.destino_turistico d WHERE r.id_ruta=2 AND d.codigo='LAGO_ATITLAN' ON CONFLICT (ruta_id, destino_id) DO UPDATE SET orden_visita=EXCLUDED.orden_visita, tiempo_sugerido=EXCLUDED.tiempo_sugerido;
+INSERT INTO turismo.ruta_destino (ruta_id, destino_id, orden_visita, tiempo_sugerido) SELECT r.id_ruta, d.id_destino, 3, 'medio día a 1 día' FROM turismo.ruta_turistica r CROSS JOIN turismo.destino_turistico d WHERE r.id_ruta=2 AND d.codigo='PANAJACHEL' ON CONFLICT (ruta_id, destino_id) DO UPDATE SET orden_visita=EXCLUDED.orden_visita, tiempo_sugerido=EXCLUDED.tiempo_sugerido;
+INSERT INTO turismo.ruta_destino (ruta_id, destino_id, orden_visita, tiempo_sugerido) SELECT r.id_ruta, d.id_destino, 4, 'medio día a 1 día' FROM turismo.ruta_turistica r CROSS JOIN turismo.destino_turistico d WHERE r.id_ruta=2 AND d.codigo='SAN_JUAN_LA_LAGUNA' ON CONFLICT (ruta_id, destino_id) DO UPDATE SET orden_visita=EXCLUDED.orden_visita, tiempo_sugerido=EXCLUDED.tiempo_sugerido;
+INSERT INTO turismo.ruta_destino (ruta_id, destino_id, orden_visita, tiempo_sugerido) SELECT r.id_ruta, d.id_destino, 5, 'medio día a 1 día' FROM turismo.ruta_turistica r CROSS JOIN turismo.destino_turistico d WHERE r.id_ruta=2 AND d.codigo='IXIMCHE' ON CONFLICT (ruta_id, destino_id) DO UPDATE SET orden_visita=EXCLUDED.orden_visita, tiempo_sugerido=EXCLUDED.tiempo_sugerido;
+INSERT INTO turismo.ruta_destino (ruta_id, destino_id, orden_visita, tiempo_sugerido) SELECT r.id_ruta, d.id_destino, 1, 'medio día a 1 día' FROM turismo.ruta_turistica r CROSS JOIN turismo.destino_turistico d WHERE r.id_ruta=3 AND d.codigo='PARQUE_NACIONAL_TIKAL' ON CONFLICT (ruta_id, destino_id) DO UPDATE SET orden_visita=EXCLUDED.orden_visita, tiempo_sugerido=EXCLUDED.tiempo_sugerido;
+INSERT INTO turismo.ruta_destino (ruta_id, destino_id, orden_visita, tiempo_sugerido) SELECT r.id_ruta, d.id_destino, 2, 'medio día a 1 día' FROM turismo.ruta_turistica r CROSS JOIN turismo.destino_turistico d WHERE r.id_ruta=3 AND d.codigo='UAXACTUN' ON CONFLICT (ruta_id, destino_id) DO UPDATE SET orden_visita=EXCLUDED.orden_visita, tiempo_sugerido=EXCLUDED.tiempo_sugerido;
+INSERT INTO turismo.ruta_destino (ruta_id, destino_id, orden_visita, tiempo_sugerido) SELECT r.id_ruta, d.id_destino, 3, 'medio día a 1 día' FROM turismo.ruta_turistica r CROSS JOIN turismo.destino_turistico d WHERE r.id_ruta=3 AND d.codigo='YAXHA' ON CONFLICT (ruta_id, destino_id) DO UPDATE SET orden_visita=EXCLUDED.orden_visita, tiempo_sugerido=EXCLUDED.tiempo_sugerido;
+INSERT INTO turismo.ruta_destino (ruta_id, destino_id, orden_visita, tiempo_sugerido) SELECT r.id_ruta, d.id_destino, 4, 'medio día a 1 día' FROM turismo.ruta_turistica r CROSS JOIN turismo.destino_turistico d WHERE r.id_ruta=3 AND d.codigo='EL_MIRADOR' ON CONFLICT (ruta_id, destino_id) DO UPDATE SET orden_visita=EXCLUDED.orden_visita, tiempo_sugerido=EXCLUDED.tiempo_sugerido;
+INSERT INTO turismo.ruta_destino (ruta_id, destino_id, orden_visita, tiempo_sugerido) SELECT r.id_ruta, d.id_destino, 1, 'medio día a 1 día' FROM turismo.ruta_turistica r CROSS JOIN turismo.destino_turistico d WHERE r.id_ruta=4 AND d.codigo='RIO_DULCE' ON CONFLICT (ruta_id, destino_id) DO UPDATE SET orden_visita=EXCLUDED.orden_visita, tiempo_sugerido=EXCLUDED.tiempo_sugerido;
+INSERT INTO turismo.ruta_destino (ruta_id, destino_id, orden_visita, tiempo_sugerido) SELECT r.id_ruta, d.id_destino, 2, 'medio día a 1 día' FROM turismo.ruta_turistica r CROSS JOIN turismo.destino_turistico d WHERE r.id_ruta=4 AND d.codigo='CASTILLO_SAN_FELIPE' ON CONFLICT (ruta_id, destino_id) DO UPDATE SET orden_visita=EXCLUDED.orden_visita, tiempo_sugerido=EXCLUDED.tiempo_sugerido;
+INSERT INTO turismo.ruta_destino (ruta_id, destino_id, orden_visita, tiempo_sugerido) SELECT r.id_ruta, d.id_destino, 3, 'medio día a 1 día' FROM turismo.ruta_turistica r CROSS JOIN turismo.destino_turistico d WHERE r.id_ruta=4 AND d.codigo='LIVINGSTON' ON CONFLICT (ruta_id, destino_id) DO UPDATE SET orden_visita=EXCLUDED.orden_visita, tiempo_sugerido=EXCLUDED.tiempo_sugerido;
+INSERT INTO turismo.ruta_destino (ruta_id, destino_id, orden_visita, tiempo_sugerido) SELECT r.id_ruta, d.id_destino, 4, 'medio día a 1 día' FROM turismo.ruta_turistica r CROSS JOIN turismo.destino_turistico d WHERE r.id_ruta=4 AND d.codigo='PLAYA_BLANCA_IZABAL' ON CONFLICT (ruta_id, destino_id) DO UPDATE SET orden_visita=EXCLUDED.orden_visita, tiempo_sugerido=EXCLUDED.tiempo_sugerido;
+INSERT INTO turismo.ruta_destino (ruta_id, destino_id, orden_visita, tiempo_sugerido) SELECT r.id_ruta, d.id_destino, 5, 'medio día a 1 día' FROM turismo.ruta_turistica r CROSS JOIN turismo.destino_turistico d WHERE r.id_ruta=4 AND d.codigo='QUIRIGUA' ON CONFLICT (ruta_id, destino_id) DO UPDATE SET orden_visita=EXCLUDED.orden_visita, tiempo_sugerido=EXCLUDED.tiempo_sugerido;
+INSERT INTO turismo.ruta_destino (ruta_id, destino_id, orden_visita, tiempo_sugerido) SELECT r.id_ruta, d.id_destino, 1, 'medio día a 1 día' FROM turismo.ruta_turistica r CROSS JOIN turismo.destino_turistico d WHERE r.id_ruta=5 AND d.codigo='COBAN' ON CONFLICT (ruta_id, destino_id) DO UPDATE SET orden_visita=EXCLUDED.orden_visita, tiempo_sugerido=EXCLUDED.tiempo_sugerido;
+INSERT INTO turismo.ruta_destino (ruta_id, destino_id, orden_visita, tiempo_sugerido) SELECT r.id_ruta, d.id_destino, 2, 'medio día a 1 día' FROM turismo.ruta_turistica r CROSS JOIN turismo.destino_turistico d WHERE r.id_ruta=5 AND d.codigo='SEMUC_CHAMPEY' ON CONFLICT (ruta_id, destino_id) DO UPDATE SET orden_visita=EXCLUDED.orden_visita, tiempo_sugerido=EXCLUDED.tiempo_sugerido;
+INSERT INTO turismo.ruta_destino (ruta_id, destino_id, orden_visita, tiempo_sugerido) SELECT r.id_ruta, d.id_destino, 3, 'medio día a 1 día' FROM turismo.ruta_turistica r CROSS JOIN turismo.destino_turistico d WHERE r.id_ruta=5 AND d.codigo='CUEVAS_CANDELARIA_AV' ON CONFLICT (ruta_id, destino_id) DO UPDATE SET orden_visita=EXCLUDED.orden_visita, tiempo_sugerido=EXCLUDED.tiempo_sugerido;
+INSERT INTO turismo.ruta_destino (ruta_id, destino_id, orden_visita, tiempo_sugerido) SELECT r.id_ruta, d.id_destino, 4, 'medio día a 1 día' FROM turismo.ruta_turistica r CROSS JOIN turismo.destino_turistico d WHERE r.id_ruta=5 AND d.codigo='BIOTOPO_QUETZAL' ON CONFLICT (ruta_id, destino_id) DO UPDATE SET orden_visita=EXCLUDED.orden_visita, tiempo_sugerido=EXCLUDED.tiempo_sugerido;
+INSERT INTO turismo.ruta_destino (ruta_id, destino_id, orden_visita, tiempo_sugerido) SELECT r.id_ruta, d.id_destino, 5, 'medio día a 1 día' FROM turismo.ruta_turistica r CROSS JOIN turismo.destino_turistico d WHERE r.id_ruta=5 AND d.codigo='LAGUNA_LACHUA' ON CONFLICT (ruta_id, destino_id) DO UPDATE SET orden_visita=EXCLUDED.orden_visita, tiempo_sugerido=EXCLUDED.tiempo_sugerido;
+INSERT INTO turismo.ruta_destino (ruta_id, destino_id, orden_visita, tiempo_sugerido) SELECT r.id_ruta, d.id_destino, 1, 'medio día a 1 día' FROM turismo.ruta_turistica r CROSS JOIN turismo.destino_turistico d WHERE r.id_ruta=6 AND d.codigo='TAKALIK_ABAJ' ON CONFLICT (ruta_id, destino_id) DO UPDATE SET orden_visita=EXCLUDED.orden_visita, tiempo_sugerido=EXCLUDED.tiempo_sugerido;
+INSERT INTO turismo.ruta_destino (ruta_id, destino_id, orden_visita, tiempo_sugerido) SELECT r.id_ruta, d.id_destino, 2, 'medio día a 1 día' FROM turismo.ruta_turistica r CROSS JOIN turismo.destino_turistico d WHERE r.id_ruta=6 AND d.codigo='XETULUL_XOCOMIL' ON CONFLICT (ruta_id, destino_id) DO UPDATE SET orden_visita=EXCLUDED.orden_visita, tiempo_sugerido=EXCLUDED.tiempo_sugerido;
+INSERT INTO turismo.ruta_destino (ruta_id, destino_id, orden_visita, tiempo_sugerido) SELECT r.id_ruta, d.id_destino, 3, 'medio día a 1 día' FROM turismo.ruta_turistica r CROSS JOIN turismo.destino_turistico d WHERE r.id_ruta=6 AND d.codigo='MONTERRICO' ON CONFLICT (ruta_id, destino_id) DO UPDATE SET orden_visita=EXCLUDED.orden_visita, tiempo_sugerido=EXCLUDED.tiempo_sugerido;
+INSERT INTO turismo.ruta_destino (ruta_id, destino_id, orden_visita, tiempo_sugerido) SELECT r.id_ruta, d.id_destino, 4, 'medio día a 1 día' FROM turismo.ruta_turistica r CROSS JOIN turismo.destino_turistico d WHERE r.id_ruta=6 AND d.codigo='SIPACATE_NARANJO' ON CONFLICT (ruta_id, destino_id) DO UPDATE SET orden_visita=EXCLUDED.orden_visita, tiempo_sugerido=EXCLUDED.tiempo_sugerido;
+INSERT INTO turismo.ruta_destino (ruta_id, destino_id, orden_visita, tiempo_sugerido) SELECT r.id_ruta, d.id_destino, 5, 'medio día a 1 día' FROM turismo.ruta_turistica r CROSS JOIN turismo.destino_turistico d WHERE r.id_ruta=6 AND d.codigo='PUERTO_SAN_JOSE' ON CONFLICT (ruta_id, destino_id) DO UPDATE SET orden_visita=EXCLUDED.orden_visita, tiempo_sugerido=EXCLUDED.tiempo_sugerido;
+INSERT INTO turismo.ruta_destino (ruta_id, destino_id, orden_visita, tiempo_sugerido) SELECT r.id_ruta, d.id_destino, 1, 'medio día a 1 día' FROM turismo.ruta_turistica r CROSS JOIN turismo.destino_turistico d WHERE r.id_ruta=7 AND d.codigo='ESQUIPULAS' ON CONFLICT (ruta_id, destino_id) DO UPDATE SET orden_visita=EXCLUDED.orden_visita, tiempo_sugerido=EXCLUDED.tiempo_sugerido;
+INSERT INTO turismo.ruta_destino (ruta_id, destino_id, orden_visita, tiempo_sugerido) SELECT r.id_ruta, d.id_destino, 2, 'medio día a 1 día' FROM turismo.ruta_turistica r CROSS JOIN turismo.destino_turistico d WHERE r.id_ruta=7 AND d.codigo='BASILICA_ESQUIPULAS' ON CONFLICT (ruta_id, destino_id) DO UPDATE SET orden_visita=EXCLUDED.orden_visita, tiempo_sugerido=EXCLUDED.tiempo_sugerido;
+INSERT INTO turismo.ruta_destino (ruta_id, destino_id, orden_visita, tiempo_sugerido) SELECT r.id_ruta, d.id_destino, 3, 'medio día a 1 día' FROM turismo.ruta_turistica r CROSS JOIN turismo.destino_turistico d WHERE r.id_ruta=7 AND d.codigo='MUSEO_PALEONTOLOGIA_ESTANZUELA' ON CONFLICT (ruta_id, destino_id) DO UPDATE SET orden_visita=EXCLUDED.orden_visita, tiempo_sugerido=EXCLUDED.tiempo_sugerido;
+INSERT INTO turismo.ruta_destino (ruta_id, destino_id, orden_visita, tiempo_sugerido) SELECT r.id_ruta, d.id_destino, 4, 'medio día a 1 día' FROM turismo.ruta_turistica r CROSS JOIN turismo.destino_turistico d WHERE r.id_ruta=7 AND d.codigo='VOLCAN_LAGUNA_IPALA' ON CONFLICT (ruta_id, destino_id) DO UPDATE SET orden_visita=EXCLUDED.orden_visita, tiempo_sugerido=EXCLUDED.tiempo_sugerido;
+INSERT INTO turismo.ruta_destino (ruta_id, destino_id, orden_visita, tiempo_sugerido) SELECT r.id_ruta, d.id_destino, 5, 'medio día a 1 día' FROM turismo.ruta_turistica r CROSS JOIN turismo.destino_turistico d WHERE r.id_ruta=7 AND d.codigo='LAGO_GUIJA' ON CONFLICT (ruta_id, destino_id) DO UPDATE SET orden_visita=EXCLUDED.orden_visita, tiempo_sugerido=EXCLUDED.tiempo_sugerido;
+
+-- Recomendaciones
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='ANTIGUA_GUATEMALA';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='PARQUE_NACIONAL_TIKAL';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='YAXHA';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='EL_MIRADOR';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='UAXACTUN';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='LAGO_ATITLAN';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='PANAJACHEL';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='SAN_JUAN_LA_LAGUNA';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='CHICHICASTENANGO';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='IXIMCHE';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='QUIRIGUA';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='RIO_DULCE';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='CASTILLO_SAN_FELIPE';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='LIVINGSTON';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='SEMUC_CHAMPEY';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='CUEVAS_CANDELARIA_AV';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='BIOTOPO_QUETZAL';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='COBAN';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='ESQUIPULAS';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='BASILICA_ESQUIPULAS';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='VOLCAN_PACAYA';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='MONTERRICO';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='SIPACATE_NARANJO';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='TAKALIK_ABAJ';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='XETULUL_XOCOMIL';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='PUERTO_SAN_JOSE';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='PLAYA_TILAPA';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='FUENTES_GEORGINAS';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='QUETZALTENANGO_CENTRO';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='VOLCAN_TAJUMULCO';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='LAGUNA_BRAVA';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='CENOTES_CANDELARIA_HUEHUE';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='TODOS_SANTOS_CUCHUMATAN';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='NEBAJ';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='MUNAE';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='KAMINALJUYU';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='ZOO_LA_AURORA';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='CENTRO_HISTORICO_GUATEMALA';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='MIXCO_VIEJO';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='VOLCAN_ACATENANGO';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='VOLCAN_AGUA';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='HOBBITENANGO';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='MUSEO_MIRAFLORES';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='SIERRA_MINAS';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='MUSEO_PALEONTOLOGIA_ESTANZUELA';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='VOLCAN_LAGUNA_IPALA';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='LAGO_GUIJA';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='VOLCAN_SUCHITAN';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='PLAYA_BLANCA_IZABAL';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'LOGISTICA'::turismo.tipo_recomendacion, 'Verificar horarios, condiciones de acceso, clima, disponibilidad de guías y transporte local antes de la visita.' FROM turismo.destino_turistico WHERE codigo='LAGUNA_LACHUA';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'AMBIENTAL'::turismo.tipo_recomendacion, 'Respetar senderos, normas del área protegida, no extraer flora o fauna y reducir residuos durante la visita.' FROM turismo.destino_turistico WHERE codigo='PARQUE_NACIONAL_TIKAL';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'AMBIENTAL'::turismo.tipo_recomendacion, 'Respetar senderos, normas del área protegida, no extraer flora o fauna y reducir residuos durante la visita.' FROM turismo.destino_turistico WHERE codigo='YAXHA';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'AMBIENTAL'::turismo.tipo_recomendacion, 'Respetar senderos, normas del área protegida, no extraer flora o fauna y reducir residuos durante la visita.' FROM turismo.destino_turistico WHERE codigo='EL_MIRADOR';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'AMBIENTAL'::turismo.tipo_recomendacion, 'Respetar senderos, normas del área protegida, no extraer flora o fauna y reducir residuos durante la visita.' FROM turismo.destino_turistico WHERE codigo='SEMUC_CHAMPEY';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'AMBIENTAL'::turismo.tipo_recomendacion, 'Respetar senderos, normas del área protegida, no extraer flora o fauna y reducir residuos durante la visita.' FROM turismo.destino_turistico WHERE codigo='BIOTOPO_QUETZAL';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'AMBIENTAL'::turismo.tipo_recomendacion, 'Respetar senderos, normas del área protegida, no extraer flora o fauna y reducir residuos durante la visita.' FROM turismo.destino_turistico WHERE codigo='VOLCAN_PACAYA';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'AMBIENTAL'::turismo.tipo_recomendacion, 'Respetar senderos, normas del área protegida, no extraer flora o fauna y reducir residuos durante la visita.' FROM turismo.destino_turistico WHERE codigo='MONTERRICO';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'AMBIENTAL'::turismo.tipo_recomendacion, 'Respetar senderos, normas del área protegida, no extraer flora o fauna y reducir residuos durante la visita.' FROM turismo.destino_turistico WHERE codigo='SIPACATE_NARANJO';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'AMBIENTAL'::turismo.tipo_recomendacion, 'Respetar senderos, normas del área protegida, no extraer flora o fauna y reducir residuos durante la visita.' FROM turismo.destino_turistico WHERE codigo='SIERRA_MINAS';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'AMBIENTAL'::turismo.tipo_recomendacion, 'Respetar senderos, normas del área protegida, no extraer flora o fauna y reducir residuos durante la visita.' FROM turismo.destino_turistico WHERE codigo='VOLCAN_LAGUNA_IPALA';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'AMBIENTAL'::turismo.tipo_recomendacion, 'Respetar senderos, normas del área protegida, no extraer flora o fauna y reducir residuos durante la visita.' FROM turismo.destino_turistico WHERE codigo='LAGUNA_LACHUA';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'CULTURAL'::turismo.tipo_recomendacion, 'Solicitar permiso antes de fotografiar personas o ceremonias, y respetar normas comunitarias y religiosas locales.' FROM turismo.destino_turistico WHERE codigo='CHICHICASTENANGO';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'CULTURAL'::turismo.tipo_recomendacion, 'Solicitar permiso antes de fotografiar personas o ceremonias, y respetar normas comunitarias y religiosas locales.' FROM turismo.destino_turistico WHERE codigo='SAN_JUAN_LA_LAGUNA';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'CULTURAL'::turismo.tipo_recomendacion, 'Solicitar permiso antes de fotografiar personas o ceremonias, y respetar normas comunitarias y religiosas locales.' FROM turismo.destino_turistico WHERE codigo='TODOS_SANTOS_CUCHUMATAN';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'CULTURAL'::turismo.tipo_recomendacion, 'Solicitar permiso antes de fotografiar personas o ceremonias, y respetar normas comunitarias y religiosas locales.' FROM turismo.destino_turistico WHERE codigo='NEBAJ';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'CULTURAL'::turismo.tipo_recomendacion, 'Solicitar permiso antes de fotografiar personas o ceremonias, y respetar normas comunitarias y religiosas locales.' FROM turismo.destino_turistico WHERE codigo='LIVINGSTON';
+INSERT INTO turismo.recomendacion_destino (destino_id, tipo, recomendacion) SELECT id_destino, 'CULTURAL'::turismo.tipo_recomendacion, 'Solicitar permiso antes de fotografiar personas o ceremonias, y respetar normas comunitarias y religiosas locales.' FROM turismo.destino_turistico WHERE codigo='ANTIGUA_GUATEMALA';
+SELECT setval(pg_get_serial_sequence('turismo.fuente_turistica', 'id_fuente'), COALESCE((SELECT MAX(id_fuente) FROM turismo.fuente_turistica), 1));
+SELECT setval(pg_get_serial_sequence('turismo.region_turistica', 'id_region'), COALESCE((SELECT MAX(id_region) FROM turismo.region_turistica), 1));
+SELECT setval(pg_get_serial_sequence('turismo.categoria_destino', 'id_categoria'), COALESCE((SELECT MAX(id_categoria) FROM turismo.categoria_destino), 1));
+SELECT setval(pg_get_serial_sequence('turismo.actividad_turistica', 'id_actividad'), COALESCE((SELECT MAX(id_actividad) FROM turismo.actividad_turistica), 1));
+SELECT setval(pg_get_serial_sequence('turismo.temporada_turistica', 'id_temporada'), COALESCE((SELECT MAX(id_temporada) FROM turismo.temporada_turistica), 1));
+SELECT setval(pg_get_serial_sequence('turismo.destino_turistico', 'id_destino'), COALESCE((SELECT MAX(id_destino) FROM turismo.destino_turistico), 1));
+SELECT setval(pg_get_serial_sequence('turismo.patrimonio_turistico', 'id_patrimonio'), COALESCE((SELECT MAX(id_patrimonio) FROM turismo.patrimonio_turistico), 1));
+SELECT setval(pg_get_serial_sequence('turismo.ruta_turistica', 'id_ruta'), COALESCE((SELECT MAX(id_ruta) FROM turismo.ruta_turistica), 1));
+-- **********************************************************************
+-- Fin schema TURISMO
+-- **********************************************************************
