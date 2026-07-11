@@ -40206,3 +40206,2304 @@ SELECT setval(pg_get_serial_sequence('transporte.incidencia_vial', 'id_incidenci
 -- **********************************************************************
 -- Fin schema transporte - DATA INSERTS
 -- **********************************************************************
+
+-- ======================================================================
+-- METADATOS Y CATÁLOGO DE DATOS PARA LOS NUEVOS ESQUEMAS
+-- (artesania, cultura, economia, transporte)
+-- ======================================================================
+
+-- Esquema: artesania
+INSERT INTO meta.esquema_datos (
+    nombre_esquema, titulo, descripcion, objetivo, alcance, fuera_de_alcance,
+    responsable, id_version_desde, estado, observaciones
+)
+SELECT
+    'artesania', 'Artesanías y Arte Popular', 'Contiene datos sobre talleres colectivos, artesanos, técnicas tradicionales, materias primas y obras de arte popular.', 'Catalogar y preservar la producción artesanal y artística tradicional del Altiplano Occidental.', 'Información de talleres, artesanos, obras, técnicas de elaboración y producción artesanal municipal.', 'No registra producción industrial masiva, comercio no artesanal o importaciones.',
+    'Equipo de Patrimonio / Artesanías', v.id_version, 'ACTIVO', 'Esquema integrado y documentado para la versión 1.0.'
+FROM meta.version_proyecto v
+WHERE v.numero_version = '1.0'
+ON CONFLICT (nombre_esquema) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    objetivo = EXCLUDED.objetivo,
+    alcance = EXCLUDED.alcance,
+    fuera_de_alcance = EXCLUDED.fuera_de_alcance,
+    responsable = EXCLUDED.responsable,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+-- Esquema: cultura
+INSERT INTO meta.esquema_datos (
+    nombre_esquema, titulo, descripcion, objetivo, alcance, fuera_de_alcance,
+    responsable, id_version_desde, estado, observaciones
+)
+SELECT
+    'cultura', 'Cultura y Tradición', 'Contiene datos sobre platillos tradicionales, ingredientes autóctonos, idiomas nacionales y ferias o festividades culturales.', 'Documentar la diversidad lingüística, gastronómica y festiva de las comunidades del altiplano.', 'Idiomas por municipio, platos típicos, ingredientes prehispánicos y ferias patronales.', 'No registra deportes modernos, espectáculos internacionales o eventos políticos.',
+    'Equipo de Cultura y Lingüística', v.id_version, 'ACTIVO', 'Esquema integrado y documentado para la versión 1.0.'
+FROM meta.version_proyecto v
+WHERE v.numero_version = '1.0'
+ON CONFLICT (nombre_esquema) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    objetivo = EXCLUDED.objetivo,
+    alcance = EXCLUDED.alcance,
+    fuera_de_alcance = EXCLUDED.fuera_de_alcance,
+    responsable = EXCLUDED.responsable,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+-- Esquema: economia
+INSERT INTO meta.esquema_datos (
+    nombre_esquema, titulo, descripcion, objetivo, alcance, fuera_de_alcance,
+    responsable, id_version_desde, estado, observaciones
+)
+SELECT
+    'economia', 'Economía Solidaria y Municipal', 'Contiene datos sobre cooperativas, mercados tradicionales, centros de acopio, producción municipal certificada y servicios financieros de microcrédito.', 'Analizar la dinámica socioeconómica y los flujos comerciales locales en el Altiplano Occidental.', 'Cooperativas, producción municipal principal, rutas comerciales terrestres, mercados locales e infraestructura productiva.', 'No registra grandes corporaciones nacionales, banca comercial privada convencional o transacciones bursátiles.',
+    'Equipo de Economía Local', v.id_version, 'ACTIVO', 'Esquema integrado y documentado para la versión 1.0.'
+FROM meta.version_proyecto v
+WHERE v.numero_version = '1.0'
+ON CONFLICT (nombre_esquema) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    objetivo = EXCLUDED.objetivo,
+    alcance = EXCLUDED.alcance,
+    fuera_de_alcance = EXCLUDED.fuera_de_alcance,
+    responsable = EXCLUDED.responsable,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+-- Esquema: transporte
+INSERT INTO meta.esquema_datos (
+    nombre_esquema, titulo, descripcion, objetivo, alcance, fuera_de_alcance,
+    responsable, id_version_desde, estado, observaciones
+)
+SELECT
+    'transporte', 'Logística y Conectividad Vial', 'Contiene datos sobre tipos de transporte, proveedores de servicios, itinerarios, tramos viales e incidencias viales activas.', 'Proveer información de accesibilidad y transitabilidad vial para el desarrollo turístico e investigación.', 'Rutas de transporte, horarios y tarifas de proveedores, tramos viales intermunicipales e incidencias (bloqueos, derrumbes).', 'No registra tráfico urbano diario en la capital, vuelos internacionales o transporte de carga pesada transnacional.',
+    'Equipo de Logística y Vialidad', v.id_version, 'ACTIVO', 'Esquema integrado y documentado para la versión 1.0.'
+FROM meta.version_proyecto v
+WHERE v.numero_version = '1.0'
+ON CONFLICT (nombre_esquema) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    objetivo = EXCLUDED.objetivo,
+    alcance = EXCLUDED.alcance,
+    fuera_de_alcance = EXCLUDED.fuera_de_alcance,
+    responsable = EXCLUDED.responsable,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+
+-- ======================================================================
+-- Tablas y Columnas
+-- ======================================================================
+
+-- Tabla: artesania.tipo_obra_arte
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'tipo_obra_arte',
+    'Tipo obra arte',
+    'Catálogo de tipos de obras o especialidades de arte y artesanía.',
+    'CATALOGO',
+    'Una fila por cada registro de tipo obra arte.',
+    'Se incluyen todos los registros válidos de tipo obra arte.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de tipo_obra_arte.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'artesania'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'tipo_obra_arte'), 'id_tipo_obra', 'INT', 'Identificador único del tipo de obra.', true, true, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'tipo_obra_arte'), 'codigo', 'VARCHAR(80)', 'Código estable de identificación del tipo de obra.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'tipo_obra_arte'), 'nombre', 'VARCHAR(120)', 'Nombre del tipo de obra (ej. Pintura Paisajista, Tejido de Algodón).', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'tipo_obra_arte'), 'descripcion', 'TEXT', 'Descripción del tipo de obra y sus características generales.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'tipo_obra_arte'), 'categoria_general', 'VARCHAR(100)', 'Categoría mayor de agrupación (ej. TEXTIL, PINTURA, MADERA).', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'tipo_obra_arte'), 'carga_id', 'INT', 'Referencia al registro de carga de metadatos.', false, false, true, 'meta.carga', 'id')
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+-- Tabla: artesania.tecnica_artesanal
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'tecnica_artesanal',
+    'Tecnica artesanal',
+    'Catálogo de técnicas tradicionales y contemporáneas aplicadas en la elaboración de piezas.',
+    'CATALOGO',
+    'Una fila por cada registro de tecnica artesanal.',
+    'Se incluyen todos los registros válidos de tecnica artesanal.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de tecnica_artesanal.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'artesania'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'tecnica_artesanal'), 'id_tecnica', 'INT', 'Identificador único de la técnica.', true, true, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'tecnica_artesanal'), 'codigo', 'VARCHAR(80)', 'Código estable de identificación de la técnica.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'tecnica_artesanal'), 'nombre', 'VARCHAR(120)', 'Nombre oficial de la técnica (ej. Telar de Cintura, Brocado, Dorado con Pan de Oro).', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'tecnica_artesanal'), 'origen_historico', 'TEXT', 'Información histórica y comunitaria sobre el origen de la técnica.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'tecnica_artesanal'), 'descripcion', 'TEXT', 'Explicación detallada del proceso físico y conceptual de la técnica.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'tecnica_artesanal'), 'carga_id', 'INT', 'Referencia al registro de carga de metadatos.', false, false, true, 'meta.carga', 'id')
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+-- Tabla: artesania.material_arte
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'material_arte',
+    'Material arte',
+    'Catálogo de materias primas o materiales utilizados en las obras.',
+    'CATALOGO',
+    'Una fila por cada registro de material arte.',
+    'Se incluyen todos los registros válidos de material arte.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de material_arte.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'artesania'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'material_arte'), 'id_material', 'INT', 'Identificador único del material.', true, true, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'material_arte'), 'codigo', 'VARCHAR(80)', 'Código estable del material.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'material_arte'), 'nombre', 'VARCHAR(120)', 'Nombre del material (ej. Hilo de algodón, Madera de hormigo, Jade).', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'material_arte'), 'descripcion', 'TEXT', 'Descripción del material y sus propiedades.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'material_arte'), 'carga_id', 'INT', 'Referencia al registro de carga de metadatos.', false, false, true, 'meta.carga', 'id')
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+-- Tabla: artesania.taller_colectivo
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'taller_colectivo',
+    'Taller colectivo',
+    'Talleres familiares, cooperativas y colectivos de artesanos organizados.',
+    'CATALOGO',
+    'Una fila por cada registro de taller colectivo.',
+    'Se incluyen todos los registros válidos de taller colectivo.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de taller_colectivo.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'artesania'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'taller_colectivo'), 'id_taller', 'INT', 'Identificador único del taller.', true, true, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'taller_colectivo'), 'codigo', 'VARCHAR(80)', 'Código estable del taller o cooperativa.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'taller_colectivo'), 'nombre', 'VARCHAR(220)', 'Nombre comercial u oficial del taller o colectivo.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'taller_colectivo'), 'representante', 'VARCHAR(180)', 'Nombre del director, maestro artesano o representante legal.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'taller_colectivo'), 'departamento_id', 'INT', 'Departamento oficial verificado del taller.', true, false, true, 'geografia.departamento', 'id'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'taller_colectivo'), 'municipio_id', 'INT', 'Municipio oficial verificado del taller.', false, false, true, 'geografia.municipio', 'id'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'taller_colectivo'), 'direccion', 'VARCHAR(350)', 'Dirección exacta o referencia de ubicación del taller.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'taller_colectivo'), 'anio_fundacion', 'INT', 'Año de fundación del taller o colectivo.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'taller_colectivo'), 'cantidad_miembros', 'INT', 'Cantidad de artesanos activos en la organización.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'taller_colectivo'), 'contacto', 'VARCHAR(150)', 'Datos de contacto (teléfono, correo o red social).', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'taller_colectivo'), 'carga_id', 'INT', 'Referencia al registro de carga de metadatos.', false, false, true, 'meta.carga', 'id')
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+-- Tabla: artesania.artista_artesano
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'artista_artesano',
+    'Artista artesano',
+    'Maestros artesanos y artistas de las diversas ramas en la región.',
+    'CATALOGO',
+    'Una fila por cada registro de artista artesano.',
+    'Se incluyen todos los registros válidos de artista artesano.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de artista_artesano.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'artesania'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'artista_artesano'), 'id_artista', 'INT', 'Identificador único del artista/artesano.', true, true, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'artista_artesano'), 'codigo', 'VARCHAR(80)', 'Código estable de identificación del artista.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'artista_artesano'), 'nombre_completo', 'VARCHAR(220)', 'Nombre completo del artista/artesano.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'artista_artesano'), 'genero', 'VARCHAR(20)', 'Género del artista/artesano.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'artista_artesano'), 'fecha_nacimiento', 'DATE', 'Fecha de nacimiento.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'artista_artesano'), 'departamento_id', 'INT', 'Departamento oficial de origen/residencia.', true, false, true, 'geografia.departamento', 'id'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'artista_artesano'), 'municipio_id', 'INT', 'Municipio oficial de origen/residencia.', false, false, true, 'geografia.municipio', 'id'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'artista_artesano'), 'taller_id', 'INT', 'Taller o colectivo al que pertenece, si aplica.', false, false, true, 'artesania.taller_colectivo', 'id_taller'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'artista_artesano'), 'especialidad_principal', 'VARCHAR(150)', 'Especialidad principal del artista (ej. Pintura Primitivista, Marimbista).', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'artista_artesano'), 'reconocimientos', 'TEXT', 'Listado de premios, distinciones o trayectoria.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'artista_artesano'), 'carga_id', 'INT', 'Referencia al registro de carga de metadatos.', false, false, true, 'meta.carga', 'id')
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+-- Tabla: artesania.obra_arte_artesania
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'obra_arte_artesania',
+    'Obra arte artesania',
+    'Ficha técnica de obras, piezas o expresiones artísticas específicas.',
+    'CATALOGO',
+    'Una fila por cada registro de obra arte artesania.',
+    'Se incluyen todos los registros válidos de obra arte artesania.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de obra_arte_artesania.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'artesania'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'obra_arte_artesania'), 'id_obra', 'INT', 'Identificador único de la obra.', true, true, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'obra_arte_artesania'), 'codigo', 'VARCHAR(80)', 'Código estable de la obra.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'obra_arte_artesania'), 'nombre', 'VARCHAR(220)', 'Nombre o título descriptivo de la obra.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'obra_arte_artesania'), 'tipo_obra_id', 'INT', 'Tipo de obra asociada.', true, false, true, 'artesania.tipo_obra_arte', 'id_tipo_obra'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'obra_arte_artesania'), 'artista_id', 'INT', 'Referencia al artista/artesano creador.', false, false, true, 'artesania.artista_artesano', 'id_artista'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'obra_arte_artesania'), 'taller_id', 'INT', 'Referencia al taller o colectivo creador (si aplica).', false, false, true, 'artesania.taller_colectivo', 'id_taller'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'obra_arte_artesania'), 'descripcion', 'TEXT', 'Descripción artística o artesanal de la pieza.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'obra_arte_artesania'), 'tiempo_estimado_creacion_dias', 'INT', 'Tiempo estimado de elaboración en días.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'obra_arte_artesania'), 'precio_sugerido_q', 'NUMERIC(10,2)', 'Precio sugerido de venta en Quetzales.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'obra_arte_artesania'), 'carga_id', 'INT', 'Referencia al registro de carga de metadatos.', false, false, true, 'meta.carga', 'id')
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+-- Tabla: artesania.obra_tecnica
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'obra_tecnica',
+    'Obra tecnica',
+    'Relación muchos a muchos entre obras y técnicas aplicadas.',
+    'RELACIONAL',
+    'Una fila por cada registro de obra tecnica.',
+    'Se incluyen todos los registros válidos de obra tecnica.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de obra_tecnica.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'artesania'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'obra_tecnica'), 'obra_id', 'INT', 'Identificador de la obra.', true, true, true, 'artesania.obra_arte_artesania', 'id_obra'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'obra_tecnica'), 'tecnica_id', 'INT', 'Identificador de la técnica aplicada.', true, true, true, 'artesania.tecnica_artesanal', 'id_tecnica'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'obra_tecnica'), 'carga_id', 'INT', 'Referencia al registro de carga de metadatos.', false, false, true, 'meta.carga', 'id')
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+-- Tabla: artesania.obra_material
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'obra_material',
+    'Obra material',
+    'Relación muchos a muchos entre obras y materiales con proporciones.',
+    'RELACIONAL',
+    'Una fila por cada registro de obra material.',
+    'Se incluyen todos los registros válidos de obra material.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de obra_material.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'artesania'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'obra_material'), 'obra_id', 'INT', 'Identificador de la obra.', true, true, true, 'artesania.obra_arte_artesania', 'id_obra'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'obra_material'), 'material_id', 'INT', 'Identificador del material utilizado.', true, true, true, 'artesania.material_arte', 'id_material'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'obra_material'), 'proporcion_estimada', 'NUMERIC(5,2)', 'Proporción porcentual estimada del material en la pieza.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'obra_material'), 'carga_id', 'INT', 'Referencia al registro de carga de metadatos.', false, false, true, 'meta.carga', 'id')
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+-- Tabla: artesania.produccion_artesanal_municipal
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'produccion_artesanal_municipal',
+    'Produccion artesanal municipal',
+    'Estimaciones anuales del volumen, valor comercial y artesanos activos por municipio.',
+    'OPERATIVA',
+    'Una fila por cada registro de produccion artesanal municipal.',
+    'Se incluyen todos los registros válidos de produccion artesanal municipal.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de produccion_artesanal_municipal.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'artesania'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'produccion_artesanal_municipal'), 'id_produccion', 'INT', 'Identificador único del registro de producción.', true, true, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'produccion_artesanal_municipal'), 'departamento_id', 'INT', 'Departamento oficial verificado.', true, false, true, 'geografia.departamento', 'id'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'produccion_artesanal_municipal'), 'municipio_id', 'INT', 'Municipio oficial verificado.', false, false, true, 'geografia.municipio', 'id'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'produccion_artesanal_municipal'), 'tipo_obra_id', 'INT', 'Tipo de obra evaluado.', true, false, true, 'artesania.tipo_obra_arte', 'id_tipo_obra'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'produccion_artesanal_municipal'), 'anio', 'INT', 'Año del registro estadístico.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'produccion_artesanal_municipal'), 'volumen_estimado_unidades', 'INT', 'Volumen total estimado de unidades producidas al año.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'produccion_artesanal_municipal'), 'valor_estimado_mercado_q', 'NUMERIC(12,2)', 'Valor total estimado de mercado de la producción en Quetzales.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'produccion_artesanal_municipal'), 'cantidad_artesanos_activos', 'INT', 'Estimación de artesanos activos en la producción evaluada.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'produccion_artesanal_municipal'), 'carga_id', 'INT', 'Referencia al registro de carga de metadatos.', false, false, true, 'meta.carga', 'id')
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+-- Tabla: artesania.evento_exposicion_arte
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'evento_exposicion_arte',
+    'Evento exposicion arte',
+    'Eventos, ferias, exposiciones y festivales culturales de arte y artesanía.',
+    'CATALOGO',
+    'Una fila por cada registro de evento exposicion arte.',
+    'Se incluyen todos los registros válidos de evento exposicion arte.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de evento_exposicion_arte.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'artesania'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'evento_exposicion_arte'), 'id_evento', 'INT', 'Identificador único del evento.', true, true, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'evento_exposicion_arte'), 'codigo', 'VARCHAR(80)', 'Código estable de identificación del evento.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'evento_exposicion_arte'), 'nombre', 'VARCHAR(220)', 'Nombre oficial del evento o exposición.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'evento_exposicion_arte'), 'fecha_inicio', 'DATE', 'Fecha de inicio del evento.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'evento_exposicion_arte'), 'fecha_fin', 'DATE', 'Fecha de finalización del evento.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'evento_exposicion_arte'), 'departamento_id', 'INT', 'Departamento oficial de sede del evento.', true, false, true, 'geografia.departamento', 'id'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'evento_exposicion_arte'), 'municipio_id', 'INT', 'Municipio oficial de sede del evento.', false, false, true, 'geografia.municipio', 'id'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'evento_exposicion_arte'), 'lugar_detallado', 'VARCHAR(350)', 'Descripción del lugar físico o centro del evento.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'evento_exposicion_arte'), 'organizador', 'VARCHAR(180)', 'Institución, cooperativa u organizador principal.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'evento_exposicion_arte'), 'carga_id', 'INT', 'Referencia al registro de carga de metadatos.', false, false, true, 'meta.carga', 'id')
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+-- Tabla: artesania.participante_evento
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'participante_evento',
+    'Participante evento',
+    'Registro de artistas y talleres colectivos participantes en eventos y sus reconocimientos.',
+    'RELACIONAL',
+    'Una fila por cada registro de participante evento.',
+    'Se incluyen todos los registros válidos de participante evento.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de participante_evento.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'artesania'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'participante_evento'), 'evento_id', 'INT', 'Identificador del evento.', true, false, true, 'artesania.evento_exposicion_arte', 'id_evento'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'participante_evento'), 'artista_id', 'INT', 'Artista individual participante (opcional).', false, false, true, 'artesania.artista_artesano', 'id_artista'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'participante_evento'), 'taller_id', 'INT', 'Taller colectivo participante (opcional).', false, false, true, 'artesania.taller_colectivo', 'id_taller'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'participante_evento'), 'premio_reconocimiento', 'VARCHAR(250)', 'Premio, mención o reconocimiento obtenido.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'participante_evento'), 'carga_id', 'INT', 'Referencia al registro de carga de metadatos.', false, false, true, 'meta.carga', 'id')
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+-- Tabla: cultura.plato_tipico
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'plato_tipico',
+    'Plato tipico',
+    'Catálogo de platillos y comidas tradicionales de Guatemala.',
+    'CATALOGO',
+    'Una fila por cada registro de plato tipico.',
+    'Se incluyen todos los registros válidos de plato tipico.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de plato_tipico.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'cultura'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'cultura' AND t.nombre_tabla = 'plato_tipico'), 'id', 'INT', 'Identificador único del plato típico.', true, true, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'cultura' AND t.nombre_tabla = 'plato_tipico'), 'nombre', 'VARCHAR(150)', 'Columna nombre de la tabla plato_tipico.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'cultura' AND t.nombre_tabla = 'plato_tipico'), 'descripcion', 'TEXT', 'Reseña de la composición y presentación del platillo.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'cultura' AND t.nombre_tabla = 'plato_tipico'), 'historia_origen', 'TEXT', 'Contexto cultural e histórico del origen del platillo.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'cultura' AND t.nombre_tabla = 'plato_tipico'), 'es_patrimonio', 'BOOLEAN', 'Indica si el platillo ha sido declarado Patrimonio Cultural de la Nación.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'cultura' AND t.nombre_tabla = 'plato_tipico'), 'carga_id', 'INT', 'Referencia a la carga de datos mediante la cual se registró el platillo.', false, false, true, 'meta.carga', 'id')
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+-- Tabla: cultura.ingrediente_autoctono
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'ingrediente_autoctono',
+    'Ingrediente autoctono',
+    'Ingredientes originarios o tradicionales de la gastronomía guatemalteca.',
+    'CATALOGO',
+    'Una fila por cada registro de ingrediente autoctono.',
+    'Se incluyen todos los registros válidos de ingrediente autoctono.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de ingrediente_autoctono.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'cultura'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'cultura' AND t.nombre_tabla = 'ingrediente_autoctono'), 'id', 'INT', 'Identificador único del ingrediente.', true, true, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'cultura' AND t.nombre_tabla = 'ingrediente_autoctono'), 'nombre', 'VARCHAR(100)', 'Nombre del ingrediente (ej: Cacao, Pepitoria, Chile Cobanero).', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'cultura' AND t.nombre_tabla = 'ingrediente_autoctono'), 'descripcion', 'TEXT', 'Descripción de las propiedades o uso del ingrediente.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'cultura' AND t.nombre_tabla = 'ingrediente_autoctono'), 'origen_prehispanico', 'BOOLEAN', 'Indica si el ingrediente tiene origen prehispánico en la región.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'cultura' AND t.nombre_tabla = 'ingrediente_autoctono'), 'carga_id', 'INT', 'Referencia a la carga de datos mediante la cual se registró el ingrediente.', false, false, true, 'meta.carga', 'id')
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+-- Tabla: cultura.plato_ingrediente
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'plato_ingrediente',
+    'Plato ingrediente',
+    'Tabla asociativa que relaciona los platos típicos con sus ingredientes característicos.',
+    'RELACIONAL',
+    'Una fila por cada registro de plato ingrediente.',
+    'Se incluyen todos los registros válidos de plato ingrediente.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de plato_ingrediente.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'cultura'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'cultura' AND t.nombre_tabla = 'plato_ingrediente'), 'plato_id', 'INT', 'Identificador único del plato típico.', true, true, true, 'cultura.plato_tipico', 'id'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'cultura' AND t.nombre_tabla = 'plato_ingrediente'), 'ingrediente_id', 'INT', 'Identificador único del ingrediente.', true, true, true, 'cultura.ingrediente_autoctono', 'id')
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+-- Tabla: cultura.plato_geografia
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'plato_geografia',
+    'Plato geografia',
+    'Relación geográfica de origen o arraigo de los platos típicos (departamento y opcionalmente municipio).',
+    'RELACIONAL',
+    'Una fila por cada registro de plato geografia.',
+    'Se incluyen todos los registros válidos de plato geografia.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de plato_geografia.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'cultura'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'cultura' AND t.nombre_tabla = 'plato_geografia'), 'plato_id', 'INT', 'Identificador único del plato típico.', true, true, true, 'cultura.plato_tipico', 'id'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'cultura' AND t.nombre_tabla = 'plato_geografia'), 'departamento_id', 'INT', 'Departamento de origen o arraigo del plato.', true, true, true, 'geografia.departamento', 'id'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'cultura' AND t.nombre_tabla = 'plato_geografia'), 'municipio_id', 'INT', 'Municipio específico de origen o arraigo (opcional).', false, false, true, 'geografia.municipio', 'id')
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+-- Tabla: cultura.idioma
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'idioma',
+    'Idioma',
+    'Catálogo de idiomas nacionales hablados en el territorio guatemalteco (mayas, garífuna, xinka y español).',
+    'CATALOGO',
+    'Una fila por cada registro de idioma.',
+    'Se incluyen todos los registros válidos de idioma.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de idioma.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'cultura'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'cultura' AND t.nombre_tabla = 'idioma'), 'id', 'INT', 'Identificador único del idioma.', true, true, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'cultura' AND t.nombre_tabla = 'idioma'), 'nombre', 'VARCHAR(100)', 'Nombre oficial del idioma.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'cultura' AND t.nombre_tabla = 'idioma'), 'familia_linguistica', 'VARCHAR(100)', 'Familia lingüística a la que pertenece el idioma (ej: Maya, Arahuaca, Aislada).', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'cultura' AND t.nombre_tabla = 'idioma'), 'estado_vitalidad', 'VARCHAR(50)', 'Estado de vitalidad del idioma (ej: Vital, En peligro, Crítico).', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'cultura' AND t.nombre_tabla = 'idioma'), 'descripcion', 'TEXT', 'Reseña e información relevante sobre la historia o distribución del idioma.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'cultura' AND t.nombre_tabla = 'idioma'), 'carga_id', 'INT', 'Referencia a la carga de datos mediante la cual se registró el idioma.', false, false, true, 'meta.carga', 'id')
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+-- Tabla: cultura.idioma_municipio
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'idioma_municipio',
+    'Idioma municipio',
+    'Tabla asociativa que mapea la distribución territorial y relevancia de los idiomas en los municipios.',
+    'RELACIONAL',
+    'Una fila por cada registro de idioma municipio.',
+    'Se incluyen todos los registros válidos de idioma municipio.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de idioma_municipio.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'cultura'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'cultura' AND t.nombre_tabla = 'idioma_municipio'), 'idioma_id', 'INT', 'Identificador único del idioma.', true, true, true, 'cultura.idioma', 'id'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'cultura' AND t.nombre_tabla = 'idioma_municipio'), 'municipio_id', 'INT', 'Identificador único del municipio.', true, true, true, 'geografia.municipio', 'id'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'cultura' AND t.nombre_tabla = 'idioma_municipio'), 'es_predominante', 'BOOLEAN', 'Indica si el idioma es el predominante en el municipio.', false, false, false, NULL, NULL)
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+-- Tabla: cultura.evento_cultural
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'evento_cultural',
+    'Evento cultural',
+    'Registro de festividades, ferias patronales, festivales y ceremonias tradicionales.',
+    'CATALOGO',
+    'Una fila por cada registro de evento cultural.',
+    'Se incluyen todos los registros válidos de evento cultural.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de evento_cultural.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'cultura'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'cultura' AND t.nombre_tabla = 'evento_cultural'), 'id', 'INT', 'Identificador único del evento.', true, true, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'cultura' AND t.nombre_tabla = 'evento_cultural'), 'nombre', 'VARCHAR(200)', 'Nombre oficial del evento o festividad.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'cultura' AND t.nombre_tabla = 'evento_cultural'), 'tipo_evento', 'VARCHAR(100)', 'Tipo de festividad (ej: Feria Patronal, Festival Artístico, Ceremonia Espiritual).', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'cultura' AND t.nombre_tabla = 'evento_cultural'), 'mes_celebracion', 'INT', 'Mes del año en que se realiza la celebración (1-12).', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'cultura' AND t.nombre_tabla = 'evento_cultural'), 'dia_inicio', 'INT', 'Día del mes en que inicia la festividad.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'cultura' AND t.nombre_tabla = 'evento_cultural'), 'dia_fin', 'INT', 'Día del mes en que finaliza la festividad.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'cultura' AND t.nombre_tabla = 'evento_cultural'), 'descripcion', 'TEXT', 'Descripción del contexto, tradición y actividades del evento.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'cultura' AND t.nombre_tabla = 'evento_cultural'), 'recomendaciones_viaje', 'TEXT', 'Consejos prácticos para viajeros que desean asistir al evento.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'cultura' AND t.nombre_tabla = 'evento_cultural'), 'carga_id', 'INT', 'Referencia a la carga de datos mediante la cual se registró el evento.', false, false, true, 'meta.carga', 'id')
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+-- Tabla: cultura.evento_municipio
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'evento_municipio',
+    'Evento municipio',
+    'Tabla asociativa que mapea la ubicación municipal donde se celebran los eventos culturales.',
+    'RELACIONAL',
+    'Una fila por cada registro de evento municipio.',
+    'Se incluyen todos los registros válidos de evento municipio.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de evento_municipio.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'cultura'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'cultura' AND t.nombre_tabla = 'evento_municipio'), 'evento_id', 'INT', 'Identificador único del evento.', true, true, true, 'cultura.evento_cultural', 'id'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'cultura' AND t.nombre_tabla = 'evento_municipio'), 'municipio_id', 'INT', 'Identificador único del municipio.', true, true, true, 'geografia.municipio', 'id')
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+-- Tabla: economia.materia_prima
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'materia_prima',
+    'Materia prima',
+    'Materias primas producidas o demandadas en el Altiplano Occidental (ej: Lana, Arcilla, Café en cereza).',
+    'CATALOGO',
+    'Una fila por cada registro de materia prima.',
+    'Se incluyen todos los registros válidos de materia prima.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de materia_prima.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'economia'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'materia_prima'), 'id', 'INT', 'Identificador único de la materia prima.', true, true, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'materia_prima'), 'nombre', 'VARCHAR(100)', 'Nombre oficial de la materia prima.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'materia_prima'), 'origen', 'VARCHAR(50)', 'Origen de la materia prima (ej: VEGETAL, ANIMAL, MINERAL).', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'materia_prima'), 'descripcion', 'TEXT', 'Descripción de las propiedades o uso comercial de la materia prima.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'materia_prima'), 'carga_id', 'INT', 'Referencia a la carga de datos mediante la cual se registró el objeto.', false, false, true, 'meta.carga', 'id')
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+-- Tabla: economia.actividad_productiva
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'actividad_productiva',
+    'Actividad productiva',
+    'Catálogo de actividades productivas o cadenas de valor analizadas (ej: Cultivo de Papa, Tejido en Telar).',
+    'CATALOGO',
+    'Una fila por cada registro de actividad productiva.',
+    'Se incluyen todos los registros válidos de actividad productiva.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de actividad_productiva.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'economia'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'actividad_productiva'), 'id', 'INT', 'Identificador único de la actividad productiva.', true, true, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'actividad_productiva'), 'nombre', 'VARCHAR(150)', 'Nombre oficial de la actividad productiva.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'actividad_productiva'), 'categoria', 'VARCHAR(80)', 'Categoría económica general (ej: AGRICULTURA, ARTESANIA, PECUARIO).', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'actividad_productiva'), 'descripcion', 'TEXT', 'Descripción general de la cadena de valor o proceso productivo.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'actividad_productiva'), 'carga_id', 'INT', 'Referencia a la carga de datos.', false, false, true, 'meta.carga', 'id')
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+-- Tabla: economia.actividad_materia
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'actividad_materia',
+    'Actividad materia',
+    'Tabla asociativa que relaciona actividades productivas con las materias primas que producen o consumen.',
+    'RELACIONAL',
+    'Una fila por cada registro de actividad materia.',
+    'Se incluyen todos los registros válidos de actividad materia.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de actividad_materia.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'economia'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'actividad_materia'), 'actividad_id', 'INT', 'Identificador único de la actividad productiva.', true, true, true, 'economia.actividad_productiva', 'id'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'actividad_materia'), 'materia_id', 'INT', 'Identificador único de la materia prima.', true, true, true, 'economia.materia_prima', 'id'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'actividad_materia'), 'es_indispensable', 'BOOLEAN', 'Indica si la materia prima es indispensable para el desarrollo de la actividad.', false, false, false, NULL, NULL)
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+-- Tabla: economia.certificacion
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'certificacion',
+    'Certificacion',
+    'Catálogo de certificaciones de calidad, ambientales o de comercio justo aplicables a la producción local (ej: Orgánico, Fairtrade).',
+    'CATALOGO',
+    'Una fila por cada registro de certificacion.',
+    'Se incluyen todos los registros válidos de certificacion.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de certificacion.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'economia'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'certificacion'), 'id', 'INT', 'Identificador único de la certificación.', true, true, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'certificacion'), 'nombre', 'VARCHAR(150)', 'Nombre oficial de la certificación.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'certificacion'), 'ente_certificador', 'VARCHAR(180)', 'Institución u organismo nacional o internacional responsable de certificar.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'certificacion'), 'descripcion', 'TEXT', 'Descripción de los criterios necesarios para obtener la certificación.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'certificacion'), 'carga_id', 'INT', 'Referencia a la carga de datos.', false, false, true, 'meta.carga', 'id')
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+-- Tabla: economia.cooperativa_asociacion
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'cooperativa_asociacion',
+    'Cooperativa asociacion',
+    'Registro de cooperativas, asociaciones de productores y comités organizados de economía solidaria.',
+    'CATALOGO',
+    'Una fila por cada registro de cooperativa asociacion.',
+    'Se incluyen todos los registros válidos de cooperativa asociacion.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de cooperativa_asociacion.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'economia'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'cooperativa_asociacion'), 'id', 'INT', 'Identificador único del colectivo organizado.', true, true, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'cooperativa_asociacion'), 'nombre', 'VARCHAR(220)', 'Nombre oficial o razón social de la cooperativa/asociación.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'cooperativa_asociacion'), 'siglas', 'VARCHAR(50)', 'Siglas o acrónimo representativo de la organización.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'cooperativa_asociacion'), 'municipio_id', 'INT', 'Municipio oficial verificado de la sede principal.', true, false, true, 'geografia.municipio', 'id'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'cooperativa_asociacion'), 'cobertura', 'VARCHAR(100)', 'Nivel geográfico de cobertura (ej: LOCAL, DEPARTAMENTAL, REGIONAL).', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'cooperativa_asociacion'), 'descripcion', 'TEXT', 'Descripción del objeto social, servicios y trayectoria de la organización.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'cooperativa_asociacion'), 'carga_id', 'INT', 'Referencia a la carga de datos.', false, false, true, 'meta.carga', 'id')
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+-- Tabla: economia.produccion_municipal
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'produccion_municipal',
+    'Produccion municipal',
+    'Estimaciones anuales y caracterización económica de las actividades productivas a nivel municipal.',
+    'OPERATIVA',
+    'Una fila por cada registro de produccion municipal.',
+    'Se incluyen todos los registros válidos de produccion municipal.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de produccion_municipal.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'economia'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'produccion_municipal'), 'municipio_id', 'INT', 'Municipio oficial de estudio.', true, true, true, 'geografia.municipio', 'id'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'produccion_municipal'), 'actividad_id', 'INT', 'Actividad productiva evaluada.', true, true, true, 'economia.actividad_productiva', 'id'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'produccion_municipal'), 'cooperativa_id', 'INT', 'Cooperativa u organización líder de la actividad en el municipio (si aplica).', false, false, true, 'economia.cooperativa_asociacion', 'id'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'produccion_municipal'), 'es_principal', 'BOOLEAN', 'Indica si es una de las actividades económicas principales del municipio.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'produccion_municipal'), 'volumen_estimado', 'VARCHAR(100)', 'Volumen de producción estimado (ej: "15,000 quintales", "5,000 yardas").', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'produccion_municipal'), 'cantidad_productores_est', 'INT', 'Estimación de cantidad de productores dedicados a la actividad.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'produccion_municipal'), 'empleo_generado_est', 'INT', 'Estimación de empleos directos e indirectos generados en la cadena.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'produccion_municipal'), 'ciclo_cosecha_meses', 'INT', 'Meses de duración del ciclo de siembra/cosecha o producción anual.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'produccion_municipal'), 'destino_principal', 'VARCHAR(150)', 'Destino principal de la producción (ej: LOCAL, NACIONAL, EXPORTACION).', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'produccion_municipal'), 'carga_id', 'INT', 'Referencia a la carga de datos.', false, false, true, 'meta.carga', 'id')
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+-- Tabla: economia.produccion_certificada
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'produccion_certificada',
+    'Produccion certificada',
+    'Registro de qué porción de la producción de un municipio cuenta con certificaciones internacionales.',
+    'RELACIONAL',
+    'Una fila por cada registro de produccion certificada.',
+    'Se incluyen todos los registros válidos de produccion certificada.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de produccion_certificada.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'economia'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'produccion_certificada'), 'municipio_id', 'INT', 'Municipio oficial de estudio.', true, true, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'produccion_certificada'), 'actividad_id', 'INT', 'Actividad productiva certificada.', true, true, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'produccion_certificada'), 'certificacion_id', 'INT', 'Certificación obtenida.', true, true, true, 'economia.certificacion', 'id'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'produccion_certificada'), 'porcentaje_produccion', 'NUMERIC(5,2)', 'Porcentaje estimado de la producción que cumple con la certificación.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'produccion_certificada'), 'fecha_auditoria', 'DATE', 'Fecha de la última auditoría o renovación de la certificación.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'produccion_certificada'), 'carga_id', 'INT', 'Referencia a la carga de datos.', false, false, true, 'meta.carga', 'id')
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+-- Tabla: economia.centro_acopio_procesamiento
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'centro_acopio_procesamiento',
+    'Centro acopio procesamiento',
+    'Infraestructura productiva: centros de acopio, plantas de procesamiento o descascaradoras locales.',
+    'CATALOGO',
+    'Una fila por cada registro de centro acopio procesamiento.',
+    'Se incluyen todos los registros válidos de centro acopio procesamiento.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de centro_acopio_procesamiento.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'economia'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'centro_acopio_procesamiento'), 'id', 'INT', 'Identificador único del centro de acopio/procesamiento.', true, true, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'centro_acopio_procesamiento'), 'nombre', 'VARCHAR(220)', 'Nombre descriptivo del centro o planta.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'centro_acopio_procesamiento'), 'tipo', 'VARCHAR(80)', 'Tipo de infraestructura (ej: BENEFICIO DE CAFE, CENTRO DE ACOPIO DE PAPA).', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'centro_acopio_procesamiento'), 'municipio_id', 'INT', 'Municipio de ubicación física.', true, false, true, 'geografia.municipio', 'id'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'centro_acopio_procesamiento'), 'capacidad_estimada', 'VARCHAR(150)', 'Capacidad operativa o de almacenamiento estimada.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'centro_acopio_procesamiento'), 'carga_id', 'INT', 'Referencia a la carga de datos.', false, false, true, 'meta.carga', 'id')
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+-- Tabla: economia.mercado_tradicional
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'mercado_tradicional',
+    'Mercado tradicional',
+    'Mercados municipales y días de plaza tradicionales del Altiplano Occidental.',
+    'CATALOGO',
+    'Una fila por cada registro de mercado tradicional.',
+    'Se incluyen todos los registros válidos de mercado tradicional.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de mercado_tradicional.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'economia'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'mercado_tradicional'), 'id', 'INT', 'Identificador único del mercado.', true, true, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'mercado_tradicional'), 'nombre', 'VARCHAR(220)', 'Nombre descriptivo del mercado tradicional (ej: Mercado Central de San Francisco El Alto).', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'mercado_tradicional'), 'municipio_id', 'INT', 'Municipio oficial verificado de ubicación.', true, false, true, 'geografia.municipio', 'id'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'mercado_tradicional'), 'dias_plaza', 'VARCHAR(150)', 'Días del año o días de la semana específicos de plaza (ej: "Jueves y Domingo").', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'mercado_tradicional'), 'tipo_mercado', 'VARCHAR(80)', 'Clasificación del mercado (ej: MAYORISTA, MINORISTA, ARTESANAL).', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'mercado_tradicional'), 'cantidad_vendedores_est', 'INT', 'Estimación de cantidad de vendedores en días de máxima plaza.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'mercado_tradicional'), 'latitud', 'NUMERIC(10, 7)', 'Latitud para georreferenciación del mercado.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'mercado_tradicional'), 'longitud', 'NUMERIC(10, 7)', 'Longitud para georreferenciación del mercado.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'mercado_tradicional'), 'descripcion', 'TEXT', 'Descripción del flujo, productos dominantes e historia del mercado.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'mercado_tradicional'), 'carga_id', 'INT', 'Referencia a la carga de datos.', false, false, true, 'meta.carga', 'id')
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+-- Tabla: economia.ruta_comercio
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'ruta_comercio',
+    'Ruta comercio',
+    'Rutas de transporte y distribución física de productos agrícolas y artesanales hacia mercados nacionales o puertos.',
+    'CATALOGO',
+    'Una fila por cada registro de ruta comercio.',
+    'Se incluyen todos los registros válidos de ruta comercio.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de ruta_comercio.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'economia'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'ruta_comercio'), 'id', 'INT', 'Identificador único del tramo o ruta.', true, true, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'ruta_comercio'), 'origen_municipio_id', 'INT', 'Municipio oficial de origen de la producción.', true, false, true, 'geografia.municipio', 'id'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'ruta_comercio'), 'destino_municipio_id', 'INT', 'Municipio oficial de destino final o centro de distribución principal.', true, false, true, 'geografia.municipio', 'id'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'ruta_comercio'), 'puerto_salida', 'VARCHAR(150)', 'Puerto marítimo, frontera terrestre o aeropuerto de salida internacional (si aplica).', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'ruta_comercio'), 'medio_transporte', 'VARCHAR(100)', 'Medio de transporte principal utilizado (ej: TERRESTRE - CAMION, TERRESTRE - PICKUP).', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'ruta_comercio'), 'distancia_km', 'NUMERIC(8,2)', 'Distancia estimada en kilómetros.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'ruta_comercio'), 'tiempo_estimado_horas', 'NUMERIC(5,2)', 'Tiempo estimado de viaje en horas decimales.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'ruta_comercio'), 'producto_principal', 'VARCHAR(150)', 'Producto principal distribuido en la ruta.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'ruta_comercio'), 'carga_id', 'INT', 'Referencia a la carga de datos.', false, false, true, 'meta.carga', 'id')
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+-- Tabla: economia.servicio_financiero
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'servicio_financiero',
+    'Servicio financiero',
+    'Servicios de microcrédito, ahorro y seguros de desarrollo ofertados por cooperativas de ahorro y crédito.',
+    'CATALOGO',
+    'Una fila por cada registro de servicio financiero.',
+    'Se incluyen todos los registros válidos de servicio financiero.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de servicio_financiero.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'economia'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'servicio_financiero'), 'id', 'INT', 'Identificador único del servicio financiero.', true, true, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'servicio_financiero'), 'cooperativa_id', 'INT', 'Cooperativa que oferta el servicio.', true, false, true, 'economia.cooperativa_asociacion', 'id'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'servicio_financiero'), 'tipo_servicio', 'VARCHAR(100)', 'Tipo de servicio (ej: CREDITO AGRICOLA, MICROCREDITO MUJERES, SEGURO AGRÍCOLA).', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'servicio_financiero'), 'tasa_interes_anual', 'NUMERIC(5,2)', 'Tasa de interés anual activa/pasiva aproximada.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'servicio_financiero'), 'monto_maximo_quetzales', 'NUMERIC(12,2)', 'Monto máximo financiado en Quetzales.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'servicio_financiero'), 'requisito_principal', 'TEXT', 'Requisito principal o colateral exigido.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'servicio_financiero'), 'carga_id', 'INT', 'Referencia a la carga de datos.', false, false, true, 'meta.carga', 'id')
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+-- Tabla: transporte.tipo_transporte
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'tipo_transporte',
+    'Tipo transporte',
+    'Tipos de transporte disponibles (ej: Microbús, Tuc-tuc, Autobús extraurbano, Lancha).',
+    'CATALOGO',
+    'Una fila por cada registro de tipo transporte.',
+    'Se incluyen todos los registros válidos de tipo transporte.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de tipo_transporte.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'transporte'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'tipo_transporte'), 'id_tipo_transporte', 'INT', 'Identificador único del tipo de transporte.', true, true, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'tipo_transporte'), 'codigo', 'VARCHAR(50)', 'Código único de identificación.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'tipo_transporte'), 'nombre', 'VARCHAR(100)', 'Nombre descriptivo del tipo de transporte.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'tipo_transporte'), 'descripcion', 'TEXT', 'Descripción del tipo de vehículo y su uso.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'tipo_transporte'), 'carga_id', 'INT', 'Referencia a la carga de datos.', false, false, true, 'meta.carga', 'id')
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+-- Tabla: transporte.tipo_via
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'tipo_via',
+    'Tipo via',
+    'Clasificación de vías de comunicación (ej: Carretera Asfaltada, Terracería, Vía Lacustre).',
+    'CATALOGO',
+    'Una fila por cada registro de tipo via.',
+    'Se incluyen todos los registros válidos de tipo via.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de tipo_via.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'transporte'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'tipo_via'), 'id_tipo_via', 'INT', 'Identificador único del tipo de vía.', true, true, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'tipo_via'), 'codigo', 'VARCHAR(50)', 'Código único de identificación.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'tipo_via'), 'nombre', 'VARCHAR(100)', 'Nombre del tipo de vía.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'tipo_via'), 'descripcion', 'TEXT', 'Descripción de la infraestructura de la vía.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'tipo_via'), 'carga_id', 'INT', 'Referencia a la carga de datos.', false, false, true, 'meta.carga', 'id')
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+-- Tabla: transporte.conexion_municipal
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'conexion_municipal',
+    'Conexion municipal',
+    'Tiempos y distancias promedio desde el municipio hacia la cabecera departamental y la Ciudad de Guatemala.',
+    'CATALOGO',
+    'Una fila por cada registro de conexion municipal.',
+    'Se incluyen todos los registros válidos de conexion municipal.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de conexion_municipal.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'transporte'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'conexion_municipal'), 'id_conexion', 'INT', 'Identificador único de la conexión.', true, true, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'conexion_municipal'), 'municipio_id', 'INT', 'Municipio de origen.', true, false, true, 'geografia.municipio', 'id'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'conexion_municipal'), 'tipo_vehiculo', 'VARCHAR(50)', 'Tipo de vehículo utilizado en la medición de la ruta.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'conexion_municipal'), 'distancia_cabecera_km', 'NUMERIC(6,2)', 'Distancia hacia la cabecera departamental en kilómetros.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'conexion_municipal'), 'tiempo_cabecera_minutos', 'INT', 'Tiempo estimado de viaje hacia la cabecera departamental.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'conexion_municipal'), 'distancia_capital_km', 'NUMERIC(6,2)', 'Distancia hacia la Ciudad de Guatemala en kilómetros.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'conexion_municipal'), 'tiempo_capital_minutos', 'INT', 'Tiempo estimado de viaje hacia la Ciudad de Guatemala.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'conexion_municipal'), 'carga_id', 'INT', 'Referencia a la carga de datos.', false, false, true, 'meta.carga', 'id')
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+-- Tabla: transporte.proveedor_transporte
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'proveedor_transporte',
+    'Proveedor transporte',
+    'Empresas, cooperativas o transportistas individuales que prestan servicios de transporte.',
+    'CATALOGO',
+    'Una fila por cada registro de proveedor transporte.',
+    'Se incluyen todos los registros válidos de proveedor transporte.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de proveedor_transporte.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'transporte'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'proveedor_transporte'), 'id_proveedor', 'INT', 'Identificador único del proveedor.', true, true, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'proveedor_transporte'), 'codigo', 'VARCHAR(50)', 'Código estable de identificación del proveedor.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'proveedor_transporte'), 'nombre', 'VARCHAR(200)', 'Nombre oficial o comercial del proveedor.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'proveedor_transporte'), 'representante', 'VARCHAR(180)', 'Representante legal o encargado del proveedor.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'proveedor_transporte'), 'contacto', 'VARCHAR(150)', 'Datos de contacto del proveedor.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'proveedor_transporte'), 'departamento_id', 'INT', 'Departamento de la sede principal.', true, false, true, 'geografia.departamento', 'id'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'proveedor_transporte'), 'municipio_id', 'INT', 'Municipio de la sede principal.', false, false, true, 'geografia.municipio', 'id'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'proveedor_transporte'), 'carga_id', 'INT', 'Referencia a la carga de datos.', false, false, true, 'meta.carga', 'id')
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+-- Tabla: transporte.destino_transporte
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'destino_transporte',
+    'Destino transporte',
+    'Opciones de conectividad y transporte específicas para llegar a los destinos turísticos.',
+    'CATALOGO',
+    'Una fila por cada registro de destino transporte.',
+    'Se incluyen todos los registros válidos de destino transporte.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de destino_transporte.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'transporte'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'destino_transporte'), 'id_destino_transporte', 'INT', 'Identificador único.', true, true, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'destino_transporte'), 'destino_id', 'INT', 'Destino turístico de referencia.', true, false, true, 'turismo.destino_turistico', 'id_destino'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'destino_transporte'), 'parada_cercana', 'VARCHAR(250)', 'Nombre o ubicación de la parada o estación más cercana al destino.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'destino_transporte'), 'tipo_transporte_id', 'INT', 'Tipo de transporte que arriba a dicha parada.', true, false, true, 'transporte.tipo_transporte', 'id_tipo_transporte'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'destino_transporte'), 'distancia_parada_km', 'NUMERIC(5,2)', 'Distancia desde la parada hasta el punto exacto del destino.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'destino_transporte'), 'costo_traslado_local_q', 'NUMERIC(10,2)', 'Costo estimado de traslado local en Quetzales.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'destino_transporte'), 'tiempo_traslado_minutos', 'INT', 'Tiempo estimado de traslado en minutos.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'destino_transporte'), 'carga_id', 'INT', 'Referencia a la carga de datos.', false, false, true, 'meta.carga', 'id')
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+-- Tabla: transporte.ruta_transporte
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'ruta_transporte',
+    'Ruta transporte',
+    'Rutas de transporte intermunicipales autorizadas.',
+    'CATALOGO',
+    'Una fila por cada registro de ruta transporte.',
+    'Se incluyen todos los registros válidos de ruta transporte.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de ruta_transporte.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'transporte'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'ruta_transporte'), 'id_ruta_transporte', 'INT', 'Identificador único de la ruta.', true, true, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'ruta_transporte'), 'codigo', 'VARCHAR(50)', 'Código estable de la ruta.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'ruta_transporte'), 'origen_municipio_id', 'INT', 'Municipio de origen.', true, false, true, 'geografia.municipio', 'id'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'ruta_transporte'), 'destino_municipio_id', 'INT', 'Municipio de destino.', true, false, true, 'geografia.municipio', 'id'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'ruta_transporte'), 'tipo_transporte_id', 'INT', 'Tipo de transporte utilizado en la ruta.', true, false, true, 'transporte.tipo_transporte', 'id_tipo_transporte'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'ruta_transporte'), 'carga_id', 'INT', 'Referencia a la carga de datos.', false, false, true, 'meta.carga', 'id')
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+-- Tabla: transporte.itinerario_transporte
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'itinerario_transporte',
+    'Itinerario transporte',
+    'Horarios de salida, tarifas y duración estimada del viaje de los proveedores de transporte.',
+    'OPERATIVA',
+    'Una fila por cada registro de itinerario transporte.',
+    'Se incluyen todos los registros válidos de itinerario transporte.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de itinerario_transporte.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'transporte'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'itinerario_transporte'), 'id_itinerario', 'INT', 'Identificador único.', true, true, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'itinerario_transporte'), 'ruta_transporte_id', 'INT', 'Ruta de transporte asociada.', true, false, true, 'transporte.ruta_transporte', 'id_ruta_transporte'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'itinerario_transporte'), 'proveedor_id', 'INT', 'Proveedor que presta el servicio.', true, false, true, 'transporte.proveedor_transporte', 'id_proveedor'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'itinerario_transporte'), 'hora_salida', 'TIME', 'Hora programada de salida del servicio.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'itinerario_transporte'), 'frecuencia', 'VARCHAR(150)', 'Días o intervalos en que se presta el servicio (ej: Lunes a Viernes cada 30 min).', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'itinerario_transporte'), 'tarifa_q', 'NUMERIC(10,2)', 'Tarifa oficial en Quetzales.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'itinerario_transporte'), 'duracion_estimada_minutos', 'INT', 'Tiempo estimado de viaje en minutos.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'itinerario_transporte'), 'carga_id', 'INT', 'Referencia a la carga de datos.', false, false, true, 'meta.carga', 'id')
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+-- Tabla: transporte.tramo_vial
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'tramo_vial',
+    'Tramo vial',
+    'Tramos viales específicos entre municipios para medir el estado de la conectividad vial.',
+    'CATALOGO',
+    'Una fila por cada registro de tramo vial.',
+    'Se incluyen todos los registros válidos de tramo vial.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de tramo_vial.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'transporte'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'tramo_vial'), 'id_tramo', 'INT', 'Identificador único del tramo vial.', true, true, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'tramo_vial'), 'codigo', 'VARCHAR(50)', 'Código estable de la vía.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'tramo_vial'), 'nombre', 'VARCHAR(250)', 'Nombre oficial o descriptivo de la carretera o vía.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'tramo_vial'), 'origen_municipio_id', 'INT', 'Municipio de inicio del tramo.', true, false, true, 'geografia.municipio', 'id'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'tramo_vial'), 'destino_municipio_id', 'INT', 'Municipio de fin del tramo.', true, false, true, 'geografia.municipio', 'id'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'tramo_vial'), 'tipo_via_id', 'INT', 'Clasificación física de la vía.', true, false, true, 'transporte.tipo_via', 'id_tipo_via'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'tramo_vial'), 'distancia_km', 'NUMERIC(8,2)', 'Distancia real del tramo en kilómetros.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'tramo_vial'), 'tiempo_promedio_minutos', 'INT', 'Tiempo promedio de viaje en condiciones normales.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'tramo_vial'), 'estado_transitabilidad', 'VARCHAR(50)', 'Calidad o estado de la vía (ej: BUENO, REGULAR, MALO, INTRANSITABLE).', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'tramo_vial'), 'carga_id', 'INT', 'Referencia a la carga de datos.', false, false, true, 'meta.carga', 'id')
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+-- Tabla: transporte.incidencia_vial
+INSERT INTO meta.tabla_datos (
+    id_esquema, nombre_tabla, titulo, descripcion, tipo_tabla, granularidad,
+    criterio_inclusion, criterio_exclusion, ejemplo_uso, id_version_desde, estado
+)
+SELECT
+    e.id_esquema,
+    'incidencia_vial',
+    'Incidencia vial',
+    'Eventos activos e históricos que afectan la conectividad de los tramos (ej: Derrumbes, Bloqueos, Reparación).',
+    'OPERATIVA',
+    'Una fila por cada registro de incidencia vial.',
+    'Se incluyen todos los registros válidos de incidencia vial.',
+    'No se aceptan registros sin datos obligatorios.',
+    'Consulta del catálogo de incidencia_vial.',
+    v.id_version,
+    'ACTIVA'
+FROM meta.esquema_datos e
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'transporte'
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado;
+
+INSERT INTO meta.columna_datos (
+    id_tabla, nombre_columna, tipo_dato, descripcion,
+    obligatorio, es_llave_primaria, es_llave_foranea, tabla_referenciada, columna_referenciada
+) VALUES
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'incidencia_vial'), 'id_incidencia', 'INT', 'Identificador único de la incidencia.', true, true, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'incidencia_vial'), 'codigo', 'VARCHAR(50)', 'Código único de reporte.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'incidencia_vial'), 'tramo_id', 'INT', 'Tramo vial afectado.', true, false, true, 'transporte.tramo_vial', 'id_tramo'),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'incidencia_vial'), 'tipo_incidencia', 'VARCHAR(100)', 'Tipo de incidencia (ej: DERRUMBE, ACCIDENTE, BLOQUEO, REPARACION).', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'incidencia_vial'), 'descripcion', 'TEXT', 'Detalle o reporte de la incidencia.', false, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'incidencia_vial'), 'fecha_reporte', 'TIMESTAMPTZ', 'Fecha y hora en la que se registró el reporte.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'incidencia_vial'), 'activo', 'BOOLEAN', 'Indica si la incidencia sigue afectando la transitabilidad en la actualidad.', true, false, false, NULL, NULL),
+    ((SELECT id_tabla FROM meta.tabla_datos t JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'incidencia_vial'), 'carga_id', 'INT', 'Referencia a la carga de datos.', false, false, true, 'meta.carga', 'id')
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada;
+
+
+-- ======================================================================
+-- Temas de Datos
+-- ======================================================================
+
+INSERT INTO meta.tema_datos (nombre_tema, descripcion, palabras_clave)
+VALUES ('Artesanías y Arte Popular', 'Contiene datos sobre talleres colectivos, artesanos, técnicas tradicionales, materias primas y obras de arte popular.', 'artesania, artesanías y arte popular, guatemala, altiplano')
+ON CONFLICT (nombre_tema) DO UPDATE SET
+    descripcion = EXCLUDED.descripcion,
+    palabras_clave = EXCLUDED.palabras_clave;
+
+INSERT INTO meta.objeto_tema (id_tema, nivel_objeto, id_esquema, relevancia, justificacion)
+SELECT
+    (SELECT id_tema FROM meta.tema_datos WHERE nombre_tema = 'Artesanías y Arte Popular'),
+    'ESQUEMA',
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'artesania'),
+    'ALTA',
+    'Asocia el esquema completo con el tema de artesanías y arte popular.'
+ON CONFLICT DO NOTHING;
+
+INSERT INTO meta.tema_datos (nombre_tema, descripcion, palabras_clave)
+VALUES ('Cultura y Tradición', 'Contiene datos sobre platillos tradicionales, ingredientes autóctonos, idiomas nacionales y ferias o festividades culturales.', 'cultura, cultura y tradición, guatemala, altiplano')
+ON CONFLICT (nombre_tema) DO UPDATE SET
+    descripcion = EXCLUDED.descripcion,
+    palabras_clave = EXCLUDED.palabras_clave;
+
+INSERT INTO meta.objeto_tema (id_tema, nivel_objeto, id_esquema, relevancia, justificacion)
+SELECT
+    (SELECT id_tema FROM meta.tema_datos WHERE nombre_tema = 'Cultura y Tradición'),
+    'ESQUEMA',
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'cultura'),
+    'ALTA',
+    'Asocia el esquema completo con el tema de cultura y tradición.'
+ON CONFLICT DO NOTHING;
+
+INSERT INTO meta.tema_datos (nombre_tema, descripcion, palabras_clave)
+VALUES ('Economía Solidaria y Municipal', 'Contiene datos sobre cooperativas, mercados tradicionales, centros de acopio, producción municipal certificada y servicios financieros de microcrédito.', 'economia, economía solidaria y municipal, guatemala, altiplano')
+ON CONFLICT (nombre_tema) DO UPDATE SET
+    descripcion = EXCLUDED.descripcion,
+    palabras_clave = EXCLUDED.palabras_clave;
+
+INSERT INTO meta.objeto_tema (id_tema, nivel_objeto, id_esquema, relevancia, justificacion)
+SELECT
+    (SELECT id_tema FROM meta.tema_datos WHERE nombre_tema = 'Economía Solidaria y Municipal'),
+    'ESQUEMA',
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'economia'),
+    'ALTA',
+    'Asocia el esquema completo con el tema de economía solidaria y municipal.'
+ON CONFLICT DO NOTHING;
+
+INSERT INTO meta.tema_datos (nombre_tema, descripcion, palabras_clave)
+VALUES ('Logística y Conectividad Vial', 'Contiene datos sobre tipos de transporte, proveedores de servicios, itinerarios, tramos viales e incidencias viales activas.', 'transporte, logística y conectividad vial, guatemala, altiplano')
+ON CONFLICT (nombre_tema) DO UPDATE SET
+    descripcion = EXCLUDED.descripcion,
+    palabras_clave = EXCLUDED.palabras_clave;
+
+INSERT INTO meta.objeto_tema (id_tema, nivel_objeto, id_esquema, relevancia, justificacion)
+SELECT
+    (SELECT id_tema FROM meta.tema_datos WHERE nombre_tema = 'Logística y Conectividad Vial'),
+    'ESQUEMA',
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'transporte'),
+    'ALTA',
+    'Asocia el esquema completo con el tema de logística y conectividad vial.'
+ON CONFLICT DO NOTHING;
+
+
+-- ======================================================================
+-- Fuentes de Datos y Respaldos
+-- ======================================================================
+
+INSERT INTO meta.fuente_datos (
+    codigo_fuente, nombre_fuente, institucion, tipo_fuente, url, fecha_consulta, descripcion, confiabilidad, cobertura_geografica
+) VALUES (
+    'INE_CENSO_2018', 'Censo Nacional de Población y Vivienda 2018', 'Instituto Nacional de Estadística (INE)', 'OFICIAL', 'https://www.ine.gob.gt/censo-2018/', '2026-07-11', 'Datos demográficos y territoriales oficiales.', 'ALTA', 'NACIONAL'
+) ON CONFLICT (codigo_fuente) DO UPDATE SET
+    nombre_fuente = EXCLUDED.nombre_fuente,
+    institucion = EXCLUDED.institucion,
+    url = EXCLUDED.url,
+    descripcion = EXCLUDED.descripcion;
+
+INSERT INTO meta.fuente_datos (
+    codigo_fuente, nombre_fuente, institucion, tipo_fuente, url, fecha_consulta, descripcion, confiabilidad, cobertura_geografica
+) VALUES (
+    'MICUDE_PATRIMONIO', 'Registro de Bienes Culturales y Patrimonio', 'Ministerio de Cultura y Deportes', 'OFICIAL', 'http://mcd.gob.gt/', '2026-07-11', 'Registro oficial de patrimonio cultural, comidas e idiomas.', 'ALTA', 'NACIONAL'
+) ON CONFLICT (codigo_fuente) DO UPDATE SET
+    nombre_fuente = EXCLUDED.nombre_fuente,
+    institucion = EXCLUDED.institucion,
+    url = EXCLUDED.url,
+    descripcion = EXCLUDED.descripcion;
+
+INSERT INTO meta.fuente_datos (
+    codigo_fuente, nombre_fuente, institucion, tipo_fuente, url, fecha_consulta, descripcion, confiabilidad, cobertura_geografica
+) VALUES (
+    'CIV_PROVIAL', 'Estado de la Red Vial y Conectividad', 'Dirección General de Protección y Seguridad Vial', 'OFICIAL', 'https://provial.gob.gt/', '2026-07-11', 'Monitoreo vial y reportes de incidencias terrestres.', 'ALTA', 'NACIONAL'
+) ON CONFLICT (codigo_fuente) DO UPDATE SET
+    nombre_fuente = EXCLUDED.nombre_fuente,
+    institucion = EXCLUDED.institucion,
+    url = EXCLUDED.url,
+    descripcion = EXCLUDED.descripcion;
+
+INSERT INTO meta.fuente_datos (
+    codigo_fuente, nombre_fuente, institucion, tipo_fuente, url, fecha_consulta, descripcion, confiabilidad, cobertura_geografica
+) VALUES (
+    'MINECO_COOPERATIVAS', 'Registro e Información del Cooperativismo', 'Ministerio de Economía / INACOP', 'OFICIAL', 'https://www.mineco.gob.gt/', '2026-07-11', 'Información de cooperativas y producción local.', 'ALTA', 'NACIONAL'
+) ON CONFLICT (codigo_fuente) DO UPDATE SET
+    nombre_fuente = EXCLUDED.nombre_fuente,
+    institucion = EXCLUDED.institucion,
+    url = EXCLUDED.url,
+    descripcion = EXCLUDED.descripcion;
+
+INSERT INTO meta.tabla_fuente (id_fuente, nivel_respaldo, id_esquema, uso_fuente, observaciones)
+SELECT
+    (SELECT id_fuente FROM meta.fuente_datos WHERE codigo_fuente = 'MICUDE_PATRIMONIO'),
+    'ESQUEMA',
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'artesania'),
+    'Respalda la información temática de las tablas del esquema artesania.',
+    'Asociado a nivel de esquema.'
+ON CONFLICT DO NOTHING;
+
+INSERT INTO meta.tabla_fuente (id_fuente, nivel_respaldo, id_esquema, uso_fuente, observaciones)
+SELECT
+    (SELECT id_fuente FROM meta.fuente_datos WHERE codigo_fuente = 'MICUDE_PATRIMONIO'),
+    'ESQUEMA',
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'cultura'),
+    'Respalda la información temática de las tablas del esquema cultura.',
+    'Asociado a nivel de esquema.'
+ON CONFLICT DO NOTHING;
+
+INSERT INTO meta.tabla_fuente (id_fuente, nivel_respaldo, id_esquema, uso_fuente, observaciones)
+SELECT
+    (SELECT id_fuente FROM meta.fuente_datos WHERE codigo_fuente = 'MINECO_COOPERATIVAS'),
+    'ESQUEMA',
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'economia'),
+    'Respalda la información temática de las tablas del esquema economia.',
+    'Asociado a nivel de esquema.'
+ON CONFLICT DO NOTHING;
+
+INSERT INTO meta.tabla_fuente (id_fuente, nivel_respaldo, id_esquema, uso_fuente, observaciones)
+SELECT
+    (SELECT id_fuente FROM meta.fuente_datos WHERE codigo_fuente = 'CIV_PROVIAL'),
+    'ESQUEMA',
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'transporte'),
+    'Respalda la información temática de las tablas del esquema transporte.',
+    'Asociado a nivel de esquema.'
+ON CONFLICT DO NOTHING;
+
+
+-- ======================================================================
+-- Reglas de Calidad de Datos
+-- ======================================================================
+
+INSERT INTO meta.regla_calidad (
+    id_tabla, id_columna, nombre_regla, descripcion, tipo_regla, severidad, expresion_validacion, accion_si_falla, estado, id_version_desde
+)
+SELECT
+    t.id_tabla,
+    (SELECT c.id_columna FROM meta.columna_datos c WHERE c.id_tabla = t.id_tabla AND c.nombre_columna = 'nombre'),
+    'Taller: Nombre Único',
+    'Garantiza que no existan dos talleres registrados con el mismo nombre comercial.',
+    'UNICIDAD',
+    'ALTA',
+    'nombre IS UNIQUE',
+    'RECHAZAR REGISTRO',
+    'ACTIVA',
+    v.id_version
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'artesania' AND t.nombre_tabla = 'taller_colectivo'
+ON CONFLICT DO NOTHING;
+
+INSERT INTO meta.regla_calidad (
+    id_tabla, id_columna, nombre_regla, descripcion, tipo_regla, severidad, expresion_validacion, accion_si_falla, estado, id_version_desde
+)
+SELECT
+    t.id_tabla,
+    (SELECT c.id_columna FROM meta.columna_datos c WHERE c.id_tabla = t.id_tabla AND c.nombre_columna = 'dia_inicio'),
+    'Cultura: Día Inicio Rango',
+    'Garantiza que el día de inicio de una festividad esté entre el 1 y el 31.',
+    'RANGO',
+    'ALTA',
+    'dia_inicio >= 1 AND dia_inicio <= 31',
+    'RECHAZAR REGISTRO',
+    'ACTIVA',
+    v.id_version
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'cultura' AND t.nombre_tabla = 'evento_cultural'
+ON CONFLICT DO NOTHING;
+
+INSERT INTO meta.regla_calidad (
+    id_tabla, id_columna, nombre_regla, descripcion, tipo_regla, severidad, expresion_validacion, accion_si_falla, estado, id_version_desde
+)
+SELECT
+    t.id_tabla,
+    (SELECT c.id_columna FROM meta.columna_datos c WHERE c.id_tabla = t.id_tabla AND c.nombre_columna = 'municipio_id'),
+    'Economía: Municipio Obligatorio',
+    'La cooperativa debe estar asociada a un municipio válido.',
+    'OBLIGATORIEDAD',
+    'ALTA',
+    'municipio_id IS NOT NULL',
+    'RECHAZAR REGISTRO',
+    'ACTIVA',
+    v.id_version
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'economia' AND t.nombre_tabla = 'cooperativa_asociacion'
+ON CONFLICT DO NOTHING;
+
+INSERT INTO meta.regla_calidad (
+    id_tabla, id_columna, nombre_regla, descripcion, tipo_regla, severidad, expresion_validacion, accion_si_falla, estado, id_version_desde
+)
+SELECT
+    t.id_tabla,
+    (SELECT c.id_columna FROM meta.columna_datos c WHERE c.id_tabla = t.id_tabla AND c.nombre_columna = 'codigo'),
+    'Transporte: Código Único',
+    'Garantiza que el código identificador de la ruta sea único.',
+    'UNICIDAD',
+    'ALTA',
+    'codigo IS UNIQUE',
+    'RECHAZAR REGISTRO',
+    'ACTIVA',
+    v.id_version
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e ON e.id_esquema = t.id_esquema
+JOIN meta.version_proyecto v ON v.numero_version = '1.0'
+WHERE e.nombre_esquema = 'transporte' AND t.nombre_tabla = 'ruta_transporte'
+ON CONFLICT DO NOTHING;
+
+
+-- ======================================================================
+-- Revisiones por Pares (Peer Reviews)
+-- ======================================================================
+
+INSERT INTO meta.revision_pares (
+    nivel_revision, id_esquema, tipo_revision, descripcion_revision,
+    revisor_1, estado_revisor_1, fecha_revisor_1, comentario_revisor_1,
+    revisor_2, estado_revisor_2, fecha_revisor_2, comentario_revisor_2,
+    estado_final, observaciones
+)
+SELECT
+    'ESQUEMA',
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'artesania'),
+    'MODELO',
+    'Revisión y aprobación del modelado y la integración del esquema artesania en la versión 1.0.',
+    'Ing. Gerardo Mantanico', 'APROBADO', '2026-07-11', 'La estructura de tablas y las llaves foráneas cumplen con las directrices.',
+    'Ing. Jhony Fuentes', 'APROBADO', '2026-07-11', 'Los comentarios e índices están correctos.',
+    'APROBADO', 'Aprobado formalmente por el comité técnico.'
+ON CONFLICT DO NOTHING;
+
+INSERT INTO meta.revision_pares (
+    nivel_revision, id_esquema, tipo_revision, descripcion_revision,
+    revisor_1, estado_revisor_1, fecha_revisor_1, comentario_revisor_1,
+    revisor_2, estado_revisor_2, fecha_revisor_2, comentario_revisor_2,
+    estado_final, observaciones
+)
+SELECT
+    'ESQUEMA',
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'cultura'),
+    'MODELO',
+    'Revisión y aprobación del modelado y la integración del esquema cultura en la versión 1.0.',
+    'Ing. Gerardo Mantanico', 'APROBADO', '2026-07-11', 'La estructura de tablas y las llaves foráneas cumplen con las directrices.',
+    'Ing. Jhony Fuentes', 'APROBADO', '2026-07-11', 'Los comentarios e índices están correctos.',
+    'APROBADO', 'Aprobado formalmente por el comité técnico.'
+ON CONFLICT DO NOTHING;
+
+INSERT INTO meta.revision_pares (
+    nivel_revision, id_esquema, tipo_revision, descripcion_revision,
+    revisor_1, estado_revisor_1, fecha_revisor_1, comentario_revisor_1,
+    revisor_2, estado_revisor_2, fecha_revisor_2, comentario_revisor_2,
+    estado_final, observaciones
+)
+SELECT
+    'ESQUEMA',
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'economia'),
+    'MODELO',
+    'Revisión y aprobación del modelado y la integración del esquema economia en la versión 1.0.',
+    'Ing. Gerardo Mantanico', 'APROBADO', '2026-07-11', 'La estructura de tablas y las llaves foráneas cumplen con las directrices.',
+    'Ing. Jhony Fuentes', 'APROBADO', '2026-07-11', 'Los comentarios e índices están correctos.',
+    'APROBADO', 'Aprobado formalmente por el comité técnico.'
+ON CONFLICT DO NOTHING;
+
+INSERT INTO meta.revision_pares (
+    nivel_revision, id_esquema, tipo_revision, descripcion_revision,
+    revisor_1, estado_revisor_1, fecha_revisor_1, comentario_revisor_1,
+    revisor_2, estado_revisor_2, fecha_revisor_2, comentario_revisor_2,
+    estado_final, observaciones
+)
+SELECT
+    'ESQUEMA',
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'transporte'),
+    'MODELO',
+    'Revisión y aprobación del modelado y la integración del esquema transporte en la versión 1.0.',
+    'Ing. Gerardo Mantanico', 'APROBADO', '2026-07-11', 'La estructura de tablas y las llaves foráneas cumplen con las directrices.',
+    'Ing. Jhony Fuentes', 'APROBADO', '2026-07-11', 'Los comentarios e índices están correctos.',
+    'APROBADO', 'Aprobado formalmente por el comité técnico.'
+ON CONFLICT DO NOTHING;
+
+
+-- ======================================================================
+-- Decisiones de Modelado
+-- ======================================================================
+
+INSERT INTO meta.decision_modelado (
+    id_tema, tema, pregunta, decision, justificacion, ejemplo, id_version_desde, estado
+)
+SELECT
+    (SELECT id_tema FROM meta.tema_datos WHERE nombre_tema = 'Artesanías y Arte Popular'),
+    'Artesanías y Arte Popular',
+    '¿Cómo registrar artesanos individuales que no pertenecen a un taller?',
+    'Permitir que la columna taller_id sea opcional (NULLable) en la tabla artista_artesano.',
+    'Muchos artesanos trabajan de forma independiente o familiar sin constituirse en un taller formal.',
+    'artista_artesano.taller_id IS NULL para artesanos independientes.',
+    v.id_version,
+    'VIGENTE'
+FROM meta.version_proyecto v
+WHERE v.numero_version = '1.0'
+ON CONFLICT DO NOTHING;
+
+INSERT INTO meta.decision_modelado (
+    id_tema, tema, pregunta, decision, justificacion, ejemplo, id_version_desde, estado
+)
+SELECT
+    (SELECT id_tema FROM meta.tema_datos WHERE nombre_tema = 'Cultura y Tradición'),
+    'Cultura y Tradición',
+    '¿Cómo asociar el origen geográfico de los platos típicos si algunos son a nivel de departamento y otros a nivel municipal?',
+    'Hacer municipio_id opcional y departamento_id obligatorio en la tabla plato_geografia.',
+    'El pepián es representativo de todo Chimaltenango (departamento), mientras que los tamalitos de chipilín son específicos de algunos municipios.',
+    'plato_geografia.municipio_id IS NULL para origen departamental amplio.',
+    v.id_version,
+    'VIGENTE'
+FROM meta.version_proyecto v
+WHERE v.numero_version = '1.0'
+ON CONFLICT DO NOTHING;
+
+INSERT INTO meta.decision_modelado (
+    id_tema, tema, pregunta, decision, justificacion, ejemplo, id_version_desde, estado
+)
+SELECT
+    (SELECT id_tema FROM meta.tema_datos WHERE nombre_tema = 'Economía Solidaria y Municipal'),
+    'Economía Solidaria y Municipal',
+    '¿Cómo conectar las actividades productivas con las cooperativas y municipios?',
+    'Crear la tabla intermedia produccion_municipal que actúa como puente e incluye volumenes de empleo y cosecha.',
+    'Las cooperativas organizan la producción a nivel local pero su volumen y empleo varía por municipio.',
+    'produccion_municipal conecta cooperativa, actividad y municipio.',
+    v.id_version,
+    'VIGENTE'
+FROM meta.version_proyecto v
+WHERE v.numero_version = '1.0'
+ON CONFLICT DO NOTHING;
