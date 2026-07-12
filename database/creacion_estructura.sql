@@ -2389,3 +2389,464 @@ CREATE INDEX IF NOT EXISTS ix_tramo_origen_destino ON transporte.tramo_vial(orig
 -- Fin schema transporte
 -- **********************************************************************
 
+
+-- **********************************************************************
+-- INICIO schema JUSTICIA
+-- **********************************************************************
+-- **********************************************************************
+-- Schema: justicia
+-- **********************************************************************
+
+CREATE SCHEMA IF NOT EXISTS justicia;
+
+COMMENT ON SCHEMA justicia IS 'Información relacionada con seguridad pública, estadísticas delictivas y nómina pública.';
+
+-- ============================================================
+-- Catálogos
+-- ============================================================
+
+CREATE TABLE justicia.estado_civil (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL
+);
+
+COMMENT ON TABLE justicia.estado_civil IS
+'Catálogo de estados civiles.';
+
+CREATE TABLE justicia.sexo (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL
+);
+
+COMMENT ON TABLE justicia.sexo IS
+'Catálogo de sexo.';
+
+CREATE TABLE justicia.grupo_etnico (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL
+);
+
+COMMENT ON TABLE justicia.grupo_etnico IS
+'Catálogo de grupos étnicos.';
+
+CREATE TABLE justicia.tipo_delito (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nombre VARCHAR(150) NOT NULL
+);
+
+COMMENT ON TABLE justicia.tipo_delito IS
+'Catálogo de tipos de delito.';
+
+CREATE TABLE justicia.grupo_edad_victima (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL
+);
+
+COMMENT ON TABLE justicia.grupo_edad_victima IS
+'Catálogo de grupos de edad utilizados en estadísticas de víctimas.';
+
+CREATE TABLE justicia.renglon_presupuestario (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    codigo VARCHAR(20),
+    nombre VARCHAR(150)
+);
+
+COMMENT ON TABLE justicia.renglon_presupuestario IS
+'Catálogo de renglones presupuestarios utilizados por las instituciones públicas.';
+
+CREATE TABLE justicia.tipo_evento (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nombre VARCHAR(150) NOT NULL
+);
+
+COMMENT ON TABLE justicia.tipo_evento IS
+'Catálogo de tipos de evento asociados a denuncias.';
+
+CREATE TABLE justicia.tipo_denuncia (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nombre VARCHAR(150) NOT NULL
+);
+
+COMMENT ON TABLE justicia.tipo_denuncia IS
+'Catálogo de tipos de denuncia.';
+
+CREATE TABLE justicia.estado_denuncia (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nombre VARCHAR(150) NOT NULL
+);
+
+COMMENT ON TABLE justicia.estado_denuncia IS
+'Catálogo de estados posibles de una denuncia.';
+
+CREATE TABLE justicia.nivel_institucion (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nombre VARCHAR(150) NOT NULL
+);
+
+COMMENT ON TABLE justicia.nivel_institucion IS
+'Catálogo de niveles jerárquicos de las instituciones.';
+
+CREATE TABLE justicia.tipo_institucion (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nombre VARCHAR(150) NOT NULL
+);
+
+COMMENT ON TABLE justicia.tipo_institucion IS
+'Catálogo de tipos de institución pública.';
+
+CREATE TABLE justicia.tipo_contrato (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nombre VARCHAR(150) NOT NULL,
+    descripcion TEXT,
+    renglon_presupuestario VARCHAR(50)
+);
+
+COMMENT ON TABLE justicia.tipo_contrato IS
+'Catálogo de tipos de contrato laboral en el sector público.';
+
+CREATE TABLE justicia.banco (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nombre VARCHAR(150) NOT NULL
+);
+
+COMMENT ON TABLE justicia.banco IS
+'Catálogo de bancos del sistema financiero.';
+
+CREATE TABLE justicia.rol_empresa (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nombre VARCHAR(150) NOT NULL
+);
+
+COMMENT ON TABLE justicia.rol_empresa IS
+'Catálogo de roles que puede tener un trabajador dentro de una empresa.';
+
+-- ============================================================
+-- Persona
+-- ============================================================
+
+CREATE TABLE justicia.persona (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    estado_civil_id INT REFERENCES justicia.estado_civil(id),
+    sexo_id INT REFERENCES justicia.sexo(id),
+    grupo_etnico_id INT REFERENCES justicia.grupo_etnico(id),
+    dpi VARCHAR(20),
+    nit VARCHAR(20),
+    nombres VARCHAR(200),
+    apellidos VARCHAR(200),
+    correo VARCHAR(200),
+    telefono VARCHAR(30),
+    fecha_nacimiento DATE
+);
+
+COMMENT ON TABLE justicia.persona IS
+'Información básica de personas utilizada por el módulo de justicia.';
+
+-- ============================================================
+-- Institución
+-- ============================================================
+
+CREATE TABLE justicia.institucion (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    municipio_id INT NOT NULL REFERENCES geografia.municipio(id),
+    tipo_institucion_id INT NOT NULL REFERENCES justicia.tipo_institucion(id),
+    nivel_institucion_id INT NOT NULL REFERENCES justicia.nivel_institucion(id),
+    nombre VARCHAR(200) NOT NULL,
+    siglas VARCHAR(20),
+    direccion VARCHAR(250),
+    telefono VARCHAR(30),
+    fecha_creacion DATE
+);
+
+COMMENT ON TABLE justicia.institucion IS
+'Instituciones públicas del sector justicia.';
+
+-- ============================================================
+-- Denuncia
+-- ============================================================
+
+CREATE TABLE justicia.denuncia (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    tipo_denuncia_id INT NOT NULL REFERENCES justicia.tipo_denuncia(id),
+    estado_denuncia_id INT NOT NULL REFERENCES justicia.estado_denuncia(id),
+    institucion_id INT NOT NULL REFERENCES justicia.institucion(id),
+    municipio_incidencia_id INT NOT NULL REFERENCES geografia.municipio(id),
+    descripcion TEXT
+);
+
+COMMENT ON TABLE justicia.denuncia IS
+'Denuncias registradas ante instituciones del sector justicia.';
+
+CREATE TABLE justicia.registro_fecha_denuncia (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    denuncia_id INT NOT NULL REFERENCES justicia.denuncia(id),
+    tipo_evento_id INT NOT NULL REFERENCES justicia.tipo_evento(id),
+    observaciones TEXT,
+    fecha DATE NOT NULL
+);
+
+COMMENT ON TABLE justicia.registro_fecha_denuncia IS
+'Registro histórico de fechas y eventos asociados a una denuncia.';
+
+-- ============================================================
+-- Trabajador, Cargo y Contrato
+-- ============================================================
+
+CREATE TABLE justicia.trabajador (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    persona_id INT NOT NULL REFERENCES justicia.persona(id),
+    esta_activo BOOLEAN NOT NULL DEFAULT TRUE
+);
+
+COMMENT ON TABLE justicia.trabajador IS
+'Trabajadores del sector justicia vinculados a una persona.';
+
+CREATE TABLE justicia.cargo (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    institucion_id INT NOT NULL REFERENCES justicia.institucion(id),
+    cargo_jefe_id INT REFERENCES justicia.cargo(id),
+    nombre VARCHAR(150) NOT NULL,
+    descripcion TEXT,
+    fecha_creacion DATE
+);
+
+COMMENT ON TABLE justicia.cargo IS
+'Cargos o puestos definidos dentro de una institución.';
+
+CREATE TABLE justicia.contrato (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    trabajador_id INT NOT NULL REFERENCES justicia.trabajador(id),
+    institucion_id INT NOT NULL REFERENCES justicia.institucion(id),
+    cargo_id INT NOT NULL REFERENCES justicia.cargo(id),
+    tipo_contrato_id INT NOT NULL REFERENCES justicia.tipo_contrato(id),
+    sueldo_base NUMERIC(12,2) NOT NULL,
+    fecha_inicio DATE NOT NULL,
+    fecha_fin DATE,
+    esta_activo BOOLEAN NOT NULL DEFAULT TRUE
+);
+
+COMMENT ON TABLE justicia.contrato IS
+'Contratos de trabajadores con instituciones, incluyendo cargo, tipo de contrato y salario.';
+
+-- ============================================================
+-- Patrimonio del trabajador
+-- ============================================================
+
+CREATE TABLE justicia.vehiculo (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    trabajador_id INT NOT NULL REFERENCES justicia.trabajador(id),
+    placa VARCHAR(20) NOT NULL,
+    marca VARCHAR(100),
+    modelo VARCHAR(100),
+    anio INT,
+    valor_declarado NUMERIC(14,2),
+    fecha_adquisicion DATE
+);
+
+COMMENT ON TABLE justicia.vehiculo IS
+'Vehículos declarados por trabajadores en sus declaraciones patrimoniales.';
+
+CREATE TABLE justicia.cuenta_bancaria (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    trabajador_id INT NOT NULL REFERENCES justicia.trabajador(id),
+    banco_id INT NOT NULL REFERENCES justicia.banco(id),
+    tipo_cuenta VARCHAR(50),
+    no_cuenta VARCHAR(50) NOT NULL,
+    moneda VARCHAR(10),
+    saldo_declarado NUMERIC(14,2),
+    fecha_apertura DATE
+);
+
+COMMENT ON TABLE justicia.cuenta_bancaria IS
+'Cuentas bancarias declaradas por trabajadores en sus declaraciones patrimoniales.';
+
+CREATE TABLE justicia.inmueble (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    trabajador_id INT NOT NULL REFERENCES justicia.trabajador(id),
+    municipio_id INT NOT NULL REFERENCES geografia.municipio(id),
+    direccion VARCHAR(250),
+    no_finca VARCHAR(50),
+    area_mc NUMERIC(10,2),
+    valor_declarado NUMERIC(14,2),
+    forma_adquisicion VARCHAR(100),
+    fecha_adquisicion DATE
+);
+
+COMMENT ON TABLE justicia.inmueble IS
+'Inmuebles declarados por trabajadores en sus declaraciones patrimoniales.';
+
+CREATE TABLE justicia.empresa (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    trabajador_id INT NOT NULL REFERENCES justicia.trabajador(id),
+    rol_empresa_id INT NOT NULL REFERENCES justicia.rol_empresa(id),
+    nombre VARCHAR(200) NOT NULL,
+    nit VARCHAR(20),
+    porcentaje_participacion NUMERIC(5,2),
+    valor_declarado NUMERIC(14,2),
+    fecha_inicio_participacion DATE
+);
+
+COMMENT ON TABLE justicia.empresa IS
+'Empresas en las que participan trabajadores según sus declaraciones patrimoniales.';
+
+-- ============================================================
+-- Estadísticas de seguridad
+-- ============================================================
+
+CREATE TABLE justicia.estadistica_seguridad (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    anio SMALLINT,
+    departamento_id INT REFERENCES geografia.departamento(id),
+    nombre_departamento VARCHAR(100),
+    tipo_delito_id INT REFERENCES justicia.tipo_delito(id),
+    sexo_id INT REFERENCES justicia.sexo(id),
+    grupo_edad_id INT REFERENCES justicia.grupo_edad_victima(id),
+    cantidad INT,
+    fuente VARCHAR(200),
+    archivo_origen VARCHAR(200),
+    fecha_carga TIMESTAMP,
+    cargado_por VARCHAR(200),
+    revisado BOOLEAN
+);
+
+COMMENT ON TABLE justicia.estadistica_seguridad IS
+'Almacena estadísticas de seguridad pública por departamento, delito, sexo y grupo de edad.';
+
+-- ============================================================
+-- Nómina pública
+-- ============================================================
+
+CREATE TABLE justicia.nomina_publica (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    sigla_institucion VARCHAR(10),
+    anio SMALLINT,
+    mes SMALLINT,
+    nip VARCHAR(20),
+    nombre VARCHAR(300),
+    puesto VARCHAR(300),
+    unidad VARCHAR(300),
+    renglon_id INT REFERENCES justicia.renglon_presupuestario(id),
+    salario NUMERIC(12,2),
+    total_devengado NUMERIC(12,2),
+    fuente VARCHAR(200),
+    archivo_origen VARCHAR(200),
+    fecha_carga TIMESTAMP
+);
+
+COMMENT ON TABLE justicia.nomina_publica IS
+'Información de nómina pública proveniente de distintas instituciones del Estado.';
+
+-- ============================================================
+-- Triggers de auditoría
+-- ============================================================
+
+CREATE TRIGGER trg_auditoria
+AFTER INSERT OR UPDATE OR DELETE ON justicia.estado_civil
+FOR EACH ROW EXECUTE FUNCTION auditoria.fn_auditar();
+
+CREATE TRIGGER trg_auditoria
+AFTER INSERT OR UPDATE OR DELETE ON justicia.sexo
+FOR EACH ROW EXECUTE FUNCTION auditoria.fn_auditar();
+
+CREATE TRIGGER trg_auditoria
+AFTER INSERT OR UPDATE OR DELETE ON justicia.grupo_etnico
+FOR EACH ROW EXECUTE FUNCTION auditoria.fn_auditar();
+
+CREATE TRIGGER trg_auditoria
+AFTER INSERT OR UPDATE OR DELETE ON justicia.tipo_delito
+FOR EACH ROW EXECUTE FUNCTION auditoria.fn_auditar();
+
+CREATE TRIGGER trg_auditoria
+AFTER INSERT OR UPDATE OR DELETE ON justicia.grupo_edad_victima
+FOR EACH ROW EXECUTE FUNCTION auditoria.fn_auditar();
+
+CREATE TRIGGER trg_auditoria
+AFTER INSERT OR UPDATE OR DELETE ON justicia.renglon_presupuestario
+FOR EACH ROW EXECUTE FUNCTION auditoria.fn_auditar();
+
+CREATE TRIGGER trg_auditoria
+AFTER INSERT OR UPDATE OR DELETE ON justicia.tipo_evento
+FOR EACH ROW EXECUTE FUNCTION auditoria.fn_auditar();
+
+CREATE TRIGGER trg_auditoria
+AFTER INSERT OR UPDATE OR DELETE ON justicia.tipo_denuncia
+FOR EACH ROW EXECUTE FUNCTION auditoria.fn_auditar();
+
+CREATE TRIGGER trg_auditoria
+AFTER INSERT OR UPDATE OR DELETE ON justicia.estado_denuncia
+FOR EACH ROW EXECUTE FUNCTION auditoria.fn_auditar();
+
+CREATE TRIGGER trg_auditoria
+AFTER INSERT OR UPDATE OR DELETE ON justicia.nivel_institucion
+FOR EACH ROW EXECUTE FUNCTION auditoria.fn_auditar();
+
+CREATE TRIGGER trg_auditoria
+AFTER INSERT OR UPDATE OR DELETE ON justicia.tipo_institucion
+FOR EACH ROW EXECUTE FUNCTION auditoria.fn_auditar();
+
+CREATE TRIGGER trg_auditoria
+AFTER INSERT OR UPDATE OR DELETE ON justicia.tipo_contrato
+FOR EACH ROW EXECUTE FUNCTION auditoria.fn_auditar();
+
+CREATE TRIGGER trg_auditoria
+AFTER INSERT OR UPDATE OR DELETE ON justicia.banco
+FOR EACH ROW EXECUTE FUNCTION auditoria.fn_auditar();
+
+CREATE TRIGGER trg_auditoria
+AFTER INSERT OR UPDATE OR DELETE ON justicia.rol_empresa
+FOR EACH ROW EXECUTE FUNCTION auditoria.fn_auditar();
+
+CREATE TRIGGER trg_auditoria
+AFTER INSERT OR UPDATE OR DELETE ON justicia.persona
+FOR EACH ROW EXECUTE FUNCTION auditoria.fn_auditar();
+
+CREATE TRIGGER trg_auditoria
+AFTER INSERT OR UPDATE OR DELETE ON justicia.institucion
+FOR EACH ROW EXECUTE FUNCTION auditoria.fn_auditar();
+
+CREATE TRIGGER trg_auditoria
+AFTER INSERT OR UPDATE OR DELETE ON justicia.denuncia
+FOR EACH ROW EXECUTE FUNCTION auditoria.fn_auditar();
+
+CREATE TRIGGER trg_auditoria
+AFTER INSERT OR UPDATE OR DELETE ON justicia.registro_fecha_denuncia
+FOR EACH ROW EXECUTE FUNCTION auditoria.fn_auditar();
+
+CREATE TRIGGER trg_auditoria
+AFTER INSERT OR UPDATE OR DELETE ON justicia.trabajador
+FOR EACH ROW EXECUTE FUNCTION auditoria.fn_auditar();
+
+CREATE TRIGGER trg_auditoria
+AFTER INSERT OR UPDATE OR DELETE ON justicia.cargo
+FOR EACH ROW EXECUTE FUNCTION auditoria.fn_auditar();
+
+CREATE TRIGGER trg_auditoria
+AFTER INSERT OR UPDATE OR DELETE ON justicia.contrato
+FOR EACH ROW EXECUTE FUNCTION auditoria.fn_auditar();
+
+CREATE TRIGGER trg_auditoria
+AFTER INSERT OR UPDATE OR DELETE ON justicia.vehiculo
+FOR EACH ROW EXECUTE FUNCTION auditoria.fn_auditar();
+
+CREATE TRIGGER trg_auditoria
+AFTER INSERT OR UPDATE OR DELETE ON justicia.cuenta_bancaria
+FOR EACH ROW EXECUTE FUNCTION auditoria.fn_auditar();
+
+CREATE TRIGGER trg_auditoria
+AFTER INSERT OR UPDATE OR DELETE ON justicia.inmueble
+FOR EACH ROW EXECUTE FUNCTION auditoria.fn_auditar();
+
+CREATE TRIGGER trg_auditoria
+AFTER INSERT OR UPDATE OR DELETE ON justicia.empresa
+FOR EACH ROW EXECUTE FUNCTION auditoria.fn_auditar();
+
+CREATE TRIGGER trg_auditoria
+AFTER INSERT OR UPDATE OR DELETE ON justicia.estadistica_seguridad
+FOR EACH ROW EXECUTE FUNCTION auditoria.fn_auditar();
+
+CREATE TRIGGER trg_auditoria
+AFTER INSERT OR UPDATE OR DELETE ON justicia.nomina_publica
+FOR EACH ROW EXECUTE FUNCTION auditoria.fn_auditar();
+
+-- **********************************************************************
+-- Fin schema justicia
+-- **********************************************************************

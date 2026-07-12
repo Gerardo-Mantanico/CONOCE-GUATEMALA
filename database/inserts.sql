@@ -42507,3 +42507,12220 @@ SELECT
 FROM meta.version_proyecto v
 WHERE v.numero_version = '1.0'
 ON CONFLICT DO NOTHING;
+
+
+-- **********************************************************************
+-- inserts  schema justicia
+-- **********************************************************************
+INSERT INTO meta.esquema_datos (
+    nombre_esquema,
+    titulo,
+    descripcion,
+    objetivo,
+    alcance,
+    fuera_de_alcance,
+    responsable,
+    id_version_desde,
+    estado,
+    observaciones
+)
+VALUES (
+    'justicia',
+    'Justicia y Seguridad Pública',
+    'Esquema orientado a integrar información relacionada con seguridad pública, estadísticas delictivas, denuncias, instituciones del sector justicia, nómina pública, contratos y patrimonio declarado de trabajadores.',
+    'Organizar datos oficiales y documentados sobre criminalidad, denuncias, personal, instituciones y transparencia del sector justicia para facilitar consultas y análisis integrados con la geografía nacional.',
+    'Incluye catálogos de clasificación, personas, instituciones, denuncias, trabajadores, cargos, contratos, bienes patrimoniales declarados, estadísticas de seguridad y nómina pública.',
+    'No almacena datos turísticos, climáticos ni geográficos base. La ubicación se referencia desde el esquema geografia. Tampoco sustituye expedientes judiciales completos ni sistemas oficiales transaccionales de las instituciones.',
+    'Subequipo Justicia y Seguridad Pública',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'ACTIVO',
+    'La información del módulo proviene de fuentes oficiales e institucionales descritas en el catálogo de fuentes.'
+)
+ON CONFLICT (nombre_esquema) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    objetivo = EXCLUDED.objetivo,
+    alcance = EXCLUDED.alcance,
+    fuera_de_alcance = EXCLUDED.fuera_de_alcance,
+    responsable = EXCLUDED.responsable,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+-- ============================================================
+-- 3. Tablas del esquema justicia
+-- ============================================================
+-- Tabla: justicia.estado_civil
+INSERT INTO meta.tabla_datos (
+    id_esquema,
+    nombre_tabla,
+    titulo,
+    descripcion,
+    tipo_tabla,
+    granularidad,
+    criterio_inclusion,
+    criterio_exclusion,
+    ejemplo_uso,
+    id_version_desde,
+    estado,
+    observaciones
+)
+VALUES (
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'justicia'),
+    'estado_civil',
+    'Estado Civil',
+    'Catálogo de estados civiles.',
+    'CATALOGO',
+    'Un registro por cada estado civil utilizado para clasificar personas.',
+    'Registrar únicamente valores normalizados que se utilicen como catálogo dentro del esquema justicia.',
+    'No registrar valores duplicados, ambiguos o que no sean utilizados por ninguna tabla del módulo.',
+    'Consultar y mantener información de la tabla justicia.estado_civil.',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'ACTIVA',
+    'Tabla documentada a partir del DDL del esquema justicia.'
+)
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+-- Tabla: justicia.sexo
+INSERT INTO meta.tabla_datos (
+    id_esquema,
+    nombre_tabla,
+    titulo,
+    descripcion,
+    tipo_tabla,
+    granularidad,
+    criterio_inclusion,
+    criterio_exclusion,
+    ejemplo_uso,
+    id_version_desde,
+    estado,
+    observaciones
+)
+VALUES (
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'justicia'),
+    'sexo',
+    'Sexo',
+    'Catálogo de sexo.',
+    'CATALOGO',
+    'Un registro por cada valor de sexo utilizado en estadísticas y personas.',
+    'Registrar únicamente valores normalizados que se utilicen como catálogo dentro del esquema justicia.',
+    'No registrar valores duplicados, ambiguos o que no sean utilizados por ninguna tabla del módulo.',
+    'Consultar y mantener información de la tabla justicia.sexo.',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'ACTIVA',
+    'Tabla documentada a partir del DDL del esquema justicia.'
+)
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+-- Tabla: justicia.grupo_etnico
+INSERT INTO meta.tabla_datos (
+    id_esquema,
+    nombre_tabla,
+    titulo,
+    descripcion,
+    tipo_tabla,
+    granularidad,
+    criterio_inclusion,
+    criterio_exclusion,
+    ejemplo_uso,
+    id_version_desde,
+    estado,
+    observaciones
+)
+VALUES (
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'justicia'),
+    'grupo_etnico',
+    'Grupo Etnico',
+    'Catálogo de grupos étnicos.',
+    'CATALOGO',
+    'Un registro por cada grupo étnico utilizado para clasificar personas.',
+    'Registrar únicamente valores normalizados que se utilicen como catálogo dentro del esquema justicia.',
+    'No registrar valores duplicados, ambiguos o que no sean utilizados por ninguna tabla del módulo.',
+    'Consultar y mantener información de la tabla justicia.grupo_etnico.',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'ACTIVA',
+    'Tabla documentada a partir del DDL del esquema justicia.'
+)
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+-- Tabla: justicia.tipo_delito
+INSERT INTO meta.tabla_datos (
+    id_esquema,
+    nombre_tabla,
+    titulo,
+    descripcion,
+    tipo_tabla,
+    granularidad,
+    criterio_inclusion,
+    criterio_exclusion,
+    ejemplo_uso,
+    id_version_desde,
+    estado,
+    observaciones
+)
+VALUES (
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'justicia'),
+    'tipo_delito',
+    'Tipo Delito',
+    'Catálogo de tipos de delito.',
+    'CATALOGO',
+    'Un registro por cada tipo o modalidad de delito.',
+    'Registrar únicamente valores normalizados que se utilicen como catálogo dentro del esquema justicia.',
+    'No registrar valores duplicados, ambiguos o que no sean utilizados por ninguna tabla del módulo.',
+    'Consultar y mantener información de la tabla justicia.tipo_delito.',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'ACTIVA',
+    'Tabla documentada a partir del DDL del esquema justicia.'
+)
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+-- Tabla: justicia.grupo_edad_victima
+INSERT INTO meta.tabla_datos (
+    id_esquema,
+    nombre_tabla,
+    titulo,
+    descripcion,
+    tipo_tabla,
+    granularidad,
+    criterio_inclusion,
+    criterio_exclusion,
+    ejemplo_uso,
+    id_version_desde,
+    estado,
+    observaciones
+)
+VALUES (
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'justicia'),
+    'grupo_edad_victima',
+    'Grupo Edad Victima',
+    'Catálogo de grupos de edad utilizados en estadísticas de víctimas.',
+    'CATALOGO',
+    'Un registro por cada rango de edad utilizado en estadísticas de víctimas.',
+    'Registrar únicamente valores normalizados que se utilicen como catálogo dentro del esquema justicia.',
+    'No registrar valores duplicados, ambiguos o que no sean utilizados por ninguna tabla del módulo.',
+    'Consultar y mantener información de la tabla justicia.grupo_edad_victima.',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'ACTIVA',
+    'Tabla documentada a partir del DDL del esquema justicia.'
+)
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+-- Tabla: justicia.renglon_presupuestario
+INSERT INTO meta.tabla_datos (
+    id_esquema,
+    nombre_tabla,
+    titulo,
+    descripcion,
+    tipo_tabla,
+    granularidad,
+    criterio_inclusion,
+    criterio_exclusion,
+    ejemplo_uso,
+    id_version_desde,
+    estado,
+    observaciones
+)
+VALUES (
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'justicia'),
+    'renglon_presupuestario',
+    'Renglon Presupuestario',
+    'Catálogo de renglones presupuestarios utilizados por las instituciones públicas.',
+    'CATALOGO',
+    'Un registro por cada renglón presupuestario usado en nómina o contratación pública.',
+    'Registrar únicamente valores normalizados que se utilicen como catálogo dentro del esquema justicia.',
+    'No registrar valores duplicados, ambiguos o que no sean utilizados por ninguna tabla del módulo.',
+    'Consultar y mantener información de la tabla justicia.renglon_presupuestario.',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'ACTIVA',
+    'Tabla documentada a partir del DDL del esquema justicia.'
+)
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+-- Tabla: justicia.tipo_evento
+INSERT INTO meta.tabla_datos (
+    id_esquema,
+    nombre_tabla,
+    titulo,
+    descripcion,
+    tipo_tabla,
+    granularidad,
+    criterio_inclusion,
+    criterio_exclusion,
+    ejemplo_uso,
+    id_version_desde,
+    estado,
+    observaciones
+)
+VALUES (
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'justicia'),
+    'tipo_evento',
+    'Tipo Evento',
+    'Catálogo de tipos de evento asociados a denuncias.',
+    'CATALOGO',
+    'Un registro por cada tipo de evento asociado al ciclo de una denuncia.',
+    'Registrar únicamente valores normalizados que se utilicen como catálogo dentro del esquema justicia.',
+    'No registrar valores duplicados, ambiguos o que no sean utilizados por ninguna tabla del módulo.',
+    'Consultar y mantener información de la tabla justicia.tipo_evento.',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'ACTIVA',
+    'Tabla documentada a partir del DDL del esquema justicia.'
+)
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+-- Tabla: justicia.tipo_denuncia
+INSERT INTO meta.tabla_datos (
+    id_esquema,
+    nombre_tabla,
+    titulo,
+    descripcion,
+    tipo_tabla,
+    granularidad,
+    criterio_inclusion,
+    criterio_exclusion,
+    ejemplo_uso,
+    id_version_desde,
+    estado,
+    observaciones
+)
+VALUES (
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'justicia'),
+    'tipo_denuncia',
+    'Tipo Denuncia',
+    'Catálogo de tipos de denuncia.',
+    'CATALOGO',
+    'Un registro por cada clasificación de denuncia.',
+    'Registrar únicamente valores normalizados que se utilicen como catálogo dentro del esquema justicia.',
+    'No registrar valores duplicados, ambiguos o que no sean utilizados por ninguna tabla del módulo.',
+    'Consultar y mantener información de la tabla justicia.tipo_denuncia.',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'ACTIVA',
+    'Tabla documentada a partir del DDL del esquema justicia.'
+)
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+-- Tabla: justicia.estado_denuncia
+INSERT INTO meta.tabla_datos (
+    id_esquema,
+    nombre_tabla,
+    titulo,
+    descripcion,
+    tipo_tabla,
+    granularidad,
+    criterio_inclusion,
+    criterio_exclusion,
+    ejemplo_uso,
+    id_version_desde,
+    estado,
+    observaciones
+)
+VALUES (
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'justicia'),
+    'estado_denuncia',
+    'Estado Denuncia',
+    'Catálogo de estados posibles de una denuncia.',
+    'CATALOGO',
+    'Un registro por cada estado posible de una denuncia.',
+    'Registrar únicamente valores normalizados que se utilicen como catálogo dentro del esquema justicia.',
+    'No registrar valores duplicados, ambiguos o que no sean utilizados por ninguna tabla del módulo.',
+    'Consultar y mantener información de la tabla justicia.estado_denuncia.',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'ACTIVA',
+    'Tabla documentada a partir del DDL del esquema justicia.'
+)
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+-- Tabla: justicia.nivel_institucion
+INSERT INTO meta.tabla_datos (
+    id_esquema,
+    nombre_tabla,
+    titulo,
+    descripcion,
+    tipo_tabla,
+    granularidad,
+    criterio_inclusion,
+    criterio_exclusion,
+    ejemplo_uso,
+    id_version_desde,
+    estado,
+    observaciones
+)
+VALUES (
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'justicia'),
+    'nivel_institucion',
+    'Nivel Institucion',
+    'Catálogo de niveles jerárquicos de las instituciones.',
+    'CATALOGO',
+    'Un registro por cada nivel jerárquico institucional.',
+    'Registrar únicamente valores normalizados que se utilicen como catálogo dentro del esquema justicia.',
+    'No registrar valores duplicados, ambiguos o que no sean utilizados por ninguna tabla del módulo.',
+    'Consultar y mantener información de la tabla justicia.nivel_institucion.',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'ACTIVA',
+    'Tabla documentada a partir del DDL del esquema justicia.'
+)
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+-- Tabla: justicia.tipo_institucion
+INSERT INTO meta.tabla_datos (
+    id_esquema,
+    nombre_tabla,
+    titulo,
+    descripcion,
+    tipo_tabla,
+    granularidad,
+    criterio_inclusion,
+    criterio_exclusion,
+    ejemplo_uso,
+    id_version_desde,
+    estado,
+    observaciones
+)
+VALUES (
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'justicia'),
+    'tipo_institucion',
+    'Tipo Institucion',
+    'Catálogo de tipos de institución pública.',
+    'CATALOGO',
+    'Un registro por cada tipo de institución pública.',
+    'Registrar únicamente valores normalizados que se utilicen como catálogo dentro del esquema justicia.',
+    'No registrar valores duplicados, ambiguos o que no sean utilizados por ninguna tabla del módulo.',
+    'Consultar y mantener información de la tabla justicia.tipo_institucion.',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'ACTIVA',
+    'Tabla documentada a partir del DDL del esquema justicia.'
+)
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+-- Tabla: justicia.tipo_contrato
+INSERT INTO meta.tabla_datos (
+    id_esquema,
+    nombre_tabla,
+    titulo,
+    descripcion,
+    tipo_tabla,
+    granularidad,
+    criterio_inclusion,
+    criterio_exclusion,
+    ejemplo_uso,
+    id_version_desde,
+    estado,
+    observaciones
+)
+VALUES (
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'justicia'),
+    'tipo_contrato',
+    'Tipo Contrato',
+    'Catálogo de tipos de contrato laboral en el sector público.',
+    'CATALOGO',
+    'Un registro por cada modalidad de contratación laboral pública.',
+    'Registrar únicamente valores normalizados que se utilicen como catálogo dentro del esquema justicia.',
+    'No registrar valores duplicados, ambiguos o que no sean utilizados por ninguna tabla del módulo.',
+    'Consultar y mantener información de la tabla justicia.tipo_contrato.',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'ACTIVA',
+    'Tabla documentada a partir del DDL del esquema justicia.'
+)
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+-- Tabla: justicia.banco
+INSERT INTO meta.tabla_datos (
+    id_esquema,
+    nombre_tabla,
+    titulo,
+    descripcion,
+    tipo_tabla,
+    granularidad,
+    criterio_inclusion,
+    criterio_exclusion,
+    ejemplo_uso,
+    id_version_desde,
+    estado,
+    observaciones
+)
+VALUES (
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'justicia'),
+    'banco',
+    'Banco',
+    'Catálogo de bancos del sistema financiero.',
+    'CATALOGO',
+    'Un registro por cada banco identificado en declaraciones patrimoniales.',
+    'Registrar únicamente valores normalizados que se utilicen como catálogo dentro del esquema justicia.',
+    'No registrar valores duplicados, ambiguos o que no sean utilizados por ninguna tabla del módulo.',
+    'Consultar y mantener información de la tabla justicia.banco.',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'ACTIVA',
+    'Tabla documentada a partir del DDL del esquema justicia.'
+)
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+-- Tabla: justicia.rol_empresa
+INSERT INTO meta.tabla_datos (
+    id_esquema,
+    nombre_tabla,
+    titulo,
+    descripcion,
+    tipo_tabla,
+    granularidad,
+    criterio_inclusion,
+    criterio_exclusion,
+    ejemplo_uso,
+    id_version_desde,
+    estado,
+    observaciones
+)
+VALUES (
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'justicia'),
+    'rol_empresa',
+    'Rol Empresa',
+    'Catálogo de roles que puede tener un trabajador dentro de una empresa.',
+    'CATALOGO',
+    'Un registro por cada rol que una persona trabajadora puede tener en una empresa.',
+    'Registrar únicamente valores normalizados que se utilicen como catálogo dentro del esquema justicia.',
+    'No registrar valores duplicados, ambiguos o que no sean utilizados por ninguna tabla del módulo.',
+    'Consultar y mantener información de la tabla justicia.rol_empresa.',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'ACTIVA',
+    'Tabla documentada a partir del DDL del esquema justicia.'
+)
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+-- Tabla: justicia.persona
+INSERT INTO meta.tabla_datos (
+    id_esquema,
+    nombre_tabla,
+    titulo,
+    descripcion,
+    tipo_tabla,
+    granularidad,
+    criterio_inclusion,
+    criterio_exclusion,
+    ejemplo_uso,
+    id_version_desde,
+    estado,
+    observaciones
+)
+VALUES (
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'justicia'),
+    'persona',
+    'Persona',
+    'Información básica de personas utilizada por el módulo de justicia.',
+    'OPERATIVA',
+    'Un registro por cada persona identificada dentro del módulo.',
+    'Registrar personas necesarias para relacionar trabajadores, denuncias u otros elementos del módulo, evitando duplicar datos personales cuando sea posible.',
+    'No registrar información personal que no sea necesaria para el análisis definido por el proyecto.',
+    'Relacionar datos básicos de personas con trabajadores y otros registros del módulo.',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'ACTIVA',
+    'Tabla documentada a partir del DDL del esquema justicia.'
+)
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+-- Tabla: justicia.institucion
+INSERT INTO meta.tabla_datos (
+    id_esquema,
+    nombre_tabla,
+    titulo,
+    descripcion,
+    tipo_tabla,
+    granularidad,
+    criterio_inclusion,
+    criterio_exclusion,
+    ejemplo_uso,
+    id_version_desde,
+    estado,
+    observaciones
+)
+VALUES (
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'justicia'),
+    'institucion',
+    'Institucion',
+    'Instituciones públicas del sector justicia.',
+    'OPERATIVA',
+    'Un registro por cada institución pública vinculada al sector justicia.',
+    'Registrar instituciones públicas relacionadas con justicia, seguridad, persecución penal, administración judicial o entidades vinculadas al análisis del módulo.',
+    'No registrar instituciones sin relación con justicia, seguridad pública, nómina pública o transparencia institucional del módulo.',
+    'Identificar instituciones públicas del sector justicia y su ubicación municipal.',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'ACTIVA',
+    'Tabla documentada a partir del DDL del esquema justicia.'
+)
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+-- Tabla: justicia.denuncia
+INSERT INTO meta.tabla_datos (
+    id_esquema,
+    nombre_tabla,
+    titulo,
+    descripcion,
+    tipo_tabla,
+    granularidad,
+    criterio_inclusion,
+    criterio_exclusion,
+    ejemplo_uso,
+    id_version_desde,
+    estado,
+    observaciones
+)
+VALUES (
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'justicia'),
+    'denuncia',
+    'Denuncia',
+    'Denuncias registradas ante instituciones del sector justicia.',
+    'TRANSACCIONAL',
+    'Un registro por cada denuncia registrada ante una institución.',
+    'Registrar denuncias o casos reportados ante instituciones del sector justicia cuando exista institución, tipo, estado y ubicación de incidencia.',
+    'No registrar estadísticas agregadas en esta tabla; para agregados se utiliza justicia.estadistica_seguridad.',
+    'Consultar denuncias registradas por institución y municipio de incidencia.',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'ACTIVA',
+    'Tabla documentada a partir del DDL del esquema justicia.'
+)
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+-- Tabla: justicia.registro_fecha_denuncia
+INSERT INTO meta.tabla_datos (
+    id_esquema,
+    nombre_tabla,
+    titulo,
+    descripcion,
+    tipo_tabla,
+    granularidad,
+    criterio_inclusion,
+    criterio_exclusion,
+    ejemplo_uso,
+    id_version_desde,
+    estado,
+    observaciones
+)
+VALUES (
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'justicia'),
+    'registro_fecha_denuncia',
+    'Registro Fecha Denuncia',
+    'Registro histórico de fechas y eventos asociados a una denuncia.',
+    'TRANSACCIONAL',
+    'Un registro por cada fecha o evento histórico asociado a una denuncia.',
+    'Registrar eventos temporales relevantes de una denuncia, como ingreso, actualización, cierre u otros hitos documentados.',
+    'No registrar datos generales de la denuncia; únicamente fechas y eventos asociados.',
+    'Consultar y mantener información de la tabla justicia.registro_fecha_denuncia.',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'ACTIVA',
+    'Tabla documentada a partir del DDL del esquema justicia.'
+)
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+-- Tabla: justicia.trabajador
+INSERT INTO meta.tabla_datos (
+    id_esquema,
+    nombre_tabla,
+    titulo,
+    descripcion,
+    tipo_tabla,
+    granularidad,
+    criterio_inclusion,
+    criterio_exclusion,
+    ejemplo_uso,
+    id_version_desde,
+    estado,
+    observaciones
+)
+VALUES (
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'justicia'),
+    'trabajador',
+    'Trabajador',
+    'Trabajadores del sector justicia vinculados a una persona.',
+    'OPERATIVA',
+    'Un registro por cada trabajador vinculado a una persona.',
+    'Registrar trabajadores vinculados a instituciones del sector justicia o entidades públicas analizadas por el módulo.',
+    'No registrar ciudadanos sin vínculo laboral o institucional dentro del módulo.',
+    'Consultar y mantener información de la tabla justicia.trabajador.',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'ACTIVA',
+    'Tabla documentada a partir del DDL del esquema justicia.'
+)
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+-- Tabla: justicia.cargo
+INSERT INTO meta.tabla_datos (
+    id_esquema,
+    nombre_tabla,
+    titulo,
+    descripcion,
+    tipo_tabla,
+    granularidad,
+    criterio_inclusion,
+    criterio_exclusion,
+    ejemplo_uso,
+    id_version_desde,
+    estado,
+    observaciones
+)
+VALUES (
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'justicia'),
+    'cargo',
+    'Cargo',
+    'Cargos o puestos definidos dentro de una institución.',
+    'OPERATIVA',
+    'Un registro por cada cargo o puesto dentro de una institución.',
+    'Registrar cargos o puestos identificados dentro de instituciones públicas del módulo.',
+    'No registrar cargos sin institución asociada.',
+    'Consultar y mantener información de la tabla justicia.cargo.',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'ACTIVA',
+    'Tabla documentada a partir del DDL del esquema justicia.'
+)
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+-- Tabla: justicia.contrato
+INSERT INTO meta.tabla_datos (
+    id_esquema,
+    nombre_tabla,
+    titulo,
+    descripcion,
+    tipo_tabla,
+    granularidad,
+    criterio_inclusion,
+    criterio_exclusion,
+    ejemplo_uso,
+    id_version_desde,
+    estado,
+    observaciones
+)
+VALUES (
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'justicia'),
+    'contrato',
+    'Contrato',
+    'Contratos de trabajadores con instituciones, incluyendo cargo, tipo de contrato y salario.',
+    'TRANSACCIONAL',
+    'Un registro por cada contrato laboral de un trabajador con una institución.',
+    'Registrar contratos laborales o nombramientos con institución, cargo, tipo de contrato, fechas y sueldo base.',
+    'No registrar pagos mensuales agregados de nómina en esta tabla; para eso se utiliza justicia.nomina_publica.',
+    'Consultar contratos activos, sueldos base, cargos e instituciones asociadas.',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'ACTIVA',
+    'Tabla documentada a partir del DDL del esquema justicia.'
+)
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+-- Tabla: justicia.vehiculo
+INSERT INTO meta.tabla_datos (
+    id_esquema,
+    nombre_tabla,
+    titulo,
+    descripcion,
+    tipo_tabla,
+    granularidad,
+    criterio_inclusion,
+    criterio_exclusion,
+    ejemplo_uso,
+    id_version_desde,
+    estado,
+    observaciones
+)
+VALUES (
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'justicia'),
+    'vehiculo',
+    'Vehiculo',
+    'Vehículos declarados por trabajadores en sus declaraciones patrimoniales.',
+    'OPERATIVA',
+    'Un registro por cada vehículo declarado por un trabajador.',
+    'Registrar vehículos declarados por trabajadores cuando formen parte de información patrimonial documentada.',
+    'No registrar vehículos que no estén asociados a una declaración patrimonial documentada.',
+    'Consultar vehículos declarados como parte del patrimonio de trabajadores.',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'ACTIVA',
+    'Tabla documentada a partir del DDL del esquema justicia.'
+)
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+-- Tabla: justicia.cuenta_bancaria
+INSERT INTO meta.tabla_datos (
+    id_esquema,
+    nombre_tabla,
+    titulo,
+    descripcion,
+    tipo_tabla,
+    granularidad,
+    criterio_inclusion,
+    criterio_exclusion,
+    ejemplo_uso,
+    id_version_desde,
+    estado,
+    observaciones
+)
+VALUES (
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'justicia'),
+    'cuenta_bancaria',
+    'Cuenta Bancaria',
+    'Cuentas bancarias declaradas por trabajadores en sus declaraciones patrimoniales.',
+    'OPERATIVA',
+    'Un registro por cada cuenta bancaria declarada por un trabajador.',
+    'Registrar cuentas bancarias declaradas por trabajadores cuando formen parte de información patrimonial documentada.',
+    'No registrar cuentas sin trabajador asociado ni información patrimonial documentada.',
+    'Consultar cuentas bancarias declaradas por trabajadores.',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'ACTIVA',
+    'Tabla documentada a partir del DDL del esquema justicia.'
+)
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+-- Tabla: justicia.inmueble
+INSERT INTO meta.tabla_datos (
+    id_esquema,
+    nombre_tabla,
+    titulo,
+    descripcion,
+    tipo_tabla,
+    granularidad,
+    criterio_inclusion,
+    criterio_exclusion,
+    ejemplo_uso,
+    id_version_desde,
+    estado,
+    observaciones
+)
+VALUES (
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'justicia'),
+    'inmueble',
+    'Inmueble',
+    'Inmuebles declarados por trabajadores en sus declaraciones patrimoniales.',
+    'OPERATIVA',
+    'Un registro por cada inmueble declarado por un trabajador.',
+    'Registrar inmuebles declarados por trabajadores cuando formen parte de información patrimonial documentada.',
+    'No registrar inmuebles sin trabajador asociado ni ubicación municipal.',
+    'Consultar bienes inmuebles declarados por trabajadores y su municipio.',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'ACTIVA',
+    'Tabla documentada a partir del DDL del esquema justicia.'
+)
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+-- Tabla: justicia.empresa
+INSERT INTO meta.tabla_datos (
+    id_esquema,
+    nombre_tabla,
+    titulo,
+    descripcion,
+    tipo_tabla,
+    granularidad,
+    criterio_inclusion,
+    criterio_exclusion,
+    ejemplo_uso,
+    id_version_desde,
+    estado,
+    observaciones
+)
+VALUES (
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'justicia'),
+    'empresa',
+    'Empresa',
+    'Empresas en las que participan trabajadores según sus declaraciones patrimoniales.',
+    'OPERATIVA',
+    'Un registro por cada participación empresarial declarada por un trabajador.',
+    'Registrar participaciones empresariales declaradas por trabajadores cuando formen parte de información patrimonial documentada.',
+    'No registrar empresas sin relación patrimonial con un trabajador.',
+    'Consultar participaciones empresariales declaradas por trabajadores.',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'ACTIVA',
+    'Tabla documentada a partir del DDL del esquema justicia.'
+)
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+-- Tabla: justicia.estadistica_seguridad
+INSERT INTO meta.tabla_datos (
+    id_esquema,
+    nombre_tabla,
+    titulo,
+    descripcion,
+    tipo_tabla,
+    granularidad,
+    criterio_inclusion,
+    criterio_exclusion,
+    ejemplo_uso,
+    id_version_desde,
+    estado,
+    observaciones
+)
+VALUES (
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'justicia'),
+    'estadistica_seguridad',
+    'Estadistica Seguridad',
+    'Almacena estadísticas de seguridad pública por departamento, delito, sexo y grupo de edad.',
+    'HISTORICA',
+    'Un registro por combinación de año, departamento, tipo de delito, sexo y grupo de edad.',
+    'Registrar estadísticas agregadas de seguridad pública provenientes de fuentes oficiales como INE, PNC o MP.',
+    'No registrar eventos individuales de denuncia o víctimas sin agregación; esta tabla es para datos estadísticos consolidados.',
+    'Comparar la cantidad de delitos por departamento, año, sexo y grupo de edad.',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'ACTIVA',
+    'Tabla documentada a partir del DDL del esquema justicia.'
+)
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+-- Tabla: justicia.nomina_publica
+INSERT INTO meta.tabla_datos (
+    id_esquema,
+    nombre_tabla,
+    titulo,
+    descripcion,
+    tipo_tabla,
+    granularidad,
+    criterio_inclusion,
+    criterio_exclusion,
+    ejemplo_uso,
+    id_version_desde,
+    estado,
+    observaciones
+)
+VALUES (
+    (SELECT id_esquema FROM meta.esquema_datos WHERE nombre_esquema = 'justicia'),
+    'nomina_publica',
+    'Nomina Publica',
+    'Información de nómina pública proveniente de distintas instituciones del Estado.',
+    'HISTORICA',
+    'Un registro por persona o puesto reportado en una nómina institucional para un mes y año.',
+    'Registrar información de nómina pública publicada por instituciones del Estado, especialmente OJ y Congreso, asociada a año, mes, puesto, unidad y remuneración.',
+    'No registrar contratos detallados individuales de relación laboral; para esa relación se utiliza justicia.contrato.',
+    'Analizar salarios, puestos, unidades y renglones presupuestarios por institución y periodo.',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'ACTIVA',
+    'Tabla documentada a partir del DDL del esquema justicia.'
+)
+ON CONFLICT (id_esquema, nombre_tabla) DO UPDATE SET
+    titulo = EXCLUDED.titulo,
+    descripcion = EXCLUDED.descripcion,
+    tipo_tabla = EXCLUDED.tipo_tabla,
+    granularidad = EXCLUDED.granularidad,
+    criterio_inclusion = EXCLUDED.criterio_inclusion,
+    criterio_exclusion = EXCLUDED.criterio_exclusion,
+    ejemplo_uso = EXCLUDED.ejemplo_uso,
+    id_version_desde = EXCLUDED.id_version_desde,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+-- ============================================================
+-- 4. Diccionario de columnas del esquema justicia
+-- ============================================================
+-- Columnas de justicia.estado_civil
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'id',
+    'INT',
+    'Identificador único del registro dentro de la tabla.',
+    TRUE,
+    TRUE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '1',
+    'No debe ser NULL; Debe ser único y generado por la base de datos',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'estado_civil'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'nombre',
+    'VARCHAR(100)',
+    'Nombre o descripción corta del registro.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'Ejemplo',
+    'No debe ser NULL',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'estado_civil'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+-- Columnas de justicia.sexo
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'id',
+    'INT',
+    'Identificador único del registro dentro de la tabla.',
+    TRUE,
+    TRUE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '1',
+    'No debe ser NULL; Debe ser único y generado por la base de datos',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'sexo'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'nombre',
+    'VARCHAR(50)',
+    'Nombre o descripción corta del registro.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'Ejemplo',
+    'No debe ser NULL',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'sexo'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+-- Columnas de justicia.grupo_etnico
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'id',
+    'INT',
+    'Identificador único del registro dentro de la tabla.',
+    TRUE,
+    TRUE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '1',
+    'No debe ser NULL; Debe ser único y generado por la base de datos',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'grupo_etnico'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'nombre',
+    'VARCHAR(100)',
+    'Nombre o descripción corta del registro.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'Ejemplo',
+    'No debe ser NULL',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'grupo_etnico'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+-- Columnas de justicia.tipo_delito
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'id',
+    'INT',
+    'Identificador único del registro dentro de la tabla.',
+    TRUE,
+    TRUE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '1',
+    'No debe ser NULL; Debe ser único y generado por la base de datos',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'tipo_delito'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'nombre',
+    'VARCHAR(150)',
+    'Nombre o descripción corta del registro.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'Ejemplo',
+    'No debe ser NULL',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'tipo_delito'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+-- Columnas de justicia.grupo_edad_victima
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'id',
+    'INT',
+    'Identificador único del registro dentro de la tabla.',
+    TRUE,
+    TRUE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '1',
+    'No debe ser NULL; Debe ser único y generado por la base de datos',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'grupo_edad_victima'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'nombre',
+    'VARCHAR(100)',
+    'Nombre o descripción corta del registro.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'Ejemplo',
+    'No debe ser NULL',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'grupo_edad_victima'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+-- Columnas de justicia.renglon_presupuestario
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'id',
+    'INT',
+    'Identificador único del registro dentro de la tabla.',
+    TRUE,
+    TRUE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '1',
+    'No debe ser NULL; Debe ser único y generado por la base de datos',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'renglon_presupuestario'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'codigo',
+    'VARCHAR(20)',
+    'Código utilizado para identificar el registro dentro del catálogo.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '011',
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'renglon_presupuestario'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'nombre',
+    'VARCHAR(150)',
+    'Nombre o descripción corta del registro.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'Ejemplo',
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'renglon_presupuestario'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+-- Columnas de justicia.tipo_evento
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'id',
+    'INT',
+    'Identificador único del registro dentro de la tabla.',
+    TRUE,
+    TRUE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '1',
+    'No debe ser NULL; Debe ser único y generado por la base de datos',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'tipo_evento'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'nombre',
+    'VARCHAR(150)',
+    'Nombre o descripción corta del registro.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'Ejemplo',
+    'No debe ser NULL',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'tipo_evento'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+-- Columnas de justicia.tipo_denuncia
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'id',
+    'INT',
+    'Identificador único del registro dentro de la tabla.',
+    TRUE,
+    TRUE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '1',
+    'No debe ser NULL; Debe ser único y generado por la base de datos',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'tipo_denuncia'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'nombre',
+    'VARCHAR(150)',
+    'Nombre o descripción corta del registro.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'Ejemplo',
+    'No debe ser NULL',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'tipo_denuncia'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+-- Columnas de justicia.estado_denuncia
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'id',
+    'INT',
+    'Identificador único del registro dentro de la tabla.',
+    TRUE,
+    TRUE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '1',
+    'No debe ser NULL; Debe ser único y generado por la base de datos',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'estado_denuncia'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'nombre',
+    'VARCHAR(150)',
+    'Nombre o descripción corta del registro.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'Ejemplo',
+    'No debe ser NULL',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'estado_denuncia'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+-- Columnas de justicia.nivel_institucion
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'id',
+    'INT',
+    'Identificador único del registro dentro de la tabla.',
+    TRUE,
+    TRUE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '1',
+    'No debe ser NULL; Debe ser único y generado por la base de datos',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'nivel_institucion'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'nombre',
+    'VARCHAR(150)',
+    'Nombre o descripción corta del registro.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'Ejemplo',
+    'No debe ser NULL',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'nivel_institucion'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+-- Columnas de justicia.tipo_institucion
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'id',
+    'INT',
+    'Identificador único del registro dentro de la tabla.',
+    TRUE,
+    TRUE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '1',
+    'No debe ser NULL; Debe ser único y generado por la base de datos',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'tipo_institucion'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'nombre',
+    'VARCHAR(150)',
+    'Nombre o descripción corta del registro.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'Ejemplo',
+    'No debe ser NULL',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'tipo_institucion'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+-- Columnas de justicia.tipo_contrato
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'id',
+    'INT',
+    'Identificador único del registro dentro de la tabla.',
+    TRUE,
+    TRUE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '1',
+    'No debe ser NULL; Debe ser único y generado por la base de datos',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'tipo_contrato'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'nombre',
+    'VARCHAR(150)',
+    'Nombre o descripción corta del registro.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'Ejemplo',
+    'No debe ser NULL',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'tipo_contrato'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'descripcion',
+    'TEXT',
+    'Descripción detallada del registro.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'tipo_contrato'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'renglon_presupuestario',
+    'VARCHAR(50)',
+    'Renglón presupuestario asociado al tipo de contrato, cuando aplica.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'tipo_contrato'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+-- Columnas de justicia.banco
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'id',
+    'INT',
+    'Identificador único del registro dentro de la tabla.',
+    TRUE,
+    TRUE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '1',
+    'No debe ser NULL; Debe ser único y generado por la base de datos',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'banco'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'nombre',
+    'VARCHAR(150)',
+    'Nombre o descripción corta del registro.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'Ejemplo',
+    'No debe ser NULL',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'banco'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+-- Columnas de justicia.rol_empresa
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'id',
+    'INT',
+    'Identificador único del registro dentro de la tabla.',
+    TRUE,
+    TRUE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '1',
+    'No debe ser NULL; Debe ser único y generado por la base de datos',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'rol_empresa'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'nombre',
+    'VARCHAR(150)',
+    'Nombre o descripción corta del registro.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'Ejemplo',
+    'No debe ser NULL',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'rol_empresa'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+-- Columnas de justicia.persona
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'id',
+    'INT',
+    'Identificador único del registro dentro de la tabla.',
+    TRUE,
+    TRUE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '1',
+    'No debe ser NULL; Debe ser único y generado por la base de datos',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'persona'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'estado_civil_id',
+    'INT',
+    'Referencia al catálogo o entidad estado civil relacionada con el registro.',
+    FALSE,
+    FALSE,
+    TRUE,
+    'justicia.estado_civil',
+    'id',
+    NULL,
+    '1',
+    'Debe existir en justicia.estado_civil(id)',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'persona'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'sexo_id',
+    'INT',
+    'Referencia al catálogo o entidad sexo relacionada con el registro.',
+    FALSE,
+    FALSE,
+    TRUE,
+    'justicia.sexo',
+    'id',
+    NULL,
+    '1',
+    'Debe existir en justicia.sexo(id)',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'persona'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'grupo_etnico_id',
+    'INT',
+    'Referencia al catálogo o entidad grupo etnico relacionada con el registro.',
+    FALSE,
+    FALSE,
+    TRUE,
+    'justicia.grupo_etnico',
+    'id',
+    NULL,
+    '1',
+    'Debe existir en justicia.grupo_etnico(id)',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'persona'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'dpi',
+    'VARCHAR(20)',
+    'Documento Personal de Identificación.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '1234567890101',
+    'Si se registra, debe mantener formato válido de DPI',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'persona'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'nit',
+    'VARCHAR(20)',
+    'Número de Identificación Tributaria.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '1234567-8',
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'persona'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'nombres',
+    'VARCHAR(200)',
+    'Nombres de la persona.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'Juan Carlos',
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'persona'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'apellidos',
+    'VARCHAR(200)',
+    'Apellidos de la persona.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'Pérez López',
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'persona'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'correo',
+    'VARCHAR(200)',
+    'Correo electrónico asociado al registro.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'correo@ejemplo.gt',
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'persona'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'telefono',
+    'VARCHAR(30)',
+    'Número telefónico asociado al registro.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '5555-5555',
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'persona'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'fecha_nacimiento',
+    'DATE',
+    'Fecha de nacimiento de la persona.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '1990-01-01',
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'persona'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+-- Columnas de justicia.institucion
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'id',
+    'INT',
+    'Identificador único del registro dentro de la tabla.',
+    TRUE,
+    TRUE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '1',
+    'No debe ser NULL; Debe ser único y generado por la base de datos',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'institucion'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'municipio_id',
+    'INT',
+    'Referencia al catálogo o entidad municipio relacionada con el registro.',
+    TRUE,
+    FALSE,
+    TRUE,
+    'geografia.municipio',
+    'id',
+    NULL,
+    '1',
+    'No debe ser NULL; Debe existir en geografia.municipio(id)',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'institucion'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'tipo_institucion_id',
+    'INT',
+    'Referencia al catálogo o entidad tipo institucion relacionada con el registro.',
+    TRUE,
+    FALSE,
+    TRUE,
+    'justicia.tipo_institucion',
+    'id',
+    NULL,
+    '1',
+    'No debe ser NULL; Debe existir en justicia.tipo_institucion(id)',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'institucion'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'nivel_institucion_id',
+    'INT',
+    'Referencia al catálogo o entidad nivel institucion relacionada con el registro.',
+    TRUE,
+    FALSE,
+    TRUE,
+    'justicia.nivel_institucion',
+    'id',
+    NULL,
+    '1',
+    'No debe ser NULL; Debe existir en justicia.nivel_institucion(id)',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'institucion'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'nombre',
+    'VARCHAR(200)',
+    'Nombre o descripción corta del registro.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'Ejemplo',
+    'No debe ser NULL',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'institucion'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'siglas',
+    'VARCHAR(20)',
+    'Siglas oficiales o abreviatura de la institución.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'OJ',
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'institucion'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'direccion',
+    'VARCHAR(250)',
+    'Dirección física o referencia de ubicación.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'Ciudad de Guatemala',
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'institucion'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'telefono',
+    'VARCHAR(30)',
+    'Número telefónico asociado al registro.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '5555-5555',
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'institucion'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'fecha_creacion',
+    'DATE',
+    'Fecha de creación del registro o entidad documentada.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'institucion'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+-- Columnas de justicia.denuncia
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'id',
+    'INT',
+    'Identificador único del registro dentro de la tabla.',
+    TRUE,
+    TRUE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '1',
+    'No debe ser NULL; Debe ser único y generado por la base de datos',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'denuncia'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'tipo_denuncia_id',
+    'INT',
+    'Referencia al catálogo o entidad tipo denuncia relacionada con el registro.',
+    TRUE,
+    FALSE,
+    TRUE,
+    'justicia.tipo_denuncia',
+    'id',
+    NULL,
+    '1',
+    'No debe ser NULL; Debe existir en justicia.tipo_denuncia(id)',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'denuncia'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'estado_denuncia_id',
+    'INT',
+    'Referencia al catálogo o entidad estado denuncia relacionada con el registro.',
+    TRUE,
+    FALSE,
+    TRUE,
+    'justicia.estado_denuncia',
+    'id',
+    NULL,
+    '1',
+    'No debe ser NULL; Debe existir en justicia.estado_denuncia(id)',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'denuncia'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'institucion_id',
+    'INT',
+    'Referencia al catálogo o entidad institucion relacionada con el registro.',
+    TRUE,
+    FALSE,
+    TRUE,
+    'justicia.institucion',
+    'id',
+    NULL,
+    '1',
+    'No debe ser NULL; Debe existir en justicia.institucion(id)',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'denuncia'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'municipio_incidencia_id',
+    'INT',
+    'Referencia al catálogo o entidad municipio incidencia relacionada con el registro.',
+    TRUE,
+    FALSE,
+    TRUE,
+    'geografia.municipio',
+    'id',
+    NULL,
+    '1',
+    'No debe ser NULL; Debe existir en geografia.municipio(id)',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'denuncia'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'descripcion',
+    'TEXT',
+    'Descripción detallada del registro.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'denuncia'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+-- Columnas de justicia.registro_fecha_denuncia
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'id',
+    'INT',
+    'Identificador único del registro dentro de la tabla.',
+    TRUE,
+    TRUE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '1',
+    'No debe ser NULL; Debe ser único y generado por la base de datos',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'registro_fecha_denuncia'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'denuncia_id',
+    'INT',
+    'Referencia al catálogo o entidad denuncia relacionada con el registro.',
+    TRUE,
+    FALSE,
+    TRUE,
+    'justicia.denuncia',
+    'id',
+    NULL,
+    '1',
+    'No debe ser NULL; Debe existir en justicia.denuncia(id)',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'registro_fecha_denuncia'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'tipo_evento_id',
+    'INT',
+    'Referencia al catálogo o entidad tipo evento relacionada con el registro.',
+    TRUE,
+    FALSE,
+    TRUE,
+    'justicia.tipo_evento',
+    'id',
+    NULL,
+    '1',
+    'No debe ser NULL; Debe existir en justicia.tipo_evento(id)',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'registro_fecha_denuncia'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'observaciones',
+    'TEXT',
+    'Observaciones sobre el evento registrado para la denuncia.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'registro_fecha_denuncia'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'fecha',
+    'DATE',
+    'Fecha del evento asociado a la denuncia.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'No debe ser NULL',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'registro_fecha_denuncia'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+-- Columnas de justicia.trabajador
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'id',
+    'INT',
+    'Identificador único del registro dentro de la tabla.',
+    TRUE,
+    TRUE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '1',
+    'No debe ser NULL; Debe ser único y generado por la base de datos',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'trabajador'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'persona_id',
+    'INT',
+    'Referencia al catálogo o entidad persona relacionada con el registro.',
+    TRUE,
+    FALSE,
+    TRUE,
+    'justicia.persona',
+    'id',
+    NULL,
+    '1',
+    'No debe ser NULL; Debe existir en justicia.persona(id)',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'trabajador'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'esta_activo',
+    'BOOLEAN',
+    'Indica si el registro se encuentra activo.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    'TRUE o FALSE.',
+    'TRUE',
+    'No debe ser NULL',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'trabajador'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+-- Columnas de justicia.cargo
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'id',
+    'INT',
+    'Identificador único del registro dentro de la tabla.',
+    TRUE,
+    TRUE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '1',
+    'No debe ser NULL; Debe ser único y generado por la base de datos',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'cargo'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'institucion_id',
+    'INT',
+    'Referencia al catálogo o entidad institucion relacionada con el registro.',
+    TRUE,
+    FALSE,
+    TRUE,
+    'justicia.institucion',
+    'id',
+    NULL,
+    '1',
+    'No debe ser NULL; Debe existir en justicia.institucion(id)',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'cargo'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'cargo_jefe_id',
+    'INT',
+    'Referencia al catálogo o entidad cargo jefe relacionada con el registro.',
+    FALSE,
+    FALSE,
+    TRUE,
+    'justicia.cargo',
+    'id',
+    NULL,
+    '1',
+    'Debe existir en justicia.cargo(id)',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'cargo'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'nombre',
+    'VARCHAR(150)',
+    'Nombre o descripción corta del registro.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'Ejemplo',
+    'No debe ser NULL',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'cargo'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'descripcion',
+    'TEXT',
+    'Descripción detallada del registro.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'cargo'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'fecha_creacion',
+    'DATE',
+    'Fecha de creación del registro o entidad documentada.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'cargo'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+-- Columnas de justicia.contrato
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'id',
+    'INT',
+    'Identificador único del registro dentro de la tabla.',
+    TRUE,
+    TRUE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '1',
+    'No debe ser NULL; Debe ser único y generado por la base de datos',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'contrato'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'trabajador_id',
+    'INT',
+    'Referencia al catálogo o entidad trabajador relacionada con el registro.',
+    TRUE,
+    FALSE,
+    TRUE,
+    'justicia.trabajador',
+    'id',
+    NULL,
+    '1',
+    'No debe ser NULL; Debe existir en justicia.trabajador(id)',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'contrato'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'institucion_id',
+    'INT',
+    'Referencia al catálogo o entidad institucion relacionada con el registro.',
+    TRUE,
+    FALSE,
+    TRUE,
+    'justicia.institucion',
+    'id',
+    NULL,
+    '1',
+    'No debe ser NULL; Debe existir en justicia.institucion(id)',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'contrato'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'cargo_id',
+    'INT',
+    'Referencia al catálogo o entidad cargo relacionada con el registro.',
+    TRUE,
+    FALSE,
+    TRUE,
+    'justicia.cargo',
+    'id',
+    NULL,
+    '1',
+    'No debe ser NULL; Debe existir en justicia.cargo(id)',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'contrato'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'tipo_contrato_id',
+    'INT',
+    'Referencia al catálogo o entidad tipo contrato relacionada con el registro.',
+    TRUE,
+    FALSE,
+    TRUE,
+    'justicia.tipo_contrato',
+    'id',
+    NULL,
+    '1',
+    'No debe ser NULL; Debe existir en justicia.tipo_contrato(id)',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'contrato'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'sueldo_base',
+    'NUMERIC(12,2)',
+    'Sueldo base pactado o registrado para el contrato.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '8500.00',
+    'No debe ser NULL; Debe ser mayor o igual a cero',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'contrato'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'fecha_inicio',
+    'DATE',
+    'Fecha de inicio de la relación, contrato o participación.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    'No debe ser NULL',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'contrato'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'fecha_fin',
+    'DATE',
+    'Fecha de finalización de la relación o contrato, si aplica.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'contrato'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'esta_activo',
+    'BOOLEAN',
+    'Indica si el registro se encuentra activo.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    'TRUE o FALSE.',
+    'TRUE',
+    'No debe ser NULL',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'contrato'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+-- Columnas de justicia.vehiculo
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'id',
+    'INT',
+    'Identificador único del registro dentro de la tabla.',
+    TRUE,
+    TRUE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '1',
+    'No debe ser NULL; Debe ser único y generado por la base de datos',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'vehiculo'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'trabajador_id',
+    'INT',
+    'Referencia al catálogo o entidad trabajador relacionada con el registro.',
+    TRUE,
+    FALSE,
+    TRUE,
+    'justicia.trabajador',
+    'id',
+    NULL,
+    '1',
+    'No debe ser NULL; Debe existir en justicia.trabajador(id)',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'vehiculo'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'placa',
+    'VARCHAR(20)',
+    'Número de placa del vehículo declarado.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'P123ABC',
+    'No debe ser NULL',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'vehiculo'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'marca',
+    'VARCHAR(100)',
+    'Marca del vehículo declarado.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'Toyota',
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'vehiculo'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'modelo',
+    'VARCHAR(100)',
+    'Modelo del vehículo declarado.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'Corolla',
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'vehiculo'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'anio',
+    'INT',
+    'Año al que corresponde el registro.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    'Año válido según el periodo cubierto por la fuente.',
+    '2023',
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'vehiculo'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'valor_declarado',
+    'NUMERIC(14,2)',
+    'Valor monetario declarado del vehículo.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '75000.00',
+    'Debe ser mayor o igual a cero',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'vehiculo'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'fecha_adquisicion',
+    'DATE',
+    'Fecha en que se adquirió el vehículo declarado.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '2020-05-10',
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'vehiculo'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+-- Columnas de justicia.cuenta_bancaria
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'id',
+    'INT',
+    'Identificador único del registro dentro de la tabla.',
+    TRUE,
+    TRUE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '1',
+    'No debe ser NULL; Debe ser único y generado por la base de datos',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'cuenta_bancaria'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'trabajador_id',
+    'INT',
+    'Referencia al catálogo o entidad trabajador relacionada con el registro.',
+    TRUE,
+    FALSE,
+    TRUE,
+    'justicia.trabajador',
+    'id',
+    NULL,
+    '1',
+    'No debe ser NULL; Debe existir en justicia.trabajador(id)',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'cuenta_bancaria'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'banco_id',
+    'INT',
+    'Referencia al catálogo o entidad banco relacionada con el registro.',
+    TRUE,
+    FALSE,
+    TRUE,
+    'justicia.banco',
+    'id',
+    NULL,
+    '1',
+    'No debe ser NULL; Debe existir en justicia.banco(id)',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'cuenta_bancaria'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'tipo_cuenta',
+    'VARCHAR(50)',
+    'Tipo de cuenta bancaria declarada.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'Monetaria',
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'cuenta_bancaria'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'no_cuenta',
+    'VARCHAR(50)',
+    'Número de cuenta bancaria declarada.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '000123456789',
+    'No debe ser NULL',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'cuenta_bancaria'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'moneda',
+    'VARCHAR(10)',
+    'Moneda en la que se registra la cuenta bancaria.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    'Código o abreviatura de moneda, por ejemplo GTQ o USD.',
+    'GTQ',
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'cuenta_bancaria'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'saldo_declarado',
+    'NUMERIC(14,2)',
+    'Saldo declarado de la cuenta bancaria.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '15000.00',
+    'Debe ser mayor o igual a cero',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'cuenta_bancaria'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'fecha_apertura',
+    'DATE',
+    'Fecha de apertura de la cuenta bancaria.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'cuenta_bancaria'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+-- Columnas de justicia.inmueble
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'id',
+    'INT',
+    'Identificador único del registro dentro de la tabla.',
+    TRUE,
+    TRUE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '1',
+    'No debe ser NULL; Debe ser único y generado por la base de datos',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'inmueble'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'trabajador_id',
+    'INT',
+    'Referencia al catálogo o entidad trabajador relacionada con el registro.',
+    TRUE,
+    FALSE,
+    TRUE,
+    'justicia.trabajador',
+    'id',
+    NULL,
+    '1',
+    'No debe ser NULL; Debe existir en justicia.trabajador(id)',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'inmueble'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'municipio_id',
+    'INT',
+    'Referencia al catálogo o entidad municipio relacionada con el registro.',
+    TRUE,
+    FALSE,
+    TRUE,
+    'geografia.municipio',
+    'id',
+    NULL,
+    '1',
+    'No debe ser NULL; Debe existir en geografia.municipio(id)',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'inmueble'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'direccion',
+    'VARCHAR(250)',
+    'Dirección física o referencia de ubicación.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'Ciudad de Guatemala',
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'inmueble'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'no_finca',
+    'VARCHAR(50)',
+    'Número de finca o identificación registral del inmueble.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '12345',
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'inmueble'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'area_mc',
+    'NUMERIC(10,2)',
+    'Área del inmueble expresada en metros cuadrados.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '120.50',
+    'Debe ser mayor o igual a cero',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'inmueble'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'valor_declarado',
+    'NUMERIC(14,2)',
+    'Valor monetario declarado del inmueble.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '75000.00',
+    'Debe ser mayor o igual a cero',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'inmueble'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'forma_adquisicion',
+    'VARCHAR(100)',
+    'Forma en que fue adquirido el inmueble.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'Compra',
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'inmueble'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'fecha_adquisicion',
+    'DATE',
+    'Fecha de adquisición del inmueble.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '2020-05-10',
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'inmueble'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+-- Columnas de justicia.empresa
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'id',
+    'INT',
+    'Identificador único del registro dentro de la tabla.',
+    TRUE,
+    TRUE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '1',
+    'No debe ser NULL; Debe ser único y generado por la base de datos',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'empresa'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'trabajador_id',
+    'INT',
+    'Referencia al catálogo o entidad trabajador relacionada con el registro.',
+    TRUE,
+    FALSE,
+    TRUE,
+    'justicia.trabajador',
+    'id',
+    NULL,
+    '1',
+    'No debe ser NULL; Debe existir en justicia.trabajador(id)',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'empresa'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'rol_empresa_id',
+    'INT',
+    'Referencia al catálogo o entidad rol empresa relacionada con el registro.',
+    TRUE,
+    FALSE,
+    TRUE,
+    'justicia.rol_empresa',
+    'id',
+    NULL,
+    '1',
+    'No debe ser NULL; Debe existir en justicia.rol_empresa(id)',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'empresa'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'nombre',
+    'VARCHAR(200)',
+    'Nombre o descripción corta del registro.',
+    TRUE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'Ejemplo',
+    'No debe ser NULL',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'empresa'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'nit',
+    'VARCHAR(20)',
+    'Número de Identificación Tributaria.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '1234567-8',
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'empresa'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'porcentaje_participacion',
+    'NUMERIC(5,2)',
+    'Porcentaje de participación del trabajador en la empresa.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '25.00',
+    'Debe estar entre 0 y 100',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'empresa'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'valor_declarado',
+    'NUMERIC(14,2)',
+    'Valor monetario declarado de la participación empresarial.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '75000.00',
+    'Debe ser mayor o igual a cero',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'empresa'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'fecha_inicio_participacion',
+    'DATE',
+    'Fecha en que inició la participación del trabajador en la empresa.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'empresa'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+-- Columnas de justicia.estadistica_seguridad
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'id',
+    'INT',
+    'Identificador único del registro dentro de la tabla.',
+    TRUE,
+    TRUE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '1',
+    'No debe ser NULL; Debe ser único y generado por la base de datos',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'estadistica_seguridad'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'anio',
+    'SMALLINT',
+    'Año al que corresponde el registro.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    'Año válido según el periodo cubierto por la fuente.',
+    '2023',
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'estadistica_seguridad'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'departamento_id',
+    'INT',
+    'Referencia al catálogo o entidad departamento relacionada con el registro.',
+    FALSE,
+    FALSE,
+    TRUE,
+    'geografia.departamento',
+    'id',
+    NULL,
+    '1',
+    'Debe existir en geografia.departamento(id)',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'estadistica_seguridad'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'nombre_departamento',
+    'VARCHAR(100)',
+    'Nombre del departamento incluido como texto en la fuente original o como apoyo de lectura.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'Guatemala',
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'estadistica_seguridad'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'tipo_delito_id',
+    'INT',
+    'Referencia al catálogo o entidad tipo delito relacionada con el registro.',
+    FALSE,
+    FALSE,
+    TRUE,
+    'justicia.tipo_delito',
+    'id',
+    NULL,
+    '1',
+    'Debe existir en justicia.tipo_delito(id)',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'estadistica_seguridad'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'sexo_id',
+    'INT',
+    'Referencia al catálogo o entidad sexo relacionada con el registro.',
+    FALSE,
+    FALSE,
+    TRUE,
+    'justicia.sexo',
+    'id',
+    NULL,
+    '1',
+    'Debe existir en justicia.sexo(id)',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'estadistica_seguridad'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'grupo_edad_id',
+    'INT',
+    'Referencia al catálogo o entidad grupo edad relacionada con el registro.',
+    FALSE,
+    FALSE,
+    TRUE,
+    'justicia.grupo_edad_victima',
+    'id',
+    NULL,
+    '1',
+    'Debe existir en justicia.grupo_edad_victima(id)',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'estadistica_seguridad'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'cantidad',
+    'INT',
+    'Cantidad de hechos, registros o eventos contabilizados en la estadística.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '125',
+    'Debe ser mayor o igual a cero',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'estadistica_seguridad'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'fuente',
+    'VARCHAR(200)',
+    'Nombre o referencia de la fuente de datos de donde proviene el registro.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'INE',
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'estadistica_seguridad'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'archivo_origen',
+    'VARCHAR(200)',
+    'Nombre del archivo origen utilizado en la carga de datos.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'archivo_fuente.xlsx',
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'estadistica_seguridad'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'fecha_carga',
+    'TIMESTAMP',
+    'Fecha y hora en que el registro fue cargado a la base de datos.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '2026-07-12 10:00:00',
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'estadistica_seguridad'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'cargado_por',
+    'VARCHAR(200)',
+    'Usuario, integrante o proceso que realizó la carga del registro.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'estadistica_seguridad'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'revisado',
+    'BOOLEAN',
+    'Indica si el registro fue revisado o validado.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    'TRUE o FALSE.',
+    'TRUE',
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'estadistica_seguridad'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+-- Columnas de justicia.nomina_publica
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'id',
+    'INT',
+    'Identificador único del registro dentro de la tabla.',
+    TRUE,
+    TRUE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '1',
+    'No debe ser NULL; Debe ser único y generado por la base de datos',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'nomina_publica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'sigla_institucion',
+    'VARCHAR(10)',
+    'Sigla de la institución que publica la nómina.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'nomina_publica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'anio',
+    'SMALLINT',
+    'Año al que corresponde el registro.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    'Año válido según el periodo cubierto por la fuente.',
+    '2023',
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'nomina_publica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'mes',
+    'SMALLINT',
+    'Mes al que corresponde el registro.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    'Enteros del 1 al 12.',
+    '6',
+    'Debe estar entre 1 y 12',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'nomina_publica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'nip',
+    'VARCHAR(20)',
+    'Número de identificación de personal o código utilizado por la institución.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '12345',
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'nomina_publica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'nombre',
+    'VARCHAR(300)',
+    'Nombre o descripción corta del registro.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'Ejemplo',
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'nomina_publica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'puesto',
+    'VARCHAR(300)',
+    'Puesto ocupado por la persona reportada en la nómina.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'Analista',
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'nomina_publica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'unidad',
+    'VARCHAR(300)',
+    'Unidad administrativa donde se ubica el puesto.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'Dirección Administrativa',
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'nomina_publica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'renglon_id',
+    'INT',
+    'Referencia al catálogo o entidad renglon relacionada con el registro.',
+    FALSE,
+    FALSE,
+    TRUE,
+    'justicia.renglon_presupuestario',
+    'id',
+    NULL,
+    '1',
+    'Debe existir en justicia.renglon_presupuestario(id)',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'nomina_publica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'salario',
+    'NUMERIC(12,2)',
+    'Salario reportado para el registro de nómina.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '8500.00',
+    'Debe ser mayor o igual a cero',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'nomina_publica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'total_devengado',
+    'NUMERIC(12,2)',
+    'Total devengado reportado para el registro de nómina.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '9200.00',
+    'Debe ser mayor o igual a cero',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'nomina_publica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'fuente',
+    'VARCHAR(200)',
+    'Nombre o referencia de la fuente de datos de donde proviene el registro.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'INE',
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'nomina_publica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'archivo_origen',
+    'VARCHAR(200)',
+    'Nombre del archivo origen utilizado en la carga de datos.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    'archivo_fuente.xlsx',
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'nomina_publica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.columna_datos (
+    id_tabla,
+    nombre_columna,
+    tipo_dato,
+    descripcion,
+    obligatorio,
+    es_llave_primaria,
+    es_llave_foranea,
+    tabla_referenciada,
+    columna_referenciada,
+    valores_permitidos,
+    ejemplo_valor,
+    regla_validacion,
+    id_version_desde,
+    observaciones
+)
+SELECT
+    t.id_tabla,
+    'fecha_carga',
+    'TIMESTAMP',
+    'Fecha y hora en que el registro fue cargado a la base de datos.',
+    FALSE,
+    FALSE,
+    FALSE,
+    NULL,
+    NULL,
+    NULL,
+    '2026-07-12 10:00:00',
+    NULL,
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'Columna documentada a partir del DDL y del contexto funcional del módulo justicia.'
+FROM meta.tabla_datos t
+JOIN meta.esquema_datos e
+    ON e.id_esquema = t.id_esquema
+WHERE e.nombre_esquema = 'justicia'
+  AND t.nombre_tabla = 'nomina_publica'
+ON CONFLICT (id_tabla, nombre_columna) DO UPDATE SET
+    tipo_dato = EXCLUDED.tipo_dato,
+    descripcion = EXCLUDED.descripcion,
+    obligatorio = EXCLUDED.obligatorio,
+    es_llave_primaria = EXCLUDED.es_llave_primaria,
+    es_llave_foranea = EXCLUDED.es_llave_foranea,
+    tabla_referenciada = EXCLUDED.tabla_referenciada,
+    columna_referenciada = EXCLUDED.columna_referenciada,
+    valores_permitidos = EXCLUDED.valores_permitidos,
+    ejemplo_valor = EXCLUDED.ejemplo_valor,
+    regla_validacion = EXCLUDED.regla_validacion,
+    id_version_desde = EXCLUDED.id_version_desde,
+    observaciones = EXCLUDED.observaciones;
+
+-- ============================================================
+-- 5. Temas de búsqueda relacionados con justicia
+-- ============================================================
+INSERT INTO meta.tema_datos (
+    nombre_tema,
+    descripcion,
+    palabras_clave,
+    estado,
+    observaciones
+)
+VALUES (
+    'Justicia',
+    'Información del sistema de justicia, instituciones, denuncias, personal y seguridad pública.',
+    'justicia, sistema judicial, instituciones, denuncias, seguridad pública, nómina pública',
+    'ACTIVO',
+    'Tema creado para facilitar la búsqueda temática dentro del catálogo de metadatos.'
+)
+ON CONFLICT (nombre_tema) DO UPDATE SET
+    descripcion = EXCLUDED.descripcion,
+    palabras_clave = EXCLUDED.palabras_clave,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.tema_datos (
+    nombre_tema,
+    descripcion,
+    palabras_clave,
+    estado,
+    observaciones
+)
+VALUES (
+    'Seguridad pública',
+    'Información agregada sobre incidencia delictiva y hechos de seguridad pública.',
+    'seguridad, delitos, criminalidad, victimas, incidencia delictiva, INE, PNC, MP',
+    'ACTIVO',
+    'Tema creado para facilitar la búsqueda temática dentro del catálogo de metadatos.'
+)
+ON CONFLICT (nombre_tema) DO UPDATE SET
+    descripcion = EXCLUDED.descripcion,
+    palabras_clave = EXCLUDED.palabras_clave,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.tema_datos (
+    nombre_tema,
+    descripcion,
+    palabras_clave,
+    estado,
+    observaciones
+)
+VALUES (
+    'Delitos',
+    'Clasificación y estadísticas relacionadas con tipos de delito.',
+    'delito, tipo delito, robo, hurto, criminalidad, modalidad',
+    'ACTIVO',
+    'Tema creado para facilitar la búsqueda temática dentro del catálogo de metadatos.'
+)
+ON CONFLICT (nombre_tema) DO UPDATE SET
+    descripcion = EXCLUDED.descripcion,
+    palabras_clave = EXCLUDED.palabras_clave,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.tema_datos (
+    nombre_tema,
+    descripcion,
+    palabras_clave,
+    estado,
+    observaciones
+)
+VALUES (
+    'Denuncias',
+    'Datos relacionados con denuncias, estados, eventos e instituciones receptoras.',
+    'denuncia, ministerio publico, agraviado, sindicado, estado denuncia, evento',
+    'ACTIVO',
+    'Tema creado para facilitar la búsqueda temática dentro del catálogo de metadatos.'
+)
+ON CONFLICT (nombre_tema) DO UPDATE SET
+    descripcion = EXCLUDED.descripcion,
+    palabras_clave = EXCLUDED.palabras_clave,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.tema_datos (
+    nombre_tema,
+    descripcion,
+    palabras_clave,
+    estado,
+    observaciones
+)
+VALUES (
+    'Nómina pública',
+    'Información de remuneraciones, puestos, unidades y renglones presupuestarios de instituciones públicas.',
+    'nomina, salario, remuneracion, puesto, unidad, renglon, OJ, Congreso',
+    'ACTIVO',
+    'Tema creado para facilitar la búsqueda temática dentro del catálogo de metadatos.'
+)
+ON CONFLICT (nombre_tema) DO UPDATE SET
+    descripcion = EXCLUDED.descripcion,
+    palabras_clave = EXCLUDED.palabras_clave,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.tema_datos (
+    nombre_tema,
+    descripcion,
+    palabras_clave,
+    estado,
+    observaciones
+)
+VALUES (
+    'Instituciones públicas',
+    'Instituciones del sector justicia y entidades públicas relacionadas.',
+    'institucion, OJ, MP, PNC, Congreso, nivel institucion, tipo institucion',
+    'ACTIVO',
+    'Tema creado para facilitar la búsqueda temática dentro del catálogo de metadatos.'
+)
+ON CONFLICT (nombre_tema) DO UPDATE SET
+    descripcion = EXCLUDED.descripcion,
+    palabras_clave = EXCLUDED.palabras_clave,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.tema_datos (
+    nombre_tema,
+    descripcion,
+    palabras_clave,
+    estado,
+    observaciones
+)
+VALUES (
+    'Personas',
+    'Información básica de personas y trabajadores usada por el módulo.',
+    'persona, trabajador, dpi, nit, sexo, estado civil, grupo etnico',
+    'ACTIVO',
+    'Tema creado para facilitar la búsqueda temática dentro del catálogo de metadatos.'
+)
+ON CONFLICT (nombre_tema) DO UPDATE SET
+    descripcion = EXCLUDED.descripcion,
+    palabras_clave = EXCLUDED.palabras_clave,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.tema_datos (
+    nombre_tema,
+    descripcion,
+    palabras_clave,
+    estado,
+    observaciones
+)
+VALUES (
+    'Patrimonio declarado',
+    'Información patrimonial declarada por trabajadores: vehículos, cuentas, inmuebles y empresas.',
+    'patrimonio, vehiculo, cuenta bancaria, inmueble, empresa, declaracion patrimonial',
+    'ACTIVO',
+    'Tema creado para facilitar la búsqueda temática dentro del catálogo de metadatos.'
+)
+ON CONFLICT (nombre_tema) DO UPDATE SET
+    descripcion = EXCLUDED.descripcion,
+    palabras_clave = EXCLUDED.palabras_clave,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.tema_datos (
+    nombre_tema,
+    descripcion,
+    palabras_clave,
+    estado,
+    observaciones
+)
+VALUES (
+    'Contratación pública',
+    'Contratos, cargos, tipos de contrato y renglones presupuestarios.',
+    'contrato, cargo, trabajador, renglon presupuestario, sueldo base',
+    'ACTIVO',
+    'Tema creado para facilitar la búsqueda temática dentro del catálogo de metadatos.'
+)
+ON CONFLICT (nombre_tema) DO UPDATE SET
+    descripcion = EXCLUDED.descripcion,
+    palabras_clave = EXCLUDED.palabras_clave,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.tema_datos (
+    nombre_tema,
+    descripcion,
+    palabras_clave,
+    estado,
+    observaciones
+)
+VALUES (
+    'Geografía',
+    'Relación de datos del módulo con departamentos y municipios del esquema geografia.',
+    'departamento, municipio, ubicación, geografia, incidencia',
+    'ACTIVO',
+    'Tema creado para facilitar la búsqueda temática dentro del catálogo de metadatos.'
+)
+ON CONFLICT (nombre_tema) DO UPDATE SET
+    descripcion = EXCLUDED.descripcion,
+    palabras_clave = EXCLUDED.palabras_clave,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.tema_datos (
+    nombre_tema,
+    descripcion,
+    palabras_clave,
+    estado,
+    observaciones
+)
+VALUES (
+    'Transparencia pública',
+    'Datos publicados para rendición de cuentas, acceso a información y control ciudadano.',
+    'transparencia, informacion publica, LAIP, rendicion de cuentas, salarios',
+    'ACTIVO',
+    'Tema creado para facilitar la búsqueda temática dentro del catálogo de metadatos.'
+)
+ON CONFLICT (nombre_tema) DO UPDATE SET
+    descripcion = EXCLUDED.descripcion,
+    palabras_clave = EXCLUDED.palabras_clave,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+-- ============================================================
+-- 6. Relación entre temas y objetos del esquema justicia
+-- ============================================================
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_esquema,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'ESQUEMA',
+    e.id_esquema,
+    'ALTA',
+    'El esquema justicia concentra información relacionada con justicia.',
+    'Consulta general del módulo justicia y sus tablas asociadas.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+WHERE tema.nombre_tema = 'Justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'ESQUEMA'
+        AND ot.id_esquema = e.id_esquema
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_esquema,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'ESQUEMA',
+    e.id_esquema,
+    'ALTA',
+    'El esquema justicia concentra información relacionada con seguridad pública.',
+    'Consulta general del módulo justicia y sus tablas asociadas.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+WHERE tema.nombre_tema = 'Seguridad pública'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'ESQUEMA'
+        AND ot.id_esquema = e.id_esquema
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_esquema,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'ESQUEMA',
+    e.id_esquema,
+    'ALTA',
+    'El esquema justicia concentra información relacionada con transparencia pública.',
+    'Consulta general del módulo justicia y sus tablas asociadas.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+WHERE tema.nombre_tema = 'Transparencia pública'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'ESQUEMA'
+        AND ot.id_esquema = e.id_esquema
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.estadistica_seguridad contiene información relacionada con el tema Seguridad pública.',
+    'Buscar información del tema Seguridad pública dentro de justicia.estadistica_seguridad.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'estadistica_seguridad'
+WHERE tema.nombre_tema = 'Seguridad pública'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.tipo_delito contiene información relacionada con el tema Seguridad pública.',
+    'Buscar información del tema Seguridad pública dentro de justicia.tipo_delito.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'tipo_delito'
+WHERE tema.nombre_tema = 'Seguridad pública'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.sexo contiene información relacionada con el tema Seguridad pública.',
+    'Buscar información del tema Seguridad pública dentro de justicia.sexo.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'sexo'
+WHERE tema.nombre_tema = 'Seguridad pública'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.grupo_edad_victima contiene información relacionada con el tema Seguridad pública.',
+    'Buscar información del tema Seguridad pública dentro de justicia.grupo_edad_victima.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'grupo_edad_victima'
+WHERE tema.nombre_tema = 'Seguridad pública'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.tipo_delito contiene información relacionada con el tema Delitos.',
+    'Buscar información del tema Delitos dentro de justicia.tipo_delito.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'tipo_delito'
+WHERE tema.nombre_tema = 'Delitos'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.estadistica_seguridad contiene información relacionada con el tema Delitos.',
+    'Buscar información del tema Delitos dentro de justicia.estadistica_seguridad.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'estadistica_seguridad'
+WHERE tema.nombre_tema = 'Delitos'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.denuncia contiene información relacionada con el tema Delitos.',
+    'Buscar información del tema Delitos dentro de justicia.denuncia.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'denuncia'
+WHERE tema.nombre_tema = 'Delitos'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.denuncia contiene información relacionada con el tema Denuncias.',
+    'Buscar información del tema Denuncias dentro de justicia.denuncia.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'denuncia'
+WHERE tema.nombre_tema = 'Denuncias'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.registro_fecha_denuncia contiene información relacionada con el tema Denuncias.',
+    'Buscar información del tema Denuncias dentro de justicia.registro_fecha_denuncia.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'registro_fecha_denuncia'
+WHERE tema.nombre_tema = 'Denuncias'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.tipo_denuncia contiene información relacionada con el tema Denuncias.',
+    'Buscar información del tema Denuncias dentro de justicia.tipo_denuncia.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'tipo_denuncia'
+WHERE tema.nombre_tema = 'Denuncias'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.estado_denuncia contiene información relacionada con el tema Denuncias.',
+    'Buscar información del tema Denuncias dentro de justicia.estado_denuncia.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'estado_denuncia'
+WHERE tema.nombre_tema = 'Denuncias'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.tipo_evento contiene información relacionada con el tema Denuncias.',
+    'Buscar información del tema Denuncias dentro de justicia.tipo_evento.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'tipo_evento'
+WHERE tema.nombre_tema = 'Denuncias'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.nomina_publica contiene información relacionada con el tema Nómina pública.',
+    'Buscar información del tema Nómina pública dentro de justicia.nomina_publica.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'nomina_publica'
+WHERE tema.nombre_tema = 'Nómina pública'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.renglon_presupuestario contiene información relacionada con el tema Nómina pública.',
+    'Buscar información del tema Nómina pública dentro de justicia.renglon_presupuestario.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'renglon_presupuestario'
+WHERE tema.nombre_tema = 'Nómina pública'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.tipo_contrato contiene información relacionada con el tema Nómina pública.',
+    'Buscar información del tema Nómina pública dentro de justicia.tipo_contrato.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'tipo_contrato'
+WHERE tema.nombre_tema = 'Nómina pública'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.institucion contiene información relacionada con el tema Instituciones públicas.',
+    'Buscar información del tema Instituciones públicas dentro de justicia.institucion.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'institucion'
+WHERE tema.nombre_tema = 'Instituciones públicas'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.tipo_institucion contiene información relacionada con el tema Instituciones públicas.',
+    'Buscar información del tema Instituciones públicas dentro de justicia.tipo_institucion.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'tipo_institucion'
+WHERE tema.nombre_tema = 'Instituciones públicas'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.nivel_institucion contiene información relacionada con el tema Instituciones públicas.',
+    'Buscar información del tema Instituciones públicas dentro de justicia.nivel_institucion.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'nivel_institucion'
+WHERE tema.nombre_tema = 'Instituciones públicas'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.cargo contiene información relacionada con el tema Instituciones públicas.',
+    'Buscar información del tema Instituciones públicas dentro de justicia.cargo.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'cargo'
+WHERE tema.nombre_tema = 'Instituciones públicas'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.persona contiene información relacionada con el tema Personas.',
+    'Buscar información del tema Personas dentro de justicia.persona.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'persona'
+WHERE tema.nombre_tema = 'Personas'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.trabajador contiene información relacionada con el tema Personas.',
+    'Buscar información del tema Personas dentro de justicia.trabajador.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'trabajador'
+WHERE tema.nombre_tema = 'Personas'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.sexo contiene información relacionada con el tema Personas.',
+    'Buscar información del tema Personas dentro de justicia.sexo.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'sexo'
+WHERE tema.nombre_tema = 'Personas'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.estado_civil contiene información relacionada con el tema Personas.',
+    'Buscar información del tema Personas dentro de justicia.estado_civil.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'estado_civil'
+WHERE tema.nombre_tema = 'Personas'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.grupo_etnico contiene información relacionada con el tema Personas.',
+    'Buscar información del tema Personas dentro de justicia.grupo_etnico.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'grupo_etnico'
+WHERE tema.nombre_tema = 'Personas'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.vehiculo contiene información relacionada con el tema Patrimonio declarado.',
+    'Buscar información del tema Patrimonio declarado dentro de justicia.vehiculo.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'vehiculo'
+WHERE tema.nombre_tema = 'Patrimonio declarado'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.cuenta_bancaria contiene información relacionada con el tema Patrimonio declarado.',
+    'Buscar información del tema Patrimonio declarado dentro de justicia.cuenta_bancaria.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'cuenta_bancaria'
+WHERE tema.nombre_tema = 'Patrimonio declarado'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.inmueble contiene información relacionada con el tema Patrimonio declarado.',
+    'Buscar información del tema Patrimonio declarado dentro de justicia.inmueble.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'inmueble'
+WHERE tema.nombre_tema = 'Patrimonio declarado'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.empresa contiene información relacionada con el tema Patrimonio declarado.',
+    'Buscar información del tema Patrimonio declarado dentro de justicia.empresa.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'empresa'
+WHERE tema.nombre_tema = 'Patrimonio declarado'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.banco contiene información relacionada con el tema Patrimonio declarado.',
+    'Buscar información del tema Patrimonio declarado dentro de justicia.banco.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'banco'
+WHERE tema.nombre_tema = 'Patrimonio declarado'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.rol_empresa contiene información relacionada con el tema Patrimonio declarado.',
+    'Buscar información del tema Patrimonio declarado dentro de justicia.rol_empresa.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'rol_empresa'
+WHERE tema.nombre_tema = 'Patrimonio declarado'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.contrato contiene información relacionada con el tema Contratación pública.',
+    'Buscar información del tema Contratación pública dentro de justicia.contrato.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'contrato'
+WHERE tema.nombre_tema = 'Contratación pública'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.tipo_contrato contiene información relacionada con el tema Contratación pública.',
+    'Buscar información del tema Contratación pública dentro de justicia.tipo_contrato.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'tipo_contrato'
+WHERE tema.nombre_tema = 'Contratación pública'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.cargo contiene información relacionada con el tema Contratación pública.',
+    'Buscar información del tema Contratación pública dentro de justicia.cargo.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'cargo'
+WHERE tema.nombre_tema = 'Contratación pública'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.trabajador contiene información relacionada con el tema Contratación pública.',
+    'Buscar información del tema Contratación pública dentro de justicia.trabajador.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'trabajador'
+WHERE tema.nombre_tema = 'Contratación pública'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.renglon_presupuestario contiene información relacionada con el tema Contratación pública.',
+    'Buscar información del tema Contratación pública dentro de justicia.renglon_presupuestario.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'renglon_presupuestario'
+WHERE tema.nombre_tema = 'Contratación pública'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.institucion contiene información relacionada con el tema Geografía.',
+    'Buscar información del tema Geografía dentro de justicia.institucion.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'institucion'
+WHERE tema.nombre_tema = 'Geografía'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.denuncia contiene información relacionada con el tema Geografía.',
+    'Buscar información del tema Geografía dentro de justicia.denuncia.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'denuncia'
+WHERE tema.nombre_tema = 'Geografía'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.inmueble contiene información relacionada con el tema Geografía.',
+    'Buscar información del tema Geografía dentro de justicia.inmueble.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'inmueble'
+WHERE tema.nombre_tema = 'Geografía'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.estadistica_seguridad contiene información relacionada con el tema Geografía.',
+    'Buscar información del tema Geografía dentro de justicia.estadistica_seguridad.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'estadistica_seguridad'
+WHERE tema.nombre_tema = 'Geografía'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.nomina_publica contiene información relacionada con el tema Transparencia pública.',
+    'Buscar información del tema Transparencia pública dentro de justicia.nomina_publica.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'nomina_publica'
+WHERE tema.nombre_tema = 'Transparencia pública'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.contrato contiene información relacionada con el tema Transparencia pública.',
+    'Buscar información del tema Transparencia pública dentro de justicia.contrato.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'contrato'
+WHERE tema.nombre_tema = 'Transparencia pública'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.institucion contiene información relacionada con el tema Transparencia pública.',
+    'Buscar información del tema Transparencia pública dentro de justicia.institucion.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'institucion'
+WHERE tema.nombre_tema = 'Transparencia pública'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_tabla,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'TABLA',
+    t.id_tabla,
+    'ALTA',
+    'La tabla justicia.estadistica_seguridad contiene información relacionada con el tema Transparencia pública.',
+    'Buscar información del tema Transparencia pública dentro de justicia.estadistica_seguridad.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'estadistica_seguridad'
+WHERE tema.nombre_tema = 'Transparencia pública'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'TABLA'
+        AND ot.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_columna,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'COLUMNA',
+    c.id_columna,
+    'ALTA',
+    'La columna justicia.institucion.municipio_id permite consultar o relacionar información del tema Geografía.',
+    'Uso de la columna municipio_id para análisis del tema Geografía.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'institucion'
+JOIN meta.columna_datos c
+    ON c.id_tabla = t.id_tabla
+   AND c.nombre_columna = 'municipio_id'
+WHERE tema.nombre_tema = 'Geografía'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'COLUMNA'
+        AND ot.id_columna = c.id_columna
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_columna,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'COLUMNA',
+    c.id_columna,
+    'ALTA',
+    'La columna justicia.denuncia.municipio_incidencia_id permite consultar o relacionar información del tema Geografía.',
+    'Uso de la columna municipio_incidencia_id para análisis del tema Geografía.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'denuncia'
+JOIN meta.columna_datos c
+    ON c.id_tabla = t.id_tabla
+   AND c.nombre_columna = 'municipio_incidencia_id'
+WHERE tema.nombre_tema = 'Geografía'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'COLUMNA'
+        AND ot.id_columna = c.id_columna
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_columna,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'COLUMNA',
+    c.id_columna,
+    'ALTA',
+    'La columna justicia.inmueble.municipio_id permite consultar o relacionar información del tema Geografía.',
+    'Uso de la columna municipio_id para análisis del tema Geografía.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'inmueble'
+JOIN meta.columna_datos c
+    ON c.id_tabla = t.id_tabla
+   AND c.nombre_columna = 'municipio_id'
+WHERE tema.nombre_tema = 'Geografía'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'COLUMNA'
+        AND ot.id_columna = c.id_columna
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_columna,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'COLUMNA',
+    c.id_columna,
+    'ALTA',
+    'La columna justicia.estadistica_seguridad.departamento_id permite consultar o relacionar información del tema Geografía.',
+    'Uso de la columna departamento_id para análisis del tema Geografía.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'estadistica_seguridad'
+JOIN meta.columna_datos c
+    ON c.id_tabla = t.id_tabla
+   AND c.nombre_columna = 'departamento_id'
+WHERE tema.nombre_tema = 'Geografía'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'COLUMNA'
+        AND ot.id_columna = c.id_columna
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_columna,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'COLUMNA',
+    c.id_columna,
+    'ALTA',
+    'La columna justicia.nomina_publica.salario permite consultar o relacionar información del tema Nómina pública.',
+    'Uso de la columna salario para análisis del tema Nómina pública.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'nomina_publica'
+JOIN meta.columna_datos c
+    ON c.id_tabla = t.id_tabla
+   AND c.nombre_columna = 'salario'
+WHERE tema.nombre_tema = 'Nómina pública'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'COLUMNA'
+        AND ot.id_columna = c.id_columna
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_columna,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'COLUMNA',
+    c.id_columna,
+    'ALTA',
+    'La columna justicia.nomina_publica.total_devengado permite consultar o relacionar información del tema Nómina pública.',
+    'Uso de la columna total_devengado para análisis del tema Nómina pública.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'nomina_publica'
+JOIN meta.columna_datos c
+    ON c.id_tabla = t.id_tabla
+   AND c.nombre_columna = 'total_devengado'
+WHERE tema.nombre_tema = 'Nómina pública'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'COLUMNA'
+        AND ot.id_columna = c.id_columna
+  );
+
+INSERT INTO meta.objeto_tema (
+    id_tema,
+    nivel_objeto,
+    id_columna,
+    relevancia,
+    justificacion,
+    ejemplo_relacion
+)
+SELECT
+    tema.id_tema,
+    'COLUMNA',
+    c.id_columna,
+    'ALTA',
+    'La columna justicia.estadistica_seguridad.cantidad permite consultar o relacionar información del tema Seguridad pública.',
+    'Uso de la columna cantidad para análisis del tema Seguridad pública.'
+FROM meta.tema_datos tema
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'estadistica_seguridad'
+JOIN meta.columna_datos c
+    ON c.id_tabla = t.id_tabla
+   AND c.nombre_columna = 'cantidad'
+WHERE tema.nombre_tema = 'Seguridad pública'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.objeto_tema ot
+      WHERE ot.id_tema = tema.id_tema
+        AND ot.nivel_objeto = 'COLUMNA'
+        AND ot.id_columna = c.id_columna
+  );
+
+-- ============================================================
+-- 7. Fuentes de datos del módulo justicia
+-- ============================================================
+INSERT INTO meta.fuente_datos (
+    codigo_fuente,
+    nombre_fuente,
+    institucion,
+    tipo_fuente,
+    url,
+    fecha_consulta,
+    descripcion,
+    confiabilidad,
+    cobertura_geografica,
+    licencia_uso,
+    estado,
+    observaciones
+)
+VALUES (
+    'INE_ESTADISTICAS_DELICTIVAS_2009_2022',
+    'Estadísticas anuales de hechos delictivos',
+    'Instituto Nacional de Estadística',
+    'OFICIAL',
+    'https://drive.google.com/drive/folders/16MB00OmDgydL9DzPb6DjIFzAquUTWfIm?usp=drive_link',
+    DATE '2026-07-12',
+    'Estadísticas anuales de hechos delictivos recopiladas a partir de registros administrativos, desagregadas por departamento, sexo, grupo de edad y modalidad del delito. Periodo cubierto: 2009-2022.',
+    'ALTA',
+    'Guatemala',
+    'Datos públicos consultados conforme a la Ley de Acceso a la Información Pública cuando aplica.',
+    'ACTIVA',
+    'Fuente documentada para el módulo Justicia y Seguridad Pública.'
+)
+ON CONFLICT (codigo_fuente) DO UPDATE SET
+    nombre_fuente = EXCLUDED.nombre_fuente,
+    institucion = EXCLUDED.institucion,
+    tipo_fuente = EXCLUDED.tipo_fuente,
+    url = EXCLUDED.url,
+    fecha_consulta = EXCLUDED.fecha_consulta,
+    descripcion = EXCLUDED.descripcion,
+    confiabilidad = EXCLUDED.confiabilidad,
+    cobertura_geografica = EXCLUDED.cobertura_geografica,
+    licencia_uso = EXCLUDED.licencia_uso,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.fuente_datos (
+    codigo_fuente,
+    nombre_fuente,
+    institucion,
+    tipo_fuente,
+    url,
+    fecha_consulta,
+    descripcion,
+    confiabilidad,
+    cobertura_geografica,
+    licencia_uso,
+    estado,
+    observaciones
+)
+VALUES (
+    'PNC_EVENTOS_DELICTIVOS_2021_2023',
+    'Registros individuales de eventos delictivos',
+    'Policía Nacional Civil',
+    'OFICIAL',
+    'https://drive.google.com/drive/folders/1-Np2kzrn9wqL00cRmmvbc6r4O6w99PSG?usp=drive_link',
+    DATE '2026-07-12',
+    'Registros individuales de víctimas o detenidos por evento delictivo, con departamento, sexo y categoría del delito. Periodo cubierto: 2021-2023.',
+    'ALTA',
+    'Guatemala',
+    'Datos públicos consultados conforme a la Ley de Acceso a la Información Pública cuando aplica.',
+    'ACTIVA',
+    'Fuente documentada para el módulo Justicia y Seguridad Pública.'
+)
+ON CONFLICT (codigo_fuente) DO UPDATE SET
+    nombre_fuente = EXCLUDED.nombre_fuente,
+    institucion = EXCLUDED.institucion,
+    tipo_fuente = EXCLUDED.tipo_fuente,
+    url = EXCLUDED.url,
+    fecha_consulta = EXCLUDED.fecha_consulta,
+    descripcion = EXCLUDED.descripcion,
+    confiabilidad = EXCLUDED.confiabilidad,
+    cobertura_geografica = EXCLUDED.cobertura_geografica,
+    licencia_uso = EXCLUDED.licencia_uso,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.fuente_datos (
+    codigo_fuente,
+    nombre_fuente,
+    institucion,
+    tipo_fuente,
+    url,
+    fecha_consulta,
+    descripcion,
+    confiabilidad,
+    cobertura_geografica,
+    licencia_uso,
+    estado,
+    observaciones
+)
+VALUES (
+    'MP_DENUNCIAS_2021_2023',
+    'Denuncias, agraviados y sindicados',
+    'Ministerio Público',
+    'OFICIAL',
+    'https://drive.google.com/drive/folders/1-LcB24wwzNrmX2vRgkC2kC789dPyKe7x?usp=drive_link',
+    DATE '2026-07-12',
+    'Archivos de agraviados y sindicados asociados a denuncias ingresadas al sistema de persecución penal. Periodo cubierto: 2021-2023.',
+    'ALTA',
+    'Guatemala',
+    'Datos públicos consultados conforme a la Ley de Acceso a la Información Pública cuando aplica.',
+    'ACTIVA',
+    'Fuente documentada para el módulo Justicia y Seguridad Pública.'
+)
+ON CONFLICT (codigo_fuente) DO UPDATE SET
+    nombre_fuente = EXCLUDED.nombre_fuente,
+    institucion = EXCLUDED.institucion,
+    tipo_fuente = EXCLUDED.tipo_fuente,
+    url = EXCLUDED.url,
+    fecha_consulta = EXCLUDED.fecha_consulta,
+    descripcion = EXCLUDED.descripcion,
+    confiabilidad = EXCLUDED.confiabilidad,
+    cobertura_geografica = EXCLUDED.cobertura_geografica,
+    licencia_uso = EXCLUDED.licencia_uso,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.fuente_datos (
+    codigo_fuente,
+    nombre_fuente,
+    institucion,
+    tipo_fuente,
+    url,
+    fecha_consulta,
+    descripcion,
+    confiabilidad,
+    cobertura_geografica,
+    licencia_uso,
+    estado,
+    observaciones
+)
+VALUES (
+    'OJ_NOMINA_PUBLICA_2023_2026',
+    'Nómina pública del Organismo Judicial',
+    'Organismo Judicial',
+    'OFICIAL',
+    'https://drive.google.com/drive/folders/1muvgG27CqXKwU6RpBV4qxAL_hvA89mTV?usp=drive_link',
+    DATE '2026-07-12',
+    'Reportes mensuales de nómina publicados por el Organismo Judicial, con nombre, puesto, unidad, renglón presupuestario y remuneración. Periodo cubierto: 2023-2026.',
+    'ALTA',
+    'Guatemala',
+    'Datos públicos consultados conforme a la Ley de Acceso a la Información Pública cuando aplica.',
+    'ACTIVA',
+    'Fuente documentada para el módulo Justicia y Seguridad Pública.'
+)
+ON CONFLICT (codigo_fuente) DO UPDATE SET
+    nombre_fuente = EXCLUDED.nombre_fuente,
+    institucion = EXCLUDED.institucion,
+    tipo_fuente = EXCLUDED.tipo_fuente,
+    url = EXCLUDED.url,
+    fecha_consulta = EXCLUDED.fecha_consulta,
+    descripcion = EXCLUDED.descripcion,
+    confiabilidad = EXCLUDED.confiabilidad,
+    cobertura_geografica = EXCLUDED.cobertura_geografica,
+    licencia_uso = EXCLUDED.licencia_uso,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.fuente_datos (
+    codigo_fuente,
+    nombre_fuente,
+    institucion,
+    tipo_fuente,
+    url,
+    fecha_consulta,
+    descripcion,
+    confiabilidad,
+    cobertura_geografica,
+    licencia_uso,
+    estado,
+    observaciones
+)
+VALUES (
+    'CR_NOMINA_PUBLICA_2024_2026',
+    'Nómina pública del Congreso de la República',
+    'Congreso de la República',
+    'OFICIAL',
+    'https://drive.google.com/drive/folders/1thOLlV4NTxoejBUpA7hHP1gJ9JJugXtd?usp=drive_link',
+    DATE '2026-07-12',
+    'Nóminas del Congreso de la República organizadas por renglón presupuestario, incluyendo 011, 022 y 029. Periodo cubierto: 2024-2026.',
+    'ALTA',
+    'Guatemala',
+    'Datos públicos consultados conforme a la Ley de Acceso a la Información Pública cuando aplica.',
+    'ACTIVA',
+    'Fuente documentada para el módulo Justicia y Seguridad Pública.'
+)
+ON CONFLICT (codigo_fuente) DO UPDATE SET
+    nombre_fuente = EXCLUDED.nombre_fuente,
+    institucion = EXCLUDED.institucion,
+    tipo_fuente = EXCLUDED.tipo_fuente,
+    url = EXCLUDED.url,
+    fecha_consulta = EXCLUDED.fecha_consulta,
+    descripcion = EXCLUDED.descripcion,
+    confiabilidad = EXCLUDED.confiabilidad,
+    cobertura_geografica = EXCLUDED.cobertura_geografica,
+    licencia_uso = EXCLUDED.licencia_uso,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+INSERT INTO meta.fuente_datos (
+    codigo_fuente,
+    nombre_fuente,
+    institucion,
+    tipo_fuente,
+    url,
+    fecha_consulta,
+    descripcion,
+    confiabilidad,
+    cobertura_geografica,
+    licencia_uso,
+    estado,
+    observaciones
+)
+VALUES (
+    'LAIP_DECRETO_57_2008',
+    'Ley de Acceso a la Información Pública, Decreto 57-2008',
+    'Congreso de la República de Guatemala',
+    'OFICIAL',
+    NULL,
+    DATE '2026-07-12',
+    'Marco legal que fundamenta la publicación y reutilización de información pública por parte de instituciones del Estado.',
+    'ALTA',
+    'Guatemala',
+    'Datos públicos consultados conforme a la Ley de Acceso a la Información Pública cuando aplica.',
+    'ACTIVA',
+    'Fuente documentada para el módulo Justicia y Seguridad Pública.'
+)
+ON CONFLICT (codigo_fuente) DO UPDATE SET
+    nombre_fuente = EXCLUDED.nombre_fuente,
+    institucion = EXCLUDED.institucion,
+    tipo_fuente = EXCLUDED.tipo_fuente,
+    url = EXCLUDED.url,
+    fecha_consulta = EXCLUDED.fecha_consulta,
+    descripcion = EXCLUDED.descripcion,
+    confiabilidad = EXCLUDED.confiabilidad,
+    cobertura_geografica = EXCLUDED.cobertura_geografica,
+    licencia_uso = EXCLUDED.licencia_uso,
+    estado = EXCLUDED.estado,
+    observaciones = EXCLUDED.observaciones;
+
+-- ============================================================
+-- 8. Relación entre fuentes y tablas documentadas
+-- ============================================================
+INSERT INTO meta.tabla_fuente (
+    id_fuente,
+    nivel_respaldo,
+    id_esquema,
+    uso_fuente,
+    campos_respalda,
+    observaciones
+)
+SELECT
+    f.id_fuente,
+    'ESQUEMA',
+    e.id_esquema,
+    'Marco general de publicación y acceso a información pública para el módulo justicia.',
+    'Fuentes, nómina pública, estadísticas y documentos publicados por instituciones del Estado.',
+    'Relación de respaldo documental registrada para el esquema justicia.'
+FROM meta.fuente_datos f
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+WHERE f.codigo_fuente = 'LAIP_DECRETO_57_2008'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.tabla_fuente tf
+      WHERE tf.id_fuente = f.id_fuente
+        AND tf.nivel_respaldo = 'ESQUEMA'
+        AND tf.id_esquema = e.id_esquema
+  );
+
+INSERT INTO meta.tabla_fuente (
+    id_fuente,
+    nivel_respaldo,
+    id_tabla,
+    uso_fuente,
+    campos_respalda,
+    observaciones
+)
+SELECT
+    f.id_fuente,
+    'TABLA',
+    t.id_tabla,
+    'Fuente para estadísticas agregadas de seguridad pública por departamento, delito, sexo y grupo de edad.',
+    'anio, departamento_id, nombre_departamento, tipo_delito_id, sexo_id, grupo_edad_id, cantidad, fuente, archivo_origen',
+    'Relación de respaldo documental registrada para tabla del esquema justicia.'
+FROM meta.fuente_datos f
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'estadistica_seguridad'
+WHERE f.codigo_fuente = 'INE_ESTADISTICAS_DELICTIVAS_2009_2022'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.tabla_fuente tf
+      WHERE tf.id_fuente = f.id_fuente
+        AND tf.nivel_respaldo = 'TABLA'
+        AND tf.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.tabla_fuente (
+    id_fuente,
+    nivel_respaldo,
+    id_tabla,
+    uso_fuente,
+    campos_respalda,
+    observaciones
+)
+SELECT
+    f.id_fuente,
+    'TABLA',
+    t.id_tabla,
+    'Fuente para registros individuales que pueden agruparse en indicadores de seguridad pública.',
+    'anio, departamento_id, tipo_delito_id, sexo_id, cantidad, fuente, archivo_origen',
+    'Relación de respaldo documental registrada para tabla del esquema justicia.'
+FROM meta.fuente_datos f
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'estadistica_seguridad'
+WHERE f.codigo_fuente = 'PNC_EVENTOS_DELICTIVOS_2021_2023'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.tabla_fuente tf
+      WHERE tf.id_fuente = f.id_fuente
+        AND tf.nivel_respaldo = 'TABLA'
+        AND tf.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.tabla_fuente (
+    id_fuente,
+    nivel_respaldo,
+    id_tabla,
+    uso_fuente,
+    campos_respalda,
+    observaciones
+)
+SELECT
+    f.id_fuente,
+    'TABLA',
+    t.id_tabla,
+    'Fuente para denuncias, agraviados y sindicados asociados al sistema de persecución penal.',
+    'tipo_denuncia_id, estado_denuncia_id, institucion_id, municipio_incidencia_id, descripcion',
+    'Relación de respaldo documental registrada para tabla del esquema justicia.'
+FROM meta.fuente_datos f
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'denuncia'
+WHERE f.codigo_fuente = 'MP_DENUNCIAS_2021_2023'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.tabla_fuente tf
+      WHERE tf.id_fuente = f.id_fuente
+        AND tf.nivel_respaldo = 'TABLA'
+        AND tf.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.tabla_fuente (
+    id_fuente,
+    nivel_respaldo,
+    id_tabla,
+    uso_fuente,
+    campos_respalda,
+    observaciones
+)
+SELECT
+    f.id_fuente,
+    'TABLA',
+    t.id_tabla,
+    'Fuente para indicadores derivados de denuncias agrupadas por año, departamento y tipo de delito.',
+    'anio, departamento_id, tipo_delito_id, cantidad, fuente, archivo_origen',
+    'Relación de respaldo documental registrada para tabla del esquema justicia.'
+FROM meta.fuente_datos f
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'estadistica_seguridad'
+WHERE f.codigo_fuente = 'MP_DENUNCIAS_2021_2023'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.tabla_fuente tf
+      WHERE tf.id_fuente = f.id_fuente
+        AND tf.nivel_respaldo = 'TABLA'
+        AND tf.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.tabla_fuente (
+    id_fuente,
+    nivel_respaldo,
+    id_tabla,
+    uso_fuente,
+    campos_respalda,
+    observaciones
+)
+SELECT
+    f.id_fuente,
+    'TABLA',
+    t.id_tabla,
+    'Fuente para nómina pública del Organismo Judicial.',
+    'sigla_institucion, anio, mes, nip, nombre, puesto, unidad, renglon_id, salario, total_devengado',
+    'Relación de respaldo documental registrada para tabla del esquema justicia.'
+FROM meta.fuente_datos f
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'nomina_publica'
+WHERE f.codigo_fuente = 'OJ_NOMINA_PUBLICA_2023_2026'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.tabla_fuente tf
+      WHERE tf.id_fuente = f.id_fuente
+        AND tf.nivel_respaldo = 'TABLA'
+        AND tf.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.tabla_fuente (
+    id_fuente,
+    nivel_respaldo,
+    id_tabla,
+    uso_fuente,
+    campos_respalda,
+    observaciones
+)
+SELECT
+    f.id_fuente,
+    'TABLA',
+    t.id_tabla,
+    'Fuente para nómina pública del Congreso de la República.',
+    'sigla_institucion, anio, mes, nip, nombre, puesto, unidad, renglon_id, salario, total_devengado',
+    'Relación de respaldo documental registrada para tabla del esquema justicia.'
+FROM meta.fuente_datos f
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'nomina_publica'
+WHERE f.codigo_fuente = 'CR_NOMINA_PUBLICA_2024_2026'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.tabla_fuente tf
+      WHERE tf.id_fuente = f.id_fuente
+        AND tf.nivel_respaldo = 'TABLA'
+        AND tf.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.tabla_fuente (
+    id_fuente,
+    nivel_respaldo,
+    id_tabla,
+    uso_fuente,
+    campos_respalda,
+    observaciones
+)
+SELECT
+    f.id_fuente,
+    'TABLA',
+    t.id_tabla,
+    'Fuente para identificar renglones presupuestarios usados en nómina.',
+    'codigo, nombre',
+    'Relación de respaldo documental registrada para tabla del esquema justicia.'
+FROM meta.fuente_datos f
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'renglon_presupuestario'
+WHERE f.codigo_fuente = 'OJ_NOMINA_PUBLICA_2023_2026'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.tabla_fuente tf
+      WHERE tf.id_fuente = f.id_fuente
+        AND tf.nivel_respaldo = 'TABLA'
+        AND tf.id_tabla = t.id_tabla
+  );
+
+INSERT INTO meta.tabla_fuente (
+    id_fuente,
+    nivel_respaldo,
+    id_tabla,
+    uso_fuente,
+    campos_respalda,
+    observaciones
+)
+SELECT
+    f.id_fuente,
+    'TABLA',
+    t.id_tabla,
+    'Fuente para identificar renglones presupuestarios usados en nómina.',
+    'codigo, nombre',
+    'Relación de respaldo documental registrada para tabla del esquema justicia.'
+FROM meta.fuente_datos f
+JOIN meta.esquema_datos e
+    ON e.nombre_esquema = 'justicia'
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'renglon_presupuestario'
+WHERE f.codigo_fuente = 'CR_NOMINA_PUBLICA_2024_2026'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.tabla_fuente tf
+      WHERE tf.id_fuente = f.id_fuente
+        AND tf.nivel_respaldo = 'TABLA'
+        AND tf.id_tabla = t.id_tabla
+  );
+
+-- ============================================================
+-- 9. Estados de carga
+-- ============================================================
+INSERT INTO meta.estado_carga (nombre, descripcion)
+VALUES ('en_proceso', 'La carga inició pero aún no finaliza.')
+ON CONFLICT (nombre) DO UPDATE SET
+    descripcion = EXCLUDED.descripcion;
+
+INSERT INTO meta.estado_carga (nombre, descripcion)
+VALUES ('exitosa', 'La carga finalizó correctamente.')
+ON CONFLICT (nombre) DO UPDATE SET
+    descripcion = EXCLUDED.descripcion;
+
+INSERT INTO meta.estado_carga (nombre, descripcion)
+VALUES ('fallida', 'La carga falló y no completó el proceso.')
+ON CONFLICT (nombre) DO UPDATE SET
+    descripcion = EXCLUDED.descripcion;
+
+INSERT INTO meta.estado_carga (nombre, descripcion)
+VALUES ('parcial', 'La carga finalizó con algunos registros rechazados u observados.')
+ON CONFLICT (nombre) DO UPDATE SET
+    descripcion = EXCLUDED.descripcion;
+
+-- ============================================================
+-- 10. Reglas de calidad del módulo justicia
+-- ============================================================
+INSERT INTO meta.regla_calidad (
+    id_tabla,
+    id_columna,
+    nombre_regla,
+    descripcion,
+    tipo_regla,
+    severidad,
+    expresion_validacion,
+    accion_si_falla,
+    estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    NULL,
+    'Estadística con cantidad no negativa',
+    'La cantidad de eventos o registros contabilizados no debe ser negativa.',
+    'RANGO',
+    'ALTA',
+    'cantidad >= 0',
+    'Rechazar o corregir el registro antes de cargarlo.',
+    'ACTIVA',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0')
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'estadistica_seguridad'
+LEFT JOIN meta.columna_datos c
+    ON FALSE
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.id_columna IS NULL
+        AND r.nombre_regla = 'Estadística con cantidad no negativa'
+  );
+
+INSERT INTO meta.regla_calidad (
+    id_tabla,
+    id_columna,
+    nombre_regla,
+    descripcion,
+    tipo_regla,
+    severidad,
+    expresion_validacion,
+    accion_si_falla,
+    estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    NULL,
+    'Periodo de estadística válido',
+    'El año de la estadística debe pertenecer al periodo cubierto por la fuente oficial.',
+    'RANGO',
+    'MEDIA',
+    'anio BETWEEN 2009 AND 2026',
+    'Verificar fuente y archivo origen.',
+    'ACTIVA',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0')
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'estadistica_seguridad'
+LEFT JOIN meta.columna_datos c
+    ON FALSE
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.id_columna IS NULL
+        AND r.nombre_regla = 'Periodo de estadística válido'
+  );
+
+INSERT INTO meta.regla_calidad (
+    id_tabla,
+    id_columna,
+    nombre_regla,
+    descripcion,
+    tipo_regla,
+    severidad,
+    expresion_validacion,
+    accion_si_falla,
+    estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    NULL,
+    'Referencia geográfica válida',
+    'Cuando exista departamento_id, debe corresponder a un departamento registrado en geografia.departamento.',
+    'REFERENCIAL',
+    'ALTA',
+    'departamento_id IS NULL OR EXISTS en geografia.departamento',
+    'Corregir mapeo geográfico antes de cargar.',
+    'ACTIVA',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0')
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'estadistica_seguridad'
+LEFT JOIN meta.columna_datos c
+    ON FALSE
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.id_columna IS NULL
+        AND r.nombre_regla = 'Referencia geográfica válida'
+  );
+
+INSERT INTO meta.regla_calidad (
+    id_tabla,
+    id_columna,
+    nombre_regla,
+    descripcion,
+    tipo_regla,
+    severidad,
+    expresion_validacion,
+    accion_si_falla,
+    estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    NULL,
+    'Fuente documentada en estadística',
+    'Cada registro estadístico debe conservar fuente y archivo origen cuando provenga de carga documental.',
+    'FUENTE',
+    'ALTA',
+    'fuente IS NOT NULL AND archivo_origen IS NOT NULL',
+    'Registrar fuente y archivo antes de aprobar la carga.',
+    'ACTIVA',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0')
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'estadistica_seguridad'
+LEFT JOIN meta.columna_datos c
+    ON FALSE
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.id_columna IS NULL
+        AND r.nombre_regla = 'Fuente documentada en estadística'
+  );
+
+INSERT INTO meta.regla_calidad (
+    id_tabla,
+    id_columna,
+    nombre_regla,
+    descripcion,
+    tipo_regla,
+    severidad,
+    expresion_validacion,
+    accion_si_falla,
+    estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    NULL,
+    'Mes válido en nómina',
+    'El mes de nómina debe estar entre 1 y 12.',
+    'RANGO',
+    'ALTA',
+    'mes BETWEEN 1 AND 12',
+    'Corregir el periodo de nómina.',
+    'ACTIVA',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0')
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'nomina_publica'
+LEFT JOIN meta.columna_datos c
+    ON FALSE
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.id_columna IS NULL
+        AND r.nombre_regla = 'Mes válido en nómina'
+  );
+
+INSERT INTO meta.regla_calidad (
+    id_tabla,
+    id_columna,
+    nombre_regla,
+    descripcion,
+    tipo_regla,
+    severidad,
+    expresion_validacion,
+    accion_si_falla,
+    estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    NULL,
+    'Montos de nómina no negativos',
+    'Salario y total devengado no deben ser negativos.',
+    'RANGO',
+    'ALTA',
+    'salario >= 0 AND total_devengado >= 0',
+    'Revisar limpieza de formato monetario.',
+    'ACTIVA',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0')
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'nomina_publica'
+LEFT JOIN meta.columna_datos c
+    ON FALSE
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.id_columna IS NULL
+        AND r.nombre_regla = 'Montos de nómina no negativos'
+  );
+
+INSERT INTO meta.regla_calidad (
+    id_tabla,
+    id_columna,
+    nombre_regla,
+    descripcion,
+    tipo_regla,
+    severidad,
+    expresion_validacion,
+    accion_si_falla,
+    estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    NULL,
+    'Fuente documentada en nómina',
+    'Cada registro de nómina debe conservar la institución fuente, archivo origen y fecha de carga.',
+    'FUENTE',
+    'ALTA',
+    'fuente IS NOT NULL AND archivo_origen IS NOT NULL AND fecha_carga IS NOT NULL',
+    'Completar trazabilidad de carga.',
+    'ACTIVA',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0')
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'nomina_publica'
+LEFT JOIN meta.columna_datos c
+    ON FALSE
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.id_columna IS NULL
+        AND r.nombre_regla = 'Fuente documentada en nómina'
+  );
+
+INSERT INTO meta.regla_calidad (
+    id_tabla,
+    id_columna,
+    nombre_regla,
+    descripcion,
+    tipo_regla,
+    severidad,
+    expresion_validacion,
+    accion_si_falla,
+    estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    NULL,
+    'Denuncia con referencias mínimas',
+    'Toda denuncia debe tener tipo, estado, institución y municipio de incidencia.',
+    'OBLIGATORIEDAD',
+    'ALTA',
+    'tipo_denuncia_id IS NOT NULL AND estado_denuncia_id IS NOT NULL AND institucion_id IS NOT NULL AND municipio_incidencia_id IS NOT NULL',
+    'No cargar denuncias incompletas.',
+    'ACTIVA',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0')
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'denuncia'
+LEFT JOIN meta.columna_datos c
+    ON FALSE
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.id_columna IS NULL
+        AND r.nombre_regla = 'Denuncia con referencias mínimas'
+  );
+
+INSERT INTO meta.regla_calidad (
+    id_tabla,
+    id_columna,
+    nombre_regla,
+    descripcion,
+    tipo_regla,
+    severidad,
+    expresion_validacion,
+    accion_si_falla,
+    estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    NULL,
+    'Evento de denuncia con fecha',
+    'Todo evento asociado a una denuncia debe tener fecha y tipo de evento.',
+    'OBLIGATORIEDAD',
+    'ALTA',
+    'fecha IS NOT NULL AND tipo_evento_id IS NOT NULL',
+    'Completar el evento o rechazarlo.',
+    'ACTIVA',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0')
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'registro_fecha_denuncia'
+LEFT JOIN meta.columna_datos c
+    ON FALSE
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.id_columna IS NULL
+        AND r.nombre_regla = 'Evento de denuncia con fecha'
+  );
+
+INSERT INTO meta.regla_calidad (
+    id_tabla,
+    id_columna,
+    nombre_regla,
+    descripcion,
+    tipo_regla,
+    severidad,
+    expresion_validacion,
+    accion_si_falla,
+    estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    c.id_columna,
+    'Formato de DPI',
+    'Si se registra DPI, debe conservar un formato válido y consistente.',
+    'FORMATO',
+    'MEDIA',
+    'dpi IS NULL OR LENGTH(dpi) BETWEEN 13 AND 20',
+    'Normalizar o dejar NULL si la fuente no lo proporciona.',
+    'ACTIVA',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0')
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'persona'
+JOIN meta.columna_datos c
+    ON c.id_tabla = t.id_tabla
+   AND c.nombre_columna = 'dpi'
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.id_columna = c.id_columna
+        AND r.nombre_regla = 'Formato de DPI'
+  );
+
+INSERT INTO meta.regla_calidad (
+    id_tabla,
+    id_columna,
+    nombre_regla,
+    descripcion,
+    tipo_regla,
+    severidad,
+    expresion_validacion,
+    accion_si_falla,
+    estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    NULL,
+    'Institución con ubicación y clasificación',
+    'Toda institución debe tener municipio, tipo, nivel y nombre.',
+    'OBLIGATORIEDAD',
+    'ALTA',
+    'municipio_id IS NOT NULL AND tipo_institucion_id IS NOT NULL AND nivel_institucion_id IS NOT NULL AND nombre IS NOT NULL',
+    'Completar datos institucionales mínimos.',
+    'ACTIVA',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0')
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'institucion'
+LEFT JOIN meta.columna_datos c
+    ON FALSE
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.id_columna IS NULL
+        AND r.nombre_regla = 'Institución con ubicación y clasificación'
+  );
+
+INSERT INTO meta.regla_calidad (
+    id_tabla,
+    id_columna,
+    nombre_regla,
+    descripcion,
+    tipo_regla,
+    severidad,
+    expresion_validacion,
+    accion_si_falla,
+    estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    NULL,
+    'Contrato con fechas coherentes',
+    'La fecha final del contrato no puede ser anterior a la fecha de inicio.',
+    'COHERENCIA',
+    'ALTA',
+    'fecha_fin IS NULL OR fecha_fin >= fecha_inicio',
+    'Corregir fechas del contrato.',
+    'ACTIVA',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0')
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'contrato'
+LEFT JOIN meta.columna_datos c
+    ON FALSE
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.id_columna IS NULL
+        AND r.nombre_regla = 'Contrato con fechas coherentes'
+  );
+
+INSERT INTO meta.regla_calidad (
+    id_tabla,
+    id_columna,
+    nombre_regla,
+    descripcion,
+    tipo_regla,
+    severidad,
+    expresion_validacion,
+    accion_si_falla,
+    estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    c.id_columna,
+    'Sueldo base no negativo',
+    'El sueldo base del contrato debe ser mayor o igual a cero.',
+    'RANGO',
+    'ALTA',
+    'sueldo_base >= 0',
+    'Revisar formato de salario.',
+    'ACTIVA',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0')
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'contrato'
+JOIN meta.columna_datos c
+    ON c.id_tabla = t.id_tabla
+   AND c.nombre_columna = 'sueldo_base'
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.id_columna = c.id_columna
+        AND r.nombre_regla = 'Sueldo base no negativo'
+  );
+
+INSERT INTO meta.regla_calidad (
+    id_tabla,
+    id_columna,
+    nombre_regla,
+    descripcion,
+    tipo_regla,
+    severidad,
+    expresion_validacion,
+    accion_si_falla,
+    estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    NULL,
+    'Vehículo con valor coherente',
+    'El año y valor declarado del vehículo deben ser coherentes cuando se registren.',
+    'RANGO',
+    'MEDIA',
+    'valor_declarado IS NULL OR valor_declarado >= 0',
+    'Revisar declaración patrimonial.',
+    'ACTIVA',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0')
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'vehiculo'
+LEFT JOIN meta.columna_datos c
+    ON FALSE
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.id_columna IS NULL
+        AND r.nombre_regla = 'Vehículo con valor coherente'
+  );
+
+INSERT INTO meta.regla_calidad (
+    id_tabla,
+    id_columna,
+    nombre_regla,
+    descripcion,
+    tipo_regla,
+    severidad,
+    expresion_validacion,
+    accion_si_falla,
+    estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    NULL,
+    'Cuenta bancaria con saldo coherente',
+    'El saldo declarado no debe ser negativo cuando se registre.',
+    'RANGO',
+    'MEDIA',
+    'saldo_declarado IS NULL OR saldo_declarado >= 0',
+    'Revisar declaración patrimonial.',
+    'ACTIVA',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0')
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'cuenta_bancaria'
+LEFT JOIN meta.columna_datos c
+    ON FALSE
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.id_columna IS NULL
+        AND r.nombre_regla = 'Cuenta bancaria con saldo coherente'
+  );
+
+INSERT INTO meta.regla_calidad (
+    id_tabla,
+    id_columna,
+    nombre_regla,
+    descripcion,
+    tipo_regla,
+    severidad,
+    expresion_validacion,
+    accion_si_falla,
+    estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    NULL,
+    'Inmueble con área y valor coherentes',
+    'Área y valor declarado no deben ser negativos cuando se registren.',
+    'RANGO',
+    'MEDIA',
+    'area_mc IS NULL OR area_mc >= 0; valor_declarado IS NULL OR valor_declarado >= 0',
+    'Revisar declaración patrimonial.',
+    'ACTIVA',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0')
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'inmueble'
+LEFT JOIN meta.columna_datos c
+    ON FALSE
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.id_columna IS NULL
+        AND r.nombre_regla = 'Inmueble con área y valor coherentes'
+  );
+
+INSERT INTO meta.regla_calidad (
+    id_tabla,
+    id_columna,
+    nombre_regla,
+    descripcion,
+    tipo_regla,
+    severidad,
+    expresion_validacion,
+    accion_si_falla,
+    estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    NULL,
+    'Participación empresarial válida',
+    'El porcentaje de participación debe estar entre 0 y 100 cuando se registre.',
+    'RANGO',
+    'MEDIA',
+    'porcentaje_participacion IS NULL OR porcentaje_participacion BETWEEN 0 AND 100',
+    'Revisar declaración patrimonial.',
+    'ACTIVA',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0')
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'empresa'
+LEFT JOIN meta.columna_datos c
+    ON FALSE
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.id_columna IS NULL
+        AND r.nombre_regla = 'Participación empresarial válida'
+  );
+
+INSERT INTO meta.regla_calidad (
+    id_tabla,
+    id_columna,
+    nombre_regla,
+    descripcion,
+    tipo_regla,
+    severidad,
+    expresion_validacion,
+    accion_si_falla,
+    estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    c.id_columna,
+    'Nombre obligatorio en catálogo banco',
+    'Los catálogos deben registrar un nombre claro para cada valor permitido.',
+    'OBLIGATORIEDAD',
+    'ALTA',
+    'nombre IS NOT NULL',
+    'No registrar valores de catálogo sin nombre.',
+    'ACTIVA',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0')
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'banco'
+JOIN meta.columna_datos c
+    ON c.id_tabla = t.id_tabla
+   AND c.nombre_columna = 'nombre'
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.id_columna = c.id_columna
+        AND r.nombre_regla = 'Nombre obligatorio en catálogo banco'
+  );
+
+INSERT INTO meta.regla_calidad (
+    id_tabla,
+    id_columna,
+    nombre_regla,
+    descripcion,
+    tipo_regla,
+    severidad,
+    expresion_validacion,
+    accion_si_falla,
+    estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    c.id_columna,
+    'Nombre obligatorio en catálogo estado_civil',
+    'Los catálogos deben registrar un nombre claro para cada valor permitido.',
+    'OBLIGATORIEDAD',
+    'ALTA',
+    'nombre IS NOT NULL',
+    'No registrar valores de catálogo sin nombre.',
+    'ACTIVA',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0')
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'estado_civil'
+JOIN meta.columna_datos c
+    ON c.id_tabla = t.id_tabla
+   AND c.nombre_columna = 'nombre'
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.id_columna = c.id_columna
+        AND r.nombre_regla = 'Nombre obligatorio en catálogo estado_civil'
+  );
+
+INSERT INTO meta.regla_calidad (
+    id_tabla,
+    id_columna,
+    nombre_regla,
+    descripcion,
+    tipo_regla,
+    severidad,
+    expresion_validacion,
+    accion_si_falla,
+    estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    c.id_columna,
+    'Nombre obligatorio en catálogo estado_denuncia',
+    'Los catálogos deben registrar un nombre claro para cada valor permitido.',
+    'OBLIGATORIEDAD',
+    'ALTA',
+    'nombre IS NOT NULL',
+    'No registrar valores de catálogo sin nombre.',
+    'ACTIVA',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0')
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'estado_denuncia'
+JOIN meta.columna_datos c
+    ON c.id_tabla = t.id_tabla
+   AND c.nombre_columna = 'nombre'
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.id_columna = c.id_columna
+        AND r.nombre_regla = 'Nombre obligatorio en catálogo estado_denuncia'
+  );
+
+INSERT INTO meta.regla_calidad (
+    id_tabla,
+    id_columna,
+    nombre_regla,
+    descripcion,
+    tipo_regla,
+    severidad,
+    expresion_validacion,
+    accion_si_falla,
+    estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    c.id_columna,
+    'Nombre obligatorio en catálogo grupo_edad_victima',
+    'Los catálogos deben registrar un nombre claro para cada valor permitido.',
+    'OBLIGATORIEDAD',
+    'ALTA',
+    'nombre IS NOT NULL',
+    'No registrar valores de catálogo sin nombre.',
+    'ACTIVA',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0')
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'grupo_edad_victima'
+JOIN meta.columna_datos c
+    ON c.id_tabla = t.id_tabla
+   AND c.nombre_columna = 'nombre'
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.id_columna = c.id_columna
+        AND r.nombre_regla = 'Nombre obligatorio en catálogo grupo_edad_victima'
+  );
+
+INSERT INTO meta.regla_calidad (
+    id_tabla,
+    id_columna,
+    nombre_regla,
+    descripcion,
+    tipo_regla,
+    severidad,
+    expresion_validacion,
+    accion_si_falla,
+    estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    c.id_columna,
+    'Nombre obligatorio en catálogo grupo_etnico',
+    'Los catálogos deben registrar un nombre claro para cada valor permitido.',
+    'OBLIGATORIEDAD',
+    'ALTA',
+    'nombre IS NOT NULL',
+    'No registrar valores de catálogo sin nombre.',
+    'ACTIVA',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0')
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'grupo_etnico'
+JOIN meta.columna_datos c
+    ON c.id_tabla = t.id_tabla
+   AND c.nombre_columna = 'nombre'
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.id_columna = c.id_columna
+        AND r.nombre_regla = 'Nombre obligatorio en catálogo grupo_etnico'
+  );
+
+INSERT INTO meta.regla_calidad (
+    id_tabla,
+    id_columna,
+    nombre_regla,
+    descripcion,
+    tipo_regla,
+    severidad,
+    expresion_validacion,
+    accion_si_falla,
+    estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    c.id_columna,
+    'Nombre obligatorio en catálogo nivel_institucion',
+    'Los catálogos deben registrar un nombre claro para cada valor permitido.',
+    'OBLIGATORIEDAD',
+    'ALTA',
+    'nombre IS NOT NULL',
+    'No registrar valores de catálogo sin nombre.',
+    'ACTIVA',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0')
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'nivel_institucion'
+JOIN meta.columna_datos c
+    ON c.id_tabla = t.id_tabla
+   AND c.nombre_columna = 'nombre'
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.id_columna = c.id_columna
+        AND r.nombre_regla = 'Nombre obligatorio en catálogo nivel_institucion'
+  );
+
+INSERT INTO meta.regla_calidad (
+    id_tabla,
+    id_columna,
+    nombre_regla,
+    descripcion,
+    tipo_regla,
+    severidad,
+    expresion_validacion,
+    accion_si_falla,
+    estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    c.id_columna,
+    'Nombre obligatorio en catálogo renglon_presupuestario',
+    'Los catálogos deben registrar un nombre claro para cada valor permitido.',
+    'OBLIGATORIEDAD',
+    'ALTA',
+    'nombre IS NOT NULL',
+    'No registrar valores de catálogo sin nombre.',
+    'ACTIVA',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0')
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'renglon_presupuestario'
+JOIN meta.columna_datos c
+    ON c.id_tabla = t.id_tabla
+   AND c.nombre_columna = 'nombre'
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.id_columna = c.id_columna
+        AND r.nombre_regla = 'Nombre obligatorio en catálogo renglon_presupuestario'
+  );
+
+INSERT INTO meta.regla_calidad (
+    id_tabla,
+    id_columna,
+    nombre_regla,
+    descripcion,
+    tipo_regla,
+    severidad,
+    expresion_validacion,
+    accion_si_falla,
+    estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    c.id_columna,
+    'Nombre obligatorio en catálogo rol_empresa',
+    'Los catálogos deben registrar un nombre claro para cada valor permitido.',
+    'OBLIGATORIEDAD',
+    'ALTA',
+    'nombre IS NOT NULL',
+    'No registrar valores de catálogo sin nombre.',
+    'ACTIVA',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0')
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'rol_empresa'
+JOIN meta.columna_datos c
+    ON c.id_tabla = t.id_tabla
+   AND c.nombre_columna = 'nombre'
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.id_columna = c.id_columna
+        AND r.nombre_regla = 'Nombre obligatorio en catálogo rol_empresa'
+  );
+
+INSERT INTO meta.regla_calidad (
+    id_tabla,
+    id_columna,
+    nombre_regla,
+    descripcion,
+    tipo_regla,
+    severidad,
+    expresion_validacion,
+    accion_si_falla,
+    estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    c.id_columna,
+    'Nombre obligatorio en catálogo sexo',
+    'Los catálogos deben registrar un nombre claro para cada valor permitido.',
+    'OBLIGATORIEDAD',
+    'ALTA',
+    'nombre IS NOT NULL',
+    'No registrar valores de catálogo sin nombre.',
+    'ACTIVA',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0')
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'sexo'
+JOIN meta.columna_datos c
+    ON c.id_tabla = t.id_tabla
+   AND c.nombre_columna = 'nombre'
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.id_columna = c.id_columna
+        AND r.nombre_regla = 'Nombre obligatorio en catálogo sexo'
+  );
+
+INSERT INTO meta.regla_calidad (
+    id_tabla,
+    id_columna,
+    nombre_regla,
+    descripcion,
+    tipo_regla,
+    severidad,
+    expresion_validacion,
+    accion_si_falla,
+    estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    c.id_columna,
+    'Nombre obligatorio en catálogo tipo_contrato',
+    'Los catálogos deben registrar un nombre claro para cada valor permitido.',
+    'OBLIGATORIEDAD',
+    'ALTA',
+    'nombre IS NOT NULL',
+    'No registrar valores de catálogo sin nombre.',
+    'ACTIVA',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0')
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'tipo_contrato'
+JOIN meta.columna_datos c
+    ON c.id_tabla = t.id_tabla
+   AND c.nombre_columna = 'nombre'
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.id_columna = c.id_columna
+        AND r.nombre_regla = 'Nombre obligatorio en catálogo tipo_contrato'
+  );
+
+INSERT INTO meta.regla_calidad (
+    id_tabla,
+    id_columna,
+    nombre_regla,
+    descripcion,
+    tipo_regla,
+    severidad,
+    expresion_validacion,
+    accion_si_falla,
+    estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    c.id_columna,
+    'Nombre obligatorio en catálogo tipo_delito',
+    'Los catálogos deben registrar un nombre claro para cada valor permitido.',
+    'OBLIGATORIEDAD',
+    'ALTA',
+    'nombre IS NOT NULL',
+    'No registrar valores de catálogo sin nombre.',
+    'ACTIVA',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0')
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'tipo_delito'
+JOIN meta.columna_datos c
+    ON c.id_tabla = t.id_tabla
+   AND c.nombre_columna = 'nombre'
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.id_columna = c.id_columna
+        AND r.nombre_regla = 'Nombre obligatorio en catálogo tipo_delito'
+  );
+
+INSERT INTO meta.regla_calidad (
+    id_tabla,
+    id_columna,
+    nombre_regla,
+    descripcion,
+    tipo_regla,
+    severidad,
+    expresion_validacion,
+    accion_si_falla,
+    estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    c.id_columna,
+    'Nombre obligatorio en catálogo tipo_denuncia',
+    'Los catálogos deben registrar un nombre claro para cada valor permitido.',
+    'OBLIGATORIEDAD',
+    'ALTA',
+    'nombre IS NOT NULL',
+    'No registrar valores de catálogo sin nombre.',
+    'ACTIVA',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0')
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'tipo_denuncia'
+JOIN meta.columna_datos c
+    ON c.id_tabla = t.id_tabla
+   AND c.nombre_columna = 'nombre'
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.id_columna = c.id_columna
+        AND r.nombre_regla = 'Nombre obligatorio en catálogo tipo_denuncia'
+  );
+
+INSERT INTO meta.regla_calidad (
+    id_tabla,
+    id_columna,
+    nombre_regla,
+    descripcion,
+    tipo_regla,
+    severidad,
+    expresion_validacion,
+    accion_si_falla,
+    estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    c.id_columna,
+    'Nombre obligatorio en catálogo tipo_evento',
+    'Los catálogos deben registrar un nombre claro para cada valor permitido.',
+    'OBLIGATORIEDAD',
+    'ALTA',
+    'nombre IS NOT NULL',
+    'No registrar valores de catálogo sin nombre.',
+    'ACTIVA',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0')
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'tipo_evento'
+JOIN meta.columna_datos c
+    ON c.id_tabla = t.id_tabla
+   AND c.nombre_columna = 'nombre'
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.id_columna = c.id_columna
+        AND r.nombre_regla = 'Nombre obligatorio en catálogo tipo_evento'
+  );
+
+INSERT INTO meta.regla_calidad (
+    id_tabla,
+    id_columna,
+    nombre_regla,
+    descripcion,
+    tipo_regla,
+    severidad,
+    expresion_validacion,
+    accion_si_falla,
+    estado,
+    id_version_desde
+)
+SELECT
+    t.id_tabla,
+    c.id_columna,
+    'Nombre obligatorio en catálogo tipo_institucion',
+    'Los catálogos deben registrar un nombre claro para cada valor permitido.',
+    'OBLIGATORIEDAD',
+    'ALTA',
+    'nombre IS NOT NULL',
+    'No registrar valores de catálogo sin nombre.',
+    'ACTIVA',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0')
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'tipo_institucion'
+JOIN meta.columna_datos c
+    ON c.id_tabla = t.id_tabla
+   AND c.nombre_columna = 'nombre'
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.regla_calidad r
+      WHERE r.id_tabla = t.id_tabla
+        AND r.id_columna = c.id_columna
+        AND r.nombre_regla = 'Nombre obligatorio en catálogo tipo_institucion'
+  );
+
+-- ============================================================
+-- 11. Revisión por pares inicial/documental
+-- ============================================================
+INSERT INTO meta.revision_pares (
+    nivel_revision,
+    id_esquema,
+    tipo_revision,
+    descripcion_revision,
+    revisor_1,
+    estado_revisor_1,
+    comentario_revisor_1,
+    revisor_2,
+    estado_revisor_2,
+    comentario_revisor_2,
+    estado_final,
+    observaciones
+)
+SELECT
+    'ESQUEMA',
+    e.id_esquema,
+    'DOCUMENTACION',
+    'Revisión general del esquema justicia',
+    'Integrante 1 del subequipo justicia',
+    'PENDIENTE',
+    'Pendiente de revisión formal por el equipo.',
+    'Integrante 2 del subequipo justicia',
+    'PENDIENTE',
+    'Pendiente de revisión formal por el equipo.',
+    'PENDIENTE',
+    'Registro inicial para documentar revisión colaborativa.'
+FROM meta.esquema_datos e
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.revision_pares rp
+      WHERE rp.nivel_revision = 'ESQUEMA'
+        AND rp.id_esquema = e.id_esquema
+        AND rp.tipo_revision = 'DOCUMENTACION'
+  );
+
+INSERT INTO meta.revision_pares (
+    nivel_revision,
+    id_tabla,
+    tipo_revision,
+    descripcion_revision,
+    revisor_1,
+    estado_revisor_1,
+    comentario_revisor_1,
+    revisor_2,
+    estado_revisor_2,
+    comentario_revisor_2,
+    estado_final,
+    observaciones
+)
+SELECT
+    'TABLA',
+    t.id_tabla,
+    'MODELO',
+    'Revisión de estructura para estadísticas de seguridad',
+    'Integrante 1 del subequipo justicia',
+    'PENDIENTE',
+    'Pendiente de validar estructura, fuentes y reglas de calidad.',
+    'Integrante 2 del subequipo justicia',
+    'PENDIENTE',
+    'Pendiente de validar estructura, fuentes y reglas de calidad.',
+    'PENDIENTE',
+    'Registro inicial para control de revisión por pares.'
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'estadistica_seguridad'
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.revision_pares rp
+      WHERE rp.nivel_revision = 'TABLA'
+        AND rp.id_tabla = t.id_tabla
+        AND rp.tipo_revision = 'MODELO'
+  );
+
+INSERT INTO meta.revision_pares (
+    nivel_revision,
+    id_tabla,
+    tipo_revision,
+    descripcion_revision,
+    revisor_1,
+    estado_revisor_1,
+    comentario_revisor_1,
+    revisor_2,
+    estado_revisor_2,
+    comentario_revisor_2,
+    estado_final,
+    observaciones
+)
+SELECT
+    'TABLA',
+    t.id_tabla,
+    'MODELO',
+    'Revisión de estructura para nómina pública',
+    'Integrante 1 del subequipo justicia',
+    'PENDIENTE',
+    'Pendiente de validar estructura, fuentes y reglas de calidad.',
+    'Integrante 2 del subequipo justicia',
+    'PENDIENTE',
+    'Pendiente de validar estructura, fuentes y reglas de calidad.',
+    'PENDIENTE',
+    'Registro inicial para control de revisión por pares.'
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'nomina_publica'
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.revision_pares rp
+      WHERE rp.nivel_revision = 'TABLA'
+        AND rp.id_tabla = t.id_tabla
+        AND rp.tipo_revision = 'MODELO'
+  );
+
+INSERT INTO meta.revision_pares (
+    nivel_revision,
+    id_tabla,
+    tipo_revision,
+    descripcion_revision,
+    revisor_1,
+    estado_revisor_1,
+    comentario_revisor_1,
+    revisor_2,
+    estado_revisor_2,
+    comentario_revisor_2,
+    estado_final,
+    observaciones
+)
+SELECT
+    'TABLA',
+    t.id_tabla,
+    'MODELO',
+    'Revisión de estructura para denuncias',
+    'Integrante 1 del subequipo justicia',
+    'PENDIENTE',
+    'Pendiente de validar estructura, fuentes y reglas de calidad.',
+    'Integrante 2 del subequipo justicia',
+    'PENDIENTE',
+    'Pendiente de validar estructura, fuentes y reglas de calidad.',
+    'PENDIENTE',
+    'Registro inicial para control de revisión por pares.'
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'denuncia'
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.revision_pares rp
+      WHERE rp.nivel_revision = 'TABLA'
+        AND rp.id_tabla = t.id_tabla
+        AND rp.tipo_revision = 'MODELO'
+  );
+
+INSERT INTO meta.revision_pares (
+    nivel_revision,
+    id_tabla,
+    tipo_revision,
+    descripcion_revision,
+    revisor_1,
+    estado_revisor_1,
+    comentario_revisor_1,
+    revisor_2,
+    estado_revisor_2,
+    comentario_revisor_2,
+    estado_final,
+    observaciones
+)
+SELECT
+    'TABLA',
+    t.id_tabla,
+    'MODELO',
+    'Revisión de estructura para contratos',
+    'Integrante 1 del subequipo justicia',
+    'PENDIENTE',
+    'Pendiente de validar estructura, fuentes y reglas de calidad.',
+    'Integrante 2 del subequipo justicia',
+    'PENDIENTE',
+    'Pendiente de validar estructura, fuentes y reglas de calidad.',
+    'PENDIENTE',
+    'Registro inicial para control de revisión por pares.'
+FROM meta.esquema_datos e
+JOIN meta.tabla_datos t
+    ON t.id_esquema = e.id_esquema
+   AND t.nombre_tabla = 'contrato'
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.revision_pares rp
+      WHERE rp.nivel_revision = 'TABLA'
+        AND rp.id_tabla = t.id_tabla
+        AND rp.tipo_revision = 'MODELO'
+  );
+
+-- ============================================================
+-- 12. Decisiones de modelado del esquema justicia
+-- ============================================================
+INSERT INTO meta.decision_modelado (
+    id_tema,
+    tema,
+    pregunta,
+    decision,
+    justificacion,
+    ejemplo,
+    id_esquema_recomendado,
+    id_tabla_recomendada,
+    alternativa,
+    responsable,
+    fecha_decision,
+    id_version_desde,
+    estado,
+    observaciones
+)
+SELECT
+    tema_d.id_tema,
+    'Ubicación geográfica',
+    '¿Justicia debe crear sus propios departamentos y municipios?',
+    'No. El esquema justicia referencia departamentos y municipios desde geografia.',
+    'La geografía es un eje común para todos los módulos. Duplicar departamentos y municipios produciría inconsistencias al cruzar información entre turismo, clima, justicia y otros esquemas.',
+    'justicia.denuncia.municipio_incidencia_id referencia geografia.municipio(id).',
+    e.id_esquema,
+    NULL,
+    'Usar texto libre de departamento o municipio solo como apoyo cuando venga así en la fuente, pero priorizar llaves foráneas a geografia.',
+    'Subequipo Justicia y Seguridad Pública',
+    DATE '2026-07-12',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'VIGENTE',
+    'Decisión registrada para orientar futuras ampliaciones del proyecto.'
+FROM meta.esquema_datos e
+LEFT JOIN meta.tabla_datos t ON FALSE
+LEFT JOIN meta.tema_datos tema_d
+    ON LOWER(tema_d.nombre_tema) = LOWER('Geografía')
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.decision_modelado dm
+      WHERE dm.tema = 'Ubicación geográfica'
+        AND dm.pregunta = '¿Justicia debe crear sus propios departamentos y municipios?'
+  );
+
+INSERT INTO meta.decision_modelado (
+    id_tema,
+    tema,
+    pregunta,
+    decision,
+    justificacion,
+    ejemplo,
+    id_esquema_recomendado,
+    id_tabla_recomendada,
+    alternativa,
+    responsable,
+    fecha_decision,
+    id_version_desde,
+    estado,
+    observaciones
+)
+SELECT
+    tema_d.id_tema,
+    'Estadística versus denuncia',
+    '¿Los eventos individuales y estadísticas agregadas deben guardarse en la misma tabla?',
+    'No. Las denuncias individuales o casos se registran en denuncia; los agregados comparables se registran en estadistica_seguridad.',
+    'Las fuentes INE, PNC y MP pueden tener granularidades distintas. Separar datos transaccionales y estadísticos facilita consultas y evita mezclar niveles de detalle.',
+    'Una denuncia específica va en justicia.denuncia; un conteo por año, departamento y delito va en justicia.estadistica_seguridad.',
+    e.id_esquema,
+    t.id_tabla,
+    'Crear tablas adicionales si en el futuro se conserva el nivel individual completo de víctimas o sindicados.',
+    'Subequipo Justicia y Seguridad Pública',
+    DATE '2026-07-12',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'VIGENTE',
+    'Decisión registrada para orientar futuras ampliaciones del proyecto.'
+FROM meta.esquema_datos e
+LEFT JOIN meta.tabla_datos t ON t.id_esquema = e.id_esquema AND t.nombre_tabla = 'estadistica_seguridad'
+LEFT JOIN meta.tema_datos tema_d
+    ON LOWER(tema_d.nombre_tema) = LOWER('Justicia')
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.decision_modelado dm
+      WHERE dm.tema = 'Estadística versus denuncia'
+        AND dm.pregunta = '¿Los eventos individuales y estadísticas agregadas deben guardarse en la misma tabla?'
+  );
+
+INSERT INTO meta.decision_modelado (
+    id_tema,
+    tema,
+    pregunta,
+    decision,
+    justificacion,
+    ejemplo,
+    id_esquema_recomendado,
+    id_tabla_recomendada,
+    alternativa,
+    responsable,
+    fecha_decision,
+    id_version_desde,
+    estado,
+    observaciones
+)
+SELECT
+    tema_d.id_tema,
+    'Nómina pública',
+    '¿La nómina pública debe ir en justicia?',
+    'Sí, cuando corresponde a instituciones vinculadas al sector justicia o actores institucionales relevantes para transparencia pública.',
+    'El módulo busca integrar seguridad, justicia y rendición de cuentas. Las nóminas del OJ y Congreso ayudan a analizar personal, puestos, renglones y remuneraciones dentro del contexto institucional.',
+    'Registros mensuales del Organismo Judicial y Congreso se almacenan en justicia.nomina_publica.',
+    e.id_esquema,
+    t.id_tabla,
+    'Si en el futuro se analiza todo el Estado, podría evaluarse un esquema separado de sector_publico o transparencia.',
+    'Subequipo Justicia y Seguridad Pública',
+    DATE '2026-07-12',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'VIGENTE',
+    'Decisión registrada para orientar futuras ampliaciones del proyecto.'
+FROM meta.esquema_datos e
+LEFT JOIN meta.tabla_datos t ON t.id_esquema = e.id_esquema AND t.nombre_tabla = 'nomina_publica'
+LEFT JOIN meta.tema_datos tema_d
+    ON LOWER(tema_d.nombre_tema) = LOWER('Justicia')
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.decision_modelado dm
+      WHERE dm.tema = 'Nómina pública'
+        AND dm.pregunta = '¿La nómina pública debe ir en justicia?'
+  );
+
+INSERT INTO meta.decision_modelado (
+    id_tema,
+    tema,
+    pregunta,
+    decision,
+    justificacion,
+    ejemplo,
+    id_esquema_recomendado,
+    id_tabla_recomendada,
+    alternativa,
+    responsable,
+    fecha_decision,
+    id_version_desde,
+    estado,
+    observaciones
+)
+SELECT
+    tema_d.id_tema,
+    'Patrimonio declarado',
+    '¿Los vehículos, cuentas, inmuebles y empresas deben ir en justicia?',
+    'Sí, cuando son parte de declaraciones patrimoniales o información asociada a trabajadores del sector analizado.',
+    'Estos datos se relacionan con transparencia, control patrimonial y rendición de cuentas de trabajadores o funcionarios vinculados al módulo.',
+    'Vehículos declarados por trabajadores se registran en justicia.vehiculo.',
+    e.id_esquema,
+    t.id_tabla,
+    'Si se extiende a análisis económico general, podría evaluarse un esquema patrimonio o economía.',
+    'Subequipo Justicia y Seguridad Pública',
+    DATE '2026-07-12',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'VIGENTE',
+    'Decisión registrada para orientar futuras ampliaciones del proyecto.'
+FROM meta.esquema_datos e
+LEFT JOIN meta.tabla_datos t ON t.id_esquema = e.id_esquema AND t.nombre_tabla = 'vehiculo'
+LEFT JOIN meta.tema_datos tema_d
+    ON LOWER(tema_d.nombre_tema) = LOWER('Justicia')
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.decision_modelado dm
+      WHERE dm.tema = 'Patrimonio declarado'
+        AND dm.pregunta = '¿Los vehículos, cuentas, inmuebles y empresas deben ir en justicia?'
+  );
+
+INSERT INTO meta.decision_modelado (
+    id_tema,
+    tema,
+    pregunta,
+    decision,
+    justificacion,
+    ejemplo,
+    id_esquema_recomendado,
+    id_tabla_recomendada,
+    alternativa,
+    responsable,
+    fecha_decision,
+    id_version_desde,
+    estado,
+    observaciones
+)
+SELECT
+    tema_d.id_tema,
+    'Fuentes oficiales',
+    '¿Se pueden usar fuentes no oficiales para datos de justicia?',
+    'Para datos base del módulo se priorizan fuentes oficiales o institucionales publicadas por entidades públicas.',
+    'La información de seguridad, nómina y justicia requiere trazabilidad y confiabilidad. Las fuentes oficiales reducen ambigüedad y facilitan auditoría.',
+    'INE, PNC, MP, OJ y Congreso se registran como fuentes oficiales en meta.fuente_datos.',
+    e.id_esquema,
+    NULL,
+    'Fuentes complementarias deben documentarse como apoyo y no reemplazar datos oficiales sin revisión.',
+    'Subequipo Justicia y Seguridad Pública',
+    DATE '2026-07-12',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'VIGENTE',
+    'Decisión registrada para orientar futuras ampliaciones del proyecto.'
+FROM meta.esquema_datos e
+LEFT JOIN meta.tabla_datos t ON FALSE
+LEFT JOIN meta.tema_datos tema_d
+    ON LOWER(tema_d.nombre_tema) = LOWER('Justicia')
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.decision_modelado dm
+      WHERE dm.tema = 'Fuentes oficiales'
+        AND dm.pregunta = '¿Se pueden usar fuentes no oficiales para datos de justicia?'
+  );
+
+INSERT INTO meta.decision_modelado (
+    id_tema,
+    tema,
+    pregunta,
+    decision,
+    justificacion,
+    ejemplo,
+    id_esquema_recomendado,
+    id_tabla_recomendada,
+    alternativa,
+    responsable,
+    fecha_decision,
+    id_version_desde,
+    estado,
+    observaciones
+)
+SELECT
+    tema_d.id_tema,
+    'Información sensible',
+    '¿El módulo debe almacenar cualquier dato personal disponible?',
+    'No. Debe registrarse únicamente la información necesaria para el análisis definido y documentado.',
+    'Aunque algunos datos sean públicos, el proyecto debe mantener criterio de minimización y utilidad analítica para evitar exposición innecesaria.',
+    'persona guarda campos básicos; detalles no necesarios deben evitarse.',
+    e.id_esquema,
+    t.id_tabla,
+    'Si se requiere mayor detalle personal, debe justificarse mediante una nueva decisión de modelado.',
+    'Subequipo Justicia y Seguridad Pública',
+    DATE '2026-07-12',
+    (SELECT id_version FROM meta.version_proyecto WHERE numero_version = '1.0'),
+    'VIGENTE',
+    'Decisión registrada para orientar futuras ampliaciones del proyecto.'
+FROM meta.esquema_datos e
+LEFT JOIN meta.tabla_datos t ON t.id_esquema = e.id_esquema AND t.nombre_tabla = 'persona'
+LEFT JOIN meta.tema_datos tema_d
+    ON LOWER(tema_d.nombre_tema) = LOWER('Justicia')
+WHERE e.nombre_esquema = 'justicia'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM meta.decision_modelado dm
+      WHERE dm.tema = 'Información sensible'
+        AND dm.pregunta = '¿El módulo debe almacenar cualquier dato personal disponible?'
+  );
+
+
+-- ============================================================
+-- FIN METADATOS
+-- ============================================================
+
+
+-- **********************************************************************
+-- fin inserts  schema justicia
+-- **********************************************************************
